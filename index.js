@@ -18,7 +18,7 @@ const pool = new Pool({
 -- DROP TABLE IF EXISTS users;
 -- DROP TABLE IF EXISTS user_sessions;
 -- DROP TABLE IF EXISTS reset_tokens;
-DROP TABLE IF EXISTS articles;
+-- DROP TABLE IF EXISTS articles;
 -- DROP TABLE IF EXISTS comments;
 -- DROP TABLE IF EXISTS votes;
 
