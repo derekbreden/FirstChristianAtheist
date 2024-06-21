@@ -29,6 +29,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
     body {
       font-size: 14px;
@@ -116,6 +117,64 @@
       width: 24px;
       margin-right: 5px;
     }
+    navigation hamburger {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 74px;
+      padding: 10px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      display: none;
+    }
+    navigation hamburger line {
+      border: 2px solid #27323e;
+      border-radius: 2px;
+      width: 100%;
+    }
+    navigation menu {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: #fff;
+      box-shadow: 0px 0px 5px #26323e;
+      border-radius: 0 0 0 2px;
+    }
+    navigation menu sign-in {
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    navigation menu sign-in > * {
+      margin-bottom: 10px;
+    }
+    navigation menu sign-in > *:last-child {
+      margin-bottom: 0;
+    }
+    input {
+      width: 240px;
+      border-radius: 2px;
+      border: 1px solid #26323e;
+      padding: 10px;
+    }
+    button {
+      -webkit-appearance: none;
+      border-radius: 2px;
+      border: 0;
+      background: #26323e;
+      color: #fff;
+      padding: 10px;
+      font-weight: bold;
+    }
+    button[alt] {
+      background: #f5f5f5;
+      color: #26323e;
+      border: 1px solid #999;
+    }
   </style>
   <head>
     <title>First Christian Atheist</title>
@@ -126,6 +185,19 @@
         <img src="/logo.png" alt="A logo consisting of a dove and a heart" />
         First Christian Atheist
       </h1>
+      <hamburger>
+        <line></line>
+        <line></line>
+        <line></line>
+      </hamburger>
+      <menu>
+        <sign-in>
+          <input placeholder="Email" />
+          <input placeholder="Password" type="password" />
+          <button>Sign Up / Sign In</button>
+          <button alt>Cancel</button>
+        </sign-in>
+      </menu>
     </navigation>
     <center-background></center-background>
     <main-content>
@@ -220,5 +292,16 @@
       .catch(function (error) {
         debug(error.message);
       });
+
+    const $ = document.querySelector.bind(document);
+    const $hamburger = $("navigation hamburger");
+    const $menu = $("navigation menu");
+    const $menu_cancel = $("navigation menu button[alt]");
+    $hamburger.addEventListener("click", function () {
+      $menu.style.display = "flex";
+    });
+    $menu_cancel.addEventListener("click", function () {
+      $menu.style.display = "none";
+    });
   </script>
 </html>

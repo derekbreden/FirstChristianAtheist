@@ -18,7 +18,7 @@ const pool = new Pool({
 -- DROP TABLE IF EXISTS users;
 -- DROP TABLE IF EXISTS user_sessions;
 -- DROP TABLE IF EXISTS reset_tokens;
--- DROP TABLE IF EXISTS articles;
+DROP TABLE IF EXISTS articles;
 -- DROP TABLE IF EXISTS comments;
 -- DROP TABLE IF EXISTS votes;
 
@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS articles (
   user_id INT NOT NULL,
   votes_raw INT DEFAULT 0,
   votes_weighted FLOAT DEFAULT 0.0,
+  admin BOOL DEFAULT false,
   create_date TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
@@ -97,15 +98,13 @@ CREATE TABLE IF NOT EXISTS votes (
   create_date TIMESTAMP NOT NULL DEFAULT NOW()
 );
     `);
-    /*
-    const results = await client.query(`
-      SELECT user_agent, create_date
+    /*const results = await client.query(`
+      SELECT user_agent, ip_address, create_date
       FROM browsers
       INNER JOIN sessions ON browsers.session_id = sessions.session_id
       ORDER BY create_date DESC
     `);
-    console.log(results.rows);
-    */
+    console.log(results.rows);*/
   } catch (err) {
     console.error("error executing query:", err);
   } finally {
@@ -199,7 +198,7 @@ const server = http.createServer((req, res) => {
     // Start an async function
     (async () => {
   
-      // PATH get_uuid
+      // PATH session
       if (path === "session") {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
@@ -207,16 +206,18 @@ const server = http.createServer((req, res) => {
         try {
           body = JSON.parse(body);
           let session_uuid = "";
+          let session_id = "";
 
           // Check the body session_uuid
           if (body.session_uuid) {
             const results = await client.query(`
-              SELECT session_uuid
+              SELECT session_id
               FROM sessions
               WHERE session_uuid = $1
             `, [body.session_uuid]);
             if (results.rows.length > 0) {
               session_uuid = results.rows[0].session_uuid;
+              session_id = results.rows[0].session_id;
             }
           }
 
@@ -227,7 +228,7 @@ const server = http.createServer((req, res) => {
               INSERT INTO sessions (session_uuid)
               VALUES ($1) returning session_id;
             `, [session_uuid]);
-            const session_id = insert_session.rows[0].session_id;
+            session_id = insert_session.rows[0].session_id;
             const user_agent = req.headers["user-agent"];
             const ip_address = req.headers["x-forwarded-for"].split(",")[0];
             await client.query(`
@@ -237,6 +238,10 @@ const server = http.createServer((req, res) => {
                 ($1, $2, $3);
             `, [session_id, user_agent, ip_address]);
           }
+
+          // Here we might perform additional actions using session_id
+          // (articling, commenting, voting, etc)
+          
 
           // Return the valid session_uuid
           res.end(JSON.stringify({ session_uuid }));
