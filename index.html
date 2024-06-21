@@ -98,7 +98,7 @@
     debug {
       white-space: pre;
     }
-    navigation {
+    nav {
       position: fixed;
       top: 0;
       left: 0;
@@ -109,15 +109,15 @@
       align-items: center;
       box-shadow: 0px 0px 5px #26323e;
     }
-    navigation h1 {
+    nav h1 {
       margin: 0 20px;
     }
-    navigation h1 img {
+    nav h1 img {
       height: 24px;
       width: 24px;
       margin-right: 5px;
     }
-    navigation hamburger {
+    nav hamburger {
       position: absolute;
       right: 0;
       top: 0;
@@ -128,14 +128,13 @@
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
-      display: none;
     }
-    navigation hamburger line {
+    nav hamburger line {
       border: 2px solid #27323e;
       border-radius: 2px;
       width: 100%;
     }
-    navigation menu {
+    nav menu {
       display: none;
       position: absolute;
       top: 0;
@@ -144,15 +143,15 @@
       box-shadow: 0px 0px 5px #26323e;
       border-radius: 0 0 0 2px;
     }
-    navigation menu sign-in {
+    nav menu sign-in {
       display: flex;
       flex-direction: column;
       padding: 20px;
     }
-    navigation menu sign-in > * {
+    nav menu sign-in > * {
       margin-bottom: 10px;
     }
-    navigation menu sign-in > *:last-child {
+    nav menu sign-in > *:last-child {
       margin-bottom: 0;
     }
     input {
@@ -180,7 +179,7 @@
     <title>First Christian Atheist</title>
   </head>
   <body>
-    <navigation>
+    <nav>
       <h1>
         <img src="/logo.png" alt="A logo consisting of a dove and a heart" />
         First Christian Atheist
@@ -195,10 +194,10 @@
           <input placeholder="Email" />
           <input placeholder="Password" type="password" />
           <button>Sign Up / Sign In</button>
-          <button alt>Cancel</button>
+          <button alt cancel>Cancel</button>
         </sign-in>
       </menu>
-    </navigation>
+    </nav>
     <center-background></center-background>
     <main-content>
       <debug></debug>
@@ -270,12 +269,20 @@
     </main-content>
   </body>
   <script>
+    // Debug and library setup
+    const $ = (selector) => {
+      const $this = document.querySelector(selector);
+      $this.on = $this.addEventListener.bind($this);
+      return $this;
+    };
     const debug = function () {
-      // document.querySelector("debug").innerHTML = JSON.stringify([ ...arguments ]);
+      // $("debug").innerHTML = JSON.stringify([...arguments]);
     };
     window.addEventListener("error", ($error) => {
       debug($error.message);
     });
+
+    // Session start
     let session_uuid = localStorage.getItem("session_uuid") || "";
     fetch("/session", {
       method: "POST",
@@ -293,15 +300,12 @@
         debug(error.message);
       });
 
-    const $ = document.querySelector.bind(document);
-    const $hamburger = $("navigation hamburger");
-    const $menu = $("navigation menu");
-    const $menu_cancel = $("navigation menu button[alt]");
-    $hamburger.addEventListener("click", function () {
-      $menu.style.display = "flex";
+    // Menu
+    $("nav hamburger").on("click", function () {
+      $("nav menu").style.display = "flex";
     });
-    $menu_cancel.addEventListener("click", function () {
-      $menu.style.display = "none";
+    $("nav menu [cancel]").on("click", function () {
+      $("nav menu").style.display = "none";
     });
   </script>
 </html>

@@ -190,14 +190,12 @@ const server = http.createServer((req, res) => {
 
   // Always get the body sent
   let body = "";
-  req.on('readable', function() {
-      body += req.read() || "";
+  req.on("readable", function () {
+    body += req.read() || "";
   });
-  req.on('end', function() {
-
+  req.on("end", function () {
     // Start an async function
     (async () => {
-  
       // PATH session
       if (path === "session") {
         res.statusCode = 200;
@@ -210,11 +208,14 @@ const server = http.createServer((req, res) => {
 
           // Check the body session_uuid
           if (body.session_uuid) {
-            const results = await client.query(`
-              SELECT session_id
+            const results = await client.query(
+              `
+              SELECT session_uuid, session_id
               FROM sessions
               WHERE session_uuid = $1
-            `, [body.session_uuid]);
+            `,
+              [body.session_uuid],
+            );
             if (results.rows.length > 0) {
               session_uuid = results.rows[0].session_uuid;
               session_id = results.rows[0].session_id;
@@ -224,24 +225,29 @@ const server = http.createServer((req, res) => {
           // If no valid session_uuid, create one
           if (session_uuid === "") {
             session_uuid = crypto.randomUUID();
-            const insert_session = await client.query(`
+            const insert_session = await client.query(
+              `
               INSERT INTO sessions (session_uuid)
               VALUES ($1) returning session_id;
-            `, [session_uuid]);
+            `,
+              [session_uuid],
+            );
             session_id = insert_session.rows[0].session_id;
             const user_agent = req.headers["user-agent"];
             const ip_address = req.headers["x-forwarded-for"].split(",")[0];
-            await client.query(`
+            await client.query(
+              `
               INSERT INTO browsers
                 (session_id, user_agent, ip_address)
               VALUES
                 ($1, $2, $3);
-            `, [session_id, user_agent, ip_address]);
+            `,
+              [session_id, user_agent, ip_address],
+            );
           }
 
           // Here we might perform additional actions using session_id
           // (articling, commenting, voting, etc)
-          
 
           // Return the valid session_uuid
           res.end(JSON.stringify({ session_uuid }));
@@ -253,7 +259,7 @@ const server = http.createServer((req, res) => {
         }
         return;
       }
-    
+
       // PATH for files
       res.statusCode = 200;
       let filename = "index.html";
@@ -282,7 +288,7 @@ const server = http.createServer((req, res) => {
       if (encodings[extension]) {
         encoding = encodings[extension];
       }
-    
+
       res.setHeader("Content-Type", content_type);
       fs.readFile(filename, encoding, (err, data) => {
         if (err) {
@@ -292,7 +298,6 @@ const server = http.createServer((req, res) => {
         }
         res.end(data, encoding);
       });
-
     })();
   });
 });
