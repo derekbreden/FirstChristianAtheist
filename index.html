@@ -199,26 +199,26 @@
   </body>
   <script>
     const debug = function () {
-      /*document.querySelector("debug").innerHTML = JSON.stringify([
-        ...arguments,
-      ]);*/
+      // document.querySelector("debug").innerHTML = JSON.stringify([ ...arguments ]);
     };
     window.addEventListener("error", ($error) => {
       debug($error.message);
     });
-    let session_uuid = localStorage.getItem("session_uuid");
-    if (!session_uuid) {
-      fetch("/get_uuid")
-        .then((response) => response.json())
-        .then(function (data) {
-          session_uuid = data.uuid;
-          localStorage.setItem("session_uuid", session_uuid);
-          debug("Is now set", session_uuid);
-        })
-        .catch(function (error) {
-          debug(error.message);
-        });
-    }
-    debug("Was already set", session_uuid);
+    let session_uuid = localStorage.getItem("session_uuid") || "";
+    fetch("/session", {
+      method: "POST",
+      body: JSON.stringify({
+        session_uuid,
+      }),
+    })
+      .then((response) => response.json())
+      .then(function (data) {
+        session_uuid = data.session_uuid;
+        localStorage.setItem("session_uuid", session_uuid);
+        debug("Is now set", session_uuid);
+      })
+      .catch(function (error) {
+        debug(error.message);
+      });
   </script>
 </html>

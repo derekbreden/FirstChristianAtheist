@@ -189,79 +189,106 @@ const server = http.createServer((req, res) => {
   // Path is always useful
   const path = req.url.split("/").join("").split("?")[0];
 
-  // get_uuid
-  if (path === "get_uuid") {
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "application/json");
+  // Always get the body sent
+  let body = "";
+  req.on('readable', function() {
+      body += req.read() || "";
+  });
+  req.on('end', function() {
+
+    // Start an async function
     (async () => {
-      const client = await pool.connect();
-      try {
-        const uuid = crypto.randomUUID();
-        const insert_session = await client.query(
-          `
-          INSERT INTO sessions (session_uuid)
-          VALUES ($1) returning session_id;
-        `,
-          [uuid],
-        );
-        const session_id = insert_session.rows[0].session_id;
-        const user_agent = req.headers["user-agent"];
-        const ip_address = req.headers["x-forwarded-for"];
-        await client.query(
-          `
-          INSERT INTO browsers (session_id, user_agent, ip_address)
-          VALUES ($1, $2, $3);
-        `,
-          [session_id, user_agent, ip_address],
-        );
-        res.end(JSON.stringify({ uuid }));
-      } catch (err) {
-        console.error("error executing query:", err);
-        res.end(JSON.stringify({ error: "error" }));
-      } finally {
-        client.release();
+  
+      // PATH get_uuid
+      if (path === "session") {
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        const client = await pool.connect();
+        try {
+          body = JSON.parse(body);
+          let session_uuid = "";
+
+          // Check the body session_uuid
+          if (body.session_uuid) {
+            const results = await client.query(`
+              SELECT session_uuid
+              FROM sessions
+              WHERE session_uuid = $1
+            `, [body.session_uuid]);
+            if (results.rows.length > 0) {
+              session_uuid = results.rows[0].session_uuid;
+            }
+          }
+
+          // If no valid session_uuid, create one
+          if (session_uuid === "") {
+            session_uuid = crypto.randomUUID();
+            const insert_session = await client.query(`
+              INSERT INTO sessions (session_uuid)
+              VALUES ($1) returning session_id;
+            `, [session_uuid]);
+            const session_id = insert_session.rows[0].session_id;
+            const user_agent = req.headers["user-agent"];
+            const ip_address = req.headers["x-forwarded-for"].split(",")[0];
+            await client.query(`
+              INSERT INTO browsers
+                (session_id, user_agent, ip_address)
+              VALUES
+                ($1, $2, $3);
+            `, [session_id, user_agent, ip_address]);
+          }
+
+          // Return the valid session_uuid
+          res.end(JSON.stringify({ session_uuid }));
+        } catch (err) {
+          console.error("error executing query:", err);
+          res.end(JSON.stringify({ error: "error" }));
+        } finally {
+          client.release();
+        }
+        return;
       }
+    
+      // PATH for files
+      res.statusCode = 200;
+      let filename = "index.html";
+      let content_type = "text/html; charset=utf-8";
+      let encoding = "utf-8";
+      if (resources.indexOf(path) > -1) {
+        filename = "resources/" + path;
+      }
+      const extension = filename.split(".").pop();
+      const content_types = {
+        ico: "image/x-icon",
+        png: "image/png",
+        svg: "image/svg+xml",
+        xml: "application/xml",
+        gif: "image/gif",
+        webmanifest: "application/manifest+json",
+      };
+      const encodings = {
+        ico: "binary",
+        png: "binary",
+        gif: "binary",
+      };
+      if (content_types[extension]) {
+        content_type = content_types[extension];
+      }
+      if (encodings[extension]) {
+        encoding = encodings[extension];
+      }
+    
+      res.setHeader("Content-Type", content_type);
+      fs.readFile(filename, encoding, (err, data) => {
+        if (err) {
+          console.error(err);
+          res.end("Error reading file\n");
+          return;
+        }
+        res.end(data, encoding);
+      });
+
     })();
-    return;
-  }
-
-  // Defaults to returning files
-  res.statusCode = 200;
-  let filename = "index.html";
-  let content_type = "text/html; charset=utf-8";
-  let encoding = "utf-8";
-  if (resources.indexOf(path) > -1) {
-    filename = "resources/" + path;
-  }
-  const extension = filename.split(".").pop();
-  const content_types = {
-    ico: "image/x-icon",
-    png: "image/png",
-    svg: "image/svg+xml",
-    xml: "application/xml",
-    gif: "image/gif",
-    webmanifest: "application/manifest+json",
-  };
-  const encodings = {
-    ico: "binary",
-    png: "binary",
-    gif: "binary",
-  };
-  if (content_types[extension]) {
-    content_type = content_types[extension];
-  }
-  if (encodings[extension]) {
-    encoding = encodings[extension];
-  }
-
-  res.setHeader("Content-Type", content_type);
-  fs.readFile(filename, encoding, (err, data) => {
-    if (err) {
-      console.error(err);
-      res.end("Error reading file\n");
-      return;
-    }
-    res.end(data, encoding);
   });
 });
 
