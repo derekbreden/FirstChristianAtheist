@@ -1,6 +1,9 @@
 <!doctype html>
 <html>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+  />
   <link
     rel="apple-touch-icon"
     sizes="180x180"
@@ -352,7 +355,7 @@
     // Session start
     let session_uuid = localStorage.getItem("session_uuid") || "";
     const startSession = () => {
-      debug("starting...")
+      debug("starting...");
       fetch("/session", {
         method: "POST",
         body: JSON.stringify({
@@ -408,6 +411,16 @@
     });
     $("sign-in [type=password]").on("focus", () => {
       signInError();
+    });
+    $("sign-in [type=email]").on("keyup", (ev) => {
+      if (ev.key === "Enter") {
+        $("sign-in button[submit]").click();
+      }
+    });
+    $("sign-in [type=password]").on("keyup", (ev) => {
+      if (ev.key === "Enter") {
+        $("sign-in button[submit]").click();
+      }
     });
     $("sign-in button[submit]").on("click", () => {
       signInError();
