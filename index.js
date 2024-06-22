@@ -267,16 +267,17 @@ const server = http.createServer((req, res) => {
                 );
               }
             } else {
+              const admin = process.env["ROOT_EMAIL"] === body.email;
               const password_hash = await bcrypt.hash(body.password, 12);
               const user_inserted = await client.query(
                 `
                 INSERT INTO users
-                  (email, password_hash, display_name, display_name_calculated)
+                  (email, password_hash, display_name, display_name_calculated, admin)
                 VALUES
-                  (lower($1), $2, $3, $4)
+                  (lower($1), $2, $3, $4, $5)
                 RETURNING user_id
               `,
-                [body.email, password_hash, "", ""],
+                [body.email, password_hash, "", "", admin],
               );
               if (user_inserted.rows.length > 0) {
                 await client.query(
