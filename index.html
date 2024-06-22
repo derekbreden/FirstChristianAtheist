@@ -32,31 +32,31 @@
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
     body {
+      position: relative;
       font-size: 14px;
       display: flex;
       justify-content: center;
-      background: #bbc8d7;
+      background-image: repeating-linear-gradient(
+        90deg,
+        #bbc8d7 0%,
+        #bbc8d7 calc((100% - 480px) / 2),
+        #fff calc((100% - 480px) / 2),
+        #fff calc((100% - 480px) / 2 + 480px),
+        #bbc8d7 calc((100% - 480px) / 2 + 480px),
+        #bbc8d7 100%
+      );
       color: #26323e;
-    }
-    center-background {
-      position: fixed;
-      top: 0px;
-      bottom: 0px;
-      left: 50%;
-      transform: translateX(-50%);
-      max-width: 480px;
-      width: 100%;
-      background: #fff;
-      z-index: -1;
     }
     main-content {
       display: flex;
       flex-direction: column;
       padding: 44px 40px 20px 40px;
       max-width: 480px;
-      background: #fff;
     }
     @media (max-width: 480px) {
+      body {
+        background: #fff;
+      }
       main-content {
         padding: 44px 20px 20px 20px;
       }
@@ -66,18 +66,10 @@
     a:active {
       color: #26323e;
     }
-    h1 {
-      font-size: 18px;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      color: #26323e;
-    }
     h2 {
       margin-top: 20px;
       font-size: 18px;
       font-weight: bold;
-      color: #26323e;
     }
     p {
       margin-top: 10px;
@@ -98,7 +90,7 @@
     debug {
       white-space: pre;
     }
-    nav {
+    header {
       position: fixed;
       top: 0;
       left: 0;
@@ -109,15 +101,19 @@
       align-items: center;
       box-shadow: 0px 0px 5px #26323e;
     }
-    nav h1 {
+    header h1 {
+      font-size: 18px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
       margin: 0 20px;
     }
-    nav h1 img {
+    header h1 img {
       height: 24px;
       width: 24px;
       margin-right: 5px;
     }
-    nav hamburger {
+    header hamburger {
       position: absolute;
       right: 0;
       top: 0;
@@ -128,32 +124,59 @@
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
-      display: none;
     }
-    nav hamburger line {
+    header hamburger line {
       border: 2px solid #27323e;
       border-radius: 2px;
       width: 100%;
     }
-    nav menu {
+    menu {
       display: none;
-      position: absolute;
+      flex-direction: column;
+      position: fixed;
       top: 0;
       right: 0;
+      z-index: 3;
       background: #fff;
       box-shadow: 0px 0px 5px #26323e;
       border-radius: 0 0 0 2px;
     }
-    nav menu sign-in {
+    menu signed-in,
+    menu sign-in {
       display: flex;
       flex-direction: column;
-      padding: 20px;
+      padding: 20px 20px 10px 20px;
+      position: relative;
+      width: 280px;
     }
-    nav menu sign-in > * {
+    menu signed-in {
+      display: none;
+    }
+    menu signed-in > *,
+    menu sign-in > * {
       margin-bottom: 10px;
     }
-    nav menu sign-in > *:last-child {
-      margin-bottom: 0;
+    menu links {
+      display: flex;
+      flex-direction: column;
+    }
+    menu links a {
+      text-decoration: none;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      border-bottom: 1px solid #999;
+    }
+    modal-bg {
+      display: none;
+      background: #00000077;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2;
     }
     input {
       width: 240px;
@@ -175,12 +198,50 @@
       color: #26323e;
       border: 1px solid #999;
     }
+    info,
+    error {
+      padding: 10px 10px 10px 36px;
+      position: relative;
+      background: #ffeeee;
+      border: 1px solid #b66;
+      color: #b66;
+      border-radius: 2px;
+      max-width: 100%;
+      display: none;
+    }
+    info::before,
+    error::before {
+      content: "!";
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      background: #b66;
+      color: #ffeeee;
+      font-size: 14px;
+      font-weight: bold;
+      height: 17px;
+      width: 17px;
+    }
+    info {
+      border-color: #48c;
+      background: #e0f0ff;
+      color: #48c;
+    }
+    info::before {
+      content: "i";
+      background: #48c;
+      color: #e0f0ff;
+    }
   </style>
   <head>
     <title>First Christian Atheist</title>
   </head>
   <body>
-    <nav>
+    <header>
       <h1>
         <img src="/logo.png" alt="A logo consisting of a dove and a heart" />
         First Christian Atheist
@@ -190,25 +251,32 @@
         <line></line>
         <line></line>
       </hamburger>
-      <menu>
-        <sign-in>
-          <input placeholder="Email" />
-          <input placeholder="Password" type="password" />
-          <button>Sign Up / Sign In</button>
-          <button alt cancel>Cancel</button>
-        </sign-in>
-      </menu>
-    </nav>
-    <center-background></center-background>
+    </header>
+    <menu>
+      <links>
+        <a href="/">Home</a>
+        <a href="/topics">Topics</a>
+      </links>
+      <sign-in>
+        <input placeholder="Email" type="email" />
+        <input placeholder="Password" type="password" />
+        <button submit>Sign Up / Sign In</button>
+        <button alt cancel>Cancel</button>
+        <error></error>
+        <info></info>
+      </sign-in>
+      <signed-in>
+        <button sign-out>Log Out</button>
+      </signed-in>
+    </menu>
     <main-content>
       <debug></debug>
-      <h2>What can be done to demonstrate unconditional love for all?</h2>
 
+      <h2>What can be done to demonstrate unconditional love for all?</h2>
       <p>
         Exploring answers to this question together without judgement or
         authority is the only goal here.
       </p>
-
       <p>
         <img
           src="love.gif"
@@ -217,7 +285,6 @@
       </p>
 
       <h2>The Bible</h2>
-
       <p quote>
         Everything we know about God's Word is summed up in a single sentence:
         Love others as you love yourself.<br />
@@ -226,7 +293,6 @@
       </p>
 
       <h2>Bishop John Shelby Spong</h2>
-
       <p quote>
         The church is still caught in pre-Darwinian pre-Copernican categories.
         The idea that we were born in sin is a very strange idea when you’re
@@ -246,20 +312,19 @@
       </p>
 
       <h2>Acceptance</h2>
-
       <p>
         Christianity as it is today does not accept unrepentant atheists, with
         the exception of Unitarian Universalism, which prioritizes worship and
         reverence. This leaves little room for the type of pragmatic and deep
         discussion that can be had here.
       </p>
-
       <p>
         Perhaps here we can have a sanctuary, for those few of us who have
         something we wish to salvage from the wreckage that is Christianity's
         encounter with the modern age, some value that we seek to carry forward
         without the theistic baggage.
       </p>
+
       <p>
         <b>
           I hope to add more interaction on this site, in the mean time you may
@@ -268,6 +333,7 @@
         </b>
       </p>
     </main-content>
+    <modal-bg></modal-bg>
   </body>
   <script>
     // Debug and library setup
@@ -285,28 +351,107 @@
 
     // Session start
     let session_uuid = localStorage.getItem("session_uuid") || "";
-    fetch("/session", {
-      method: "POST",
-      body: JSON.stringify({
-        session_uuid,
-      }),
-    })
-      .then((response) => response.json())
-      .then(function (data) {
-        session_uuid = data.session_uuid;
-        localStorage.setItem("session_uuid", session_uuid);
-        debug("Is now set", session_uuid);
+    const startSession = () => {
+      debug("starting...")
+      fetch("/session", {
+        method: "POST",
+        body: JSON.stringify({
+          session_uuid,
+        }),
       })
-      .catch(function (error) {
-        debug(error.message);
-      });
+        .then((response) => response.json())
+        .then(function (data) {
+          session_uuid = data.session_uuid;
+          localStorage.setItem("session_uuid", session_uuid);
+          if (data.email) {
+            signInSuccess(data.email);
+          }
+          debug("Is now set", data);
+        })
+        .catch(function (error) {
+          debug(error.message);
+        });
+    };
+    startSession();
 
     // Menu
-    $("nav hamburger").on("click", function () {
-      $("nav menu").style.display = "flex";
+    $("header hamburger").on("click", () => {
+      $("menu").style.display = "flex";
+      $("modal-bg").style.display = "flex";
     });
-    $("nav menu [cancel]").on("click", function () {
-      $("nav menu").style.display = "none";
+    const menuCancel = () => {
+      $("menu").style.display = "none";
+      $("modal-bg").style.display = "none";
+      $("sign-in error").style.display = "none";
+      $("sign-in [type=email]").value = "";
+      $("sign-in [type=password]").value = "";
+    };
+    $("menu [cancel]").on("click", menuCancel);
+    $("modal-bg").on("click", menuCancel);
+
+    // Sign Up / Sign In
+    signInError = (error) => {
+      if (error) {
+        $("sign-in error").style.display = "flex";
+        $("sign-in error").innerHTML = error;
+      } else {
+        $("sign-in error").style.display = "none";
+      }
+    };
+    signInSuccess = (email) => {
+      localStorage.setItem("email", email);
+      $("sign-in").style.display = "none";
+      $("signed-in").style.display = "flex";
+    };
+    $("sign-in [type=email]").on("focus", () => {
+      signInError();
+    });
+    $("sign-in [type=password]").on("focus", () => {
+      signInError();
+    });
+    $("sign-in button[submit]").on("click", () => {
+      signInError();
+      const email = $("sign-in [type=email]").value;
+      if (!$("sign-in [type=email]").checkValidity() || !email) {
+        signInError("Please enter a valid email address");
+        return;
+      }
+      const password = $("sign-in [type=password]").value;
+      if (!password) {
+        signInError("Please enter a password");
+        return;
+      }
+      $("sign-in info").innerHTML = "Validating...";
+      $("sign-in info").style.display = "flex";
+      fetch("/session", {
+        method: "POST",
+        body: JSON.stringify({
+          session_uuid,
+          email,
+          password,
+        }),
+      })
+        .then((response) => response.json())
+        .then(function (data) {
+          $("sign-in info").style.display = "none";
+          if (data.error || !data.success) {
+            signInError(data.error || "Server error");
+            return;
+          }
+          signInSuccess(email);
+          menuCancel();
+        })
+        .catch(function (error) {
+          $("sign-in info").style.display = "none";
+          signInError("Network error");
+          debug(error.message);
+        });
+    });
+    $("signed-in button[sign-out]").on("click", () => {
+      session_uuid = "";
+      startSession();
+      $("sign-in").style.display = "flex";
+      $("signed-in").style.display = "none";
     });
   </script>
 </html>
