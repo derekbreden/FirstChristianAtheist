@@ -473,8 +473,8 @@ If you did not request this, please ignore this email.`,
             // Get articles for path
             const articles = [];
             let path_to_use = "/";
-            if (pages["/" + body.path]) {
-              path_to_use = "/" + body.path;
+            if (pages[body.path]) {
+              path_to_use = body.path;
             }
             const page = pages[path_to_use];
             const add_new = !page.admin || admin;

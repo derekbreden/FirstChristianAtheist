@@ -333,7 +333,7 @@
       </p>
       <p>
         <img
-          src="love.gif"
+          src="/love.gif"
           alt="A line drawing depicts Jesus with four chat bubbles: a heart around the Earth, a storm cloud, a person kneeling, and a trio of a fire and cross and clouds. Three of the chat bubbles and Jesus are animated out of the frame, only the heart around the earth remains, and is zoomed in on."
         />
       </p>
@@ -418,25 +418,42 @@
   <script>
     // Debug and library setup
     const $ = (selector) => {
-      const $this = document.querySelector(selector);
-      $this.on = $this.addEventListener.bind($this);
-      return $this;
+      const $all = document.querySelectorAll(selector);
+      $all.forEach(function (element) {
+        element.on = element.addEventListener.bind(element);
+      });
+      if ($all.length === 1) {
+        return $all[0];
+      } else {
+        return $all;
+      }
     };
     const debug = function () {
-      // $("debug").innerHTML = JSON.stringify([...arguments], null, 2);
+      let to_render = [...arguments];
+      if (to_render[0] && to_render[0].message) {
+        to_render = {
+          message: to_render[0].message,
+          // filename: to_render[0].filename,
+          lineno: to_render[0].lineno,
+          colno: to_render[0].colno
+        }
+      } else if (to_render.length === 1) {
+        to_render = to_render[0];
+      }
+      $("debug").innerHTML = JSON.stringify(to_render, null, 2);
     };
     window.addEventListener("error", ($error) => {
-      debug($error.message);
+      debug($error);
     });
 
     // Read URL
-    let path = "";
+    let path = "/";
     const paths = window.location.pathname.split("/").filter((x) => x);
     let reset_token_uuid = "";
     if (paths[0] === "reset") {
       reset_token_uuid = paths[1] || "";
     } else if (paths[0]) {
-      path = paths[0];
+      path = "/" + paths[0];
     }
 
     // Session start
@@ -472,7 +489,7 @@
           }
         })
         .catch(function (error) {
-          debug(error.message);
+          debug(error);
         });
     };
     startSession();
@@ -482,9 +499,23 @@
       
     };
     const renderPage = (page_path, articles, add_new) => {
-      history.pushState({}, "", page_path);
-      debug(articles, add_new)
+      if (path !== page_path) {
+        path = page_path;
+        history.replaceState({}, "", page_path);
+      }
+      // debug("Rendered: " + page_path)
     };
+    window.addEventListener("popstate", () => {
+      const new_paths = window.location.pathname.split("/").filter((x) => x);
+      let new_path = "/";
+      if (new_paths[0]) {
+        new_path = "/" + new_paths[0];
+      }
+      if (path !== new_path) {
+        path = new_path;
+        startSession();
+      }
+    });
 
     // Menu
     $("header hamburger").on("click", () => {
@@ -500,6 +531,18 @@
     };
     $("menu [cancel]").on("click", menuCancel);
     $("modal-bg").on("click", menuCancel);
+    $("menu links a").forEach(($el) => {
+      $el.on("click", ($event) => {
+        $event.preventDefault();
+        menuCancel();
+        const new_path = $el.getAttribute("href");
+        if (path !== new_path) {
+          path = new_path;
+          history.pushState({}, "", path);
+        }
+        startSession();
+      });
+    });
 
     // Generic modal info
     const modalInfoCancel = () => {
@@ -670,6 +713,7 @@
       $("modal-bg").style.display = "none";
       $("modal[password-reset] error").style.display = "none";
       $("modal[password-reset] [type=password]").value = "";
+      reset_token_uuid = "";
     };
     const passwordResetError = (error) => {
       if (error) {
@@ -715,7 +759,6 @@
           }
           passwordResetCancel();
           modalInfo("Your password has been set.");
-          history.pushState({}, "", "/");
         })
         .catch(function (error) {
           $("modal[password-reset] info").style.display = "none";
