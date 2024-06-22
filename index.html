@@ -145,7 +145,8 @@
       border-radius: 0 0 0 2px;
     }
     menu signed-in,
-    menu sign-in {
+    menu sign-in,
+    modal {
       display: flex;
       flex-direction: column;
       padding: 20px 20px 10px 20px;
@@ -156,7 +157,8 @@
       display: none;
     }
     menu signed-in > *,
-    menu sign-in > * {
+    menu sign-in > *,
+    modal > * {
       margin-bottom: 10px;
     }
     menu links {
@@ -182,12 +184,14 @@
       z-index: 2;
     }
     input {
+      font-size: 14px;
       width: 240px;
       border-radius: 2px;
       border: 1px solid #26323e;
       padding: 10px;
     }
     button {
+      font-size: 14px;
       -webkit-appearance: none;
       border-radius: 2px;
       border: 0;
@@ -211,6 +215,10 @@
       border-radius: 2px;
       max-width: 100%;
       display: none;
+    }
+    info[show],
+    error[show] {
+      display: flex;
     }
     info::before,
     error::before {
@@ -239,6 +247,42 @@
       background: #48c;
       color: #e0f0ff;
     }
+    password-wrapper {
+      display: flex;
+      align-items: center;
+    }
+    password-wrapper input {
+      width: 218px;
+    }
+    password-help {
+      display: flex;
+      align-items: center;
+      padding: 10px 0 9px 5px;
+    }
+    password-help::before {
+      content: "?";
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      background: #48c;
+      color: #e0f0ff;
+      font-weight: bold;
+      height: 17px;
+      width: 17px;
+    }
+    modal {
+      position: fixed;
+      display: none;
+      flex-direction: column;
+      z-index: 3;
+      top: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      border-radius: 2px;
+      box-shadow: 0px 0px 5px #26323e;
+    }
   </style>
   <head>
     <title>First Christian Atheist</title>
@@ -261,8 +305,15 @@
         <a href="/topics">Topics</a>
       </links>
       <sign-in>
-        <input placeholder="Email" type="email" />
-        <input placeholder="Password" type="password" />
+        <input placeholder="Email" type="email" autocomplete="email" />
+        <password-wrapper>
+          <input
+            placeholder="Password"
+            type="password"
+            autocomplete="current-password"
+          />
+          <password-help></password-help>
+        </password-wrapper>
         <button submit>Sign Up / Sign In</button>
         <button alt cancel>Cancel</button>
         <error></error>
@@ -337,6 +388,32 @@
       </p>
     </main-content>
     <modal-bg></modal-bg>
+    <modal password-help>
+      <input placeholder="Email" type="email" autocomplete="email" />
+      <button submit>Reset Password</button>
+      <button alt cancel>Cancel</button>
+      <error></error>
+      <info></info>
+    </modal>
+    <modal password-reset>
+      <input
+        placeholder="New Password"
+        type="password"
+        autocomplete="new-password"
+      />
+      <button submit>Set Password</button>
+      <button alt cancel>Cancel</button>
+      <error></error>
+      <info></info>
+    </modal>
+    <modal info>
+      <info show></info>
+      <button close>Okay</button>
+    </modal>
+    <modal error>
+      <error show></error>
+      <button close>Okay</button>
+    </modal>
   </body>
   <script>
     // Debug and library setup
@@ -352,15 +429,28 @@
       debug($error.message);
     });
 
+    // Read URL
+    let path = "";
+    const paths = window.location.pathname.split("/").filter((x) => x);
+    let reset_token_uuid = "";
+    if (paths[0] === "reset") {
+      reset_token_uuid = paths[1] || "";
+    } else if (paths[0]) {
+      path = paths[0];
+    }
+
     // Session start
     let session_uuid = localStorage.getItem("session_uuid") || "";
     const startSession = () => {
-      debug("starting...");
+      const postBody = {
+        session_uuid,
+      };
+      if (reset_token_uuid) {
+        postBody.reset_token_uuid = reset_token_uuid;
+      }
       fetch("/session", {
         method: "POST",
-        body: JSON.stringify({
-          session_uuid,
-        }),
+        body: JSON.stringify(postBody),
       })
         .then((response) => response.json())
         .then(function (data) {
@@ -368,8 +458,14 @@
           localStorage.setItem("session_uuid", session_uuid);
           if (data.email) {
             signInSuccess(data.email);
+            if (reset_token_uuid) {
+              $("modal[password-reset]").style.display = "flex";
+              $("modal-bg").style.display = "flex";
+            }
           }
-          debug("Is now set", data);
+          if (data.error) {
+            modalError(data.error);
+          }
         })
         .catch(function (error) {
           debug(error.message);
@@ -392,8 +488,34 @@
     $("menu [cancel]").on("click", menuCancel);
     $("modal-bg").on("click", menuCancel);
 
+    // Generic modal info
+    const modalInfoCancel = () => {
+      $("modal[info]").style.display = "none";
+      $("modal-bg").style.display = "none";
+    };
+    $("modal[info] [close]").on("click", modalInfoCancel);
+    $("modal-bg").on("click", modalInfoCancel);
+    const modalInfo = (message) => {
+      $("modal[info] info").innerHTML = message;
+      $("modal[info]").style.display = "flex";
+      $("modal-bg").style.display = "flex";
+    };
+
+    // Generic modal error
+    const modalErrorCancel = () => {
+      $("modal[error]").style.display = "none";
+      $("modal-bg").style.display = "none";
+    };
+    $("modal[error] [close]").on("click", modalErrorCancel);
+    $("modal-bg").on("click", modalErrorCancel);
+    const modalError = (message) => {
+      $("modal[error] error").innerHTML = message;
+      $("modal[error]").style.display = "flex";
+      $("modal-bg").style.display = "flex";
+    };
+
     // Sign Up / Sign In
-    signInError = (error) => {
+    const signInError = (error) => {
       if (error) {
         $("sign-in error").style.display = "flex";
         $("sign-in error").innerHTML = error;
@@ -401,7 +523,7 @@
         $("sign-in error").style.display = "none";
       }
     };
-    signInSuccess = (email) => {
+    const signInSuccess = (email) => {
       localStorage.setItem("email", email);
       $("sign-in").style.display = "none";
       $("signed-in").style.display = "flex";
@@ -457,14 +579,125 @@
         .catch(function (error) {
           $("sign-in info").style.display = "none";
           signInError("Network error");
-          debug(error.message);
         });
     });
     $("signed-in button[sign-out]").on("click", () => {
       session_uuid = "";
+      reset_token_uuid = "";
       startSession();
       $("sign-in").style.display = "flex";
       $("signed-in").style.display = "none";
+    });
+
+    // Forgot Password
+    const passwordHelpCancel = () => {
+      $("modal[password-help]").style.display = "none";
+      $("modal-bg").style.display = "none";
+      $("modal[password-help] error").style.display = "none";
+      $("modal[password-help] [type=email]").value = "";
+    };
+    const passwordHelpError = (error) => {
+      if (error) {
+        $("modal[password-help] error").style.display = "flex";
+        $("modal[password-help] error").innerHTML = error;
+      } else {
+        $("modal[password-help] error").style.display = "none";
+      }
+    };
+    $("modal[password-help] [type=email]").on("focus", () => {
+      passwordHelpError();
+    });
+    $("password-help").on("click", () => {
+      menuCancel();
+      $("modal-bg").style.display = "flex";
+      $("modal[password-help]").style.display = "flex";
+    });
+    $("modal-bg").on("click", passwordHelpCancel);
+    $("modal[password-help] [cancel]").on("click", passwordHelpCancel);
+    $("modal[password-help] button[submit]").on("click", () => {
+      passwordHelpError();
+      const email = $("modal[password-help] [type=email]").value;
+      if (!$("modal[password-help] [type=email]").checkValidity() || !email) {
+        passwordHelpError("Please enter a valid email address");
+        return;
+      }
+      $("modal[password-help] info").innerHTML = "Validating...";
+      $("modal[password-help] info").style.display = "flex";
+      fetch("/session", {
+        method: "POST",
+        body: JSON.stringify({
+          session_uuid,
+          email,
+        }),
+      })
+        .then((response) => response.json())
+        .then(function (data) {
+          $("modal[password-help] info").style.display = "none";
+          if (data.error || !data.success) {
+            passwordHelpError(data.error || "Server error");
+            return;
+          }
+          passwordHelpCancel();
+          modalInfo("An email was sent with password reset instructions.");
+        })
+        .catch(function (error) {
+          $("modal[password-help] info").style.display = "none";
+          passwordHelpError("Network error");
+        });
+    });
+
+    // Resetting Password
+    const passwordResetCancel = () => {
+      $("modal[password-reset]").style.display = "none";
+      $("modal-bg").style.display = "none";
+      $("modal[password-reset] error").style.display = "none";
+      $("modal[password-reset] [type=password]").value = "";
+    };
+    const passwordResetError = (error) => {
+      if (error) {
+        $("modal[password-reset] error").style.display = "flex";
+        $("modal[password-reset] error").innerHTML = error;
+      } else {
+        $("modal[password-reset] error").style.display = "none";
+      }
+    };
+    $("modal[password-reset] [type=password]").on("focus", () => {
+      passwordResetError();
+    });
+    $("modal-bg").on("click", passwordResetCancel);
+    $("modal[password-reset] [cancel]").on("click", passwordResetCancel);
+    $("modal[password-reset] button[submit]").on("click", () => {
+      passwordResetError();
+      const password = $("modal[password-reset] [type=password]").value;
+      if (!password) {
+        passwordResetError("Please enter a new password");
+        return;
+      }
+      $("modal[password-reset] info").innerHTML = "Validating...";
+      $("modal[password-reset] info").style.display = "flex";
+      fetch("/session", {
+        method: "POST",
+        body: JSON.stringify({
+          session_uuid,
+          reset_token_uuid,
+          password,
+        }),
+      })
+        .then((response) => response.json())
+        .then(function (data) {
+          $("modal[password-reset] info").style.display = "none";
+          if (data.error || !data.success) {
+            passwordResetError(data.error || "Server error");
+            return;
+          }
+          passwordResetCancel();
+          modalInfo("Your password has been set.");
+          history.pushState({}, "", "/");
+        })
+        .catch(function (error) {
+          $("modal[password-reset] info").style.display = "none";
+          passwordResetError("Network error");
+        });
     });
   </script>
 </html>

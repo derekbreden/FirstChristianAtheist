@@ -5,6 +5,7 @@ const OpenAI = require("openai");
 const { Pool } = require("pg");
 const crypto = require("node:crypto");
 const bcrypt = require("bcrypt");
+const { text } = require("stream/consumers");
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -163,22 +164,24 @@ const openai = new OpenAI({
   console.error(error);
 });*/
 
-/*transporter.sendMail(
-  {
-    from: '"Derek Bredensteiner" <derek@firstchristianatheist.org>',
-    to: "derekbreden@gmail.com",
-    subject: "Another test of SES", // Subject line
-    text: "I'm not sure what will happen here, just testing ... ",
-    html: "<p>I'm not sure what will happen here, just testing ... </p>",
-  },
-  (error, info) => {
-    if (error) {
-      console.error(error);
-    } else {
-      console.log("Email sent: " + info.response);
-    }
-  },
-);*/
+const sendEmail = (to, subject, text, html) => {
+  transporter.sendMail(
+    {
+      from: '"Derek Bredensteiner" <derek@firstchristianatheist.org>',
+      to,
+      subject,
+      text,
+      html,
+    },
+    (error, info) => {
+      if (error) {
+        console.error(error);
+      } else {
+        console.log("Email sent", to, subject, info.response);
+      }
+    },
+  );
+};
 
 let resources = [];
 fs.readdir("resources", (err, files) => {
@@ -279,29 +282,112 @@ const server = http.createServer((req, res) => {
               `,
                 [body.email, password_hash, "", "", admin],
               );
-              if (user_inserted.rows.length > 0) {
-                await client.query(
-                  `
-                  INSERT INTO user_sessions
-                    (user_id, session_id)
-                  VALUES
-                    ($1, $2)
-                `,
-                  [user_inserted.rows[0].user_id, session_id],
-                );
-                res.end(
-                  JSON.stringify({
-                    success: true,
-                  }),
-                );
-              } else {
-                res.end(
-                  JSON.stringify({
-                    error: "Unable to create user",
-                  }),
-                );
-              }
+              await client.query(
+                `
+                INSERT INTO user_sessions
+                  (user_id, session_id)
+                VALUES
+                  ($1, $2)
+              `,
+                [user_inserted.rows[0].user_id, session_id],
+              );
+              res.end(
+                JSON.stringify({
+                  success: true,
+                }),
+              );
             }
+
+            // Request Password Reset
+          } else if (body.email && session_id) {
+            const user_found = await client.query(
+              `
+              SELECT user_id
+              FROM users
+              WHERE lower(email) = lower($1)
+            `,
+              [body.email],
+            );
+            if (user_found.rows.length > 0) {
+              const token_uuid = crypto.randomUUID();
+              await client.query(
+                `
+                INSERT INTO reset_tokens
+                  (user_id, token_uuid)
+                VALUES
+                  ($1, $2)
+              `,
+                [user_found.rows[0].user_id, token_uuid],
+              );
+              const token_url = `https://firstchristianatheist.org/reset/${token_uuid}`;
+              sendEmail(
+                body.email,
+                "Reset your password on FirstChristianAtheist.org",
+                `A password reset request was made for your email on FirstChristianAtheist.org.
+
+To reset your password, please open the link below:
+${token_url}
+
+This link will expire after 30 minutes.
+
+If you did not request this, please ignore this email.`,
+                `
+<p>A password reset request was made for your email on FirstChristianAtheist.org.</p>
+<p>To reset your password, please click the link below:</p>
+<p><a href="${token_url}">${token_url}</a></p>
+<p>This link will expire after 30 minutes.</p>
+<p>If you did not request this, please ignore this email.</p>
+                `,
+              );
+              res.end(
+                JSON.stringify({
+                  success: true,
+                }),
+              );
+            } else {
+              res.end(
+                JSON.stringify({
+                  success: true,
+                }),
+              );
+            }
+
+            // Resetting Password with token
+          } else if (body.password && body.reset_token_uuid && session_id) {
+            const token_found = await client.query(
+              `
+              SELECT reset_tokens.user_id
+              FROM reset_tokens
+              WHERE reset_tokens.token_uuid = $1
+            `,
+              [body.reset_token_uuid],
+            );
+            if (token_found.rows.length > 0) {
+              const user_id = token_found.rows[0].user_id;
+              const password_hash = await bcrypt.hash(body.password, 12);
+              await client.query(
+                `
+                UPDATE users
+                  SET password_hash = $1
+                WHERE user_id = $2
+              `,
+                [password_hash, user_id],
+              );
+              res.end(
+                JSON.stringify({
+                  success: true,
+                }),
+              );
+            } else {
+              res.end(
+                JSON.stringify({
+                  session_uuid,
+                  error: "Reset link expired",
+                })
+              );
+            }
+
+            // Default session response
           } else {
             // If no valid session_uuid, create one
             if (session_uuid === "") {
@@ -327,12 +413,54 @@ const server = http.createServer((req, res) => {
               );
             }
 
-            // Return the valid session_uuid
-            res.end(JSON.stringify({ session_uuid, email }));
+            // Using password reset
+            if (body.reset_token_uuid) {
+              const user_found = await client.query(
+                `
+                SELECT reset_tokens.user_id, users.email, user_sessions.session_id
+                FROM reset_tokens
+                INNER JOIN users ON reset_tokens.user_id = users.user_id
+                LEFT JOIN sessions ON sessions.session_uuid = $1
+                LEFT JOIN user_sessions ON user_sessions.user_id = users.user_id AND user_sessions.session_id = sessions.session_id
+                WHERE reset_tokens.token_uuid = $2
+              `,
+                [session_uuid, body.reset_token_uuid],
+              );
+
+              if (user_found.rows.length > 0) {
+                if (!user_found.rows[0].session_id) {
+                  await client.query(
+                    `
+                    INSERT INTO user_sessions
+                      (user_id, session_id)
+                    VALUES
+                      ($1, $2)
+                  `,
+                    [user_found.rows[0].user_id, session_id],
+                  );
+                }
+                res.end(
+                  JSON.stringify({
+                    session_uuid,
+                    email: user_found.rows[0].email,
+                  }),
+                );
+              } else {
+                res.end(
+                  JSON.stringify({
+                    session_uuid,
+                    error: "Reset link expired",
+                  }),
+                );
+              }
+            } else {
+              // Return the valid session_uuid
+              res.end(JSON.stringify({ session_uuid, email }));
+            }
           }
         } catch (err) {
           console.error("error executing query:", err);
-          res.end(JSON.stringify({ error: "error" }));
+          res.end(JSON.stringify({ error: "Database error" }));
         } finally {
           client.release();
         }
