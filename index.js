@@ -229,7 +229,7 @@ const server = http.createServer((req, res) => {
 
           // Here we might perform additional actions using session_id
           // (sign up, articling, commenting, voting, etc)
-          if (body.email && body.password) {
+          if (body.email && body.password && session_id) {
             const user_found = await client.query(
               `
               SELECT password_hash, user_id
