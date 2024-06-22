@@ -607,6 +607,11 @@
     $("modal[password-help] [type=email]").on("focus", () => {
       passwordHelpError();
     });
+    $("modal[password-help] [type=email]").on("keyup", (ev) => {
+      if (ev.key === "Enter") {
+        $("modal[password-help] button[submit]").click();
+      }
+    });
     $("password-help").on("click", () => {
       menuCancel();
       $("modal-bg").style.display = "flex";
@@ -663,6 +668,11 @@
     };
     $("modal[password-reset] [type=password]").on("focus", () => {
       passwordResetError();
+    });
+    $("modal[password-reset] [type=password]").on("keyup", (ev) => {
+      if (ev.key === "Enter") {
+        $("modal[password-reset] button[submit]").click();
+      }
     });
     $("modal-bg").on("click", passwordResetCancel);
     $("modal[password-reset] [cancel]").on("click", passwordResetCancel);
