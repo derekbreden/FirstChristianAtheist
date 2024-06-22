@@ -7,6 +7,24 @@ const crypto = require("node:crypto");
 const bcrypt = require("bcrypt");
 const { text } = require("stream/consumers");
 
+const pages = {
+  "/": {
+    title: "Home",
+    body: "This is the home page of FirstChristianAtheist.org",
+    admin_only: true,
+  },
+  "/topics": {
+    title: "Topics",
+    body: `A list of topics related to answering the question:
+
+"What can be done to demonstrate unconditional love for all?"
+
+And exploring answers to that question together without judgement or authority or theistic baggage.`,
+    admin_only: false,
+  },
+};
+let root_user_id = null;
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
@@ -100,6 +118,43 @@ CREATE TABLE IF NOT EXISTS votes (
   create_date TIMESTAMP NOT NULL DEFAULT NOW()
 );
     `);
+    const found_root_user = await client.query(`
+      SELECT user_id FROM users
+      WHERE
+        admin = true;
+    `);
+    if (found_root_user.rows.length === 0) {
+      root_user_id = found_root_user.rows[0].user_id;
+    }
+    if (root_user_id) {
+      const page_paths = Object.keys(pages);
+      for (const page_path of page_paths) {
+        const page = pages[page_path];
+        const found_page = await client.query(
+          `
+          SELECT article_id
+          FROM articles
+          WHERE title = $1 AND user_id = $2 AND admin = true;
+        `,
+          [page.title, root_user_id],
+        );
+        if (found_page.rows.length === 0) {
+          page.article_id = found_page.rows[0].article_id;
+        } else {
+          const new_page = await client.query(
+            `
+            INSERT INTO articles
+              (title, body, user_id, parent_article_id)
+            VALUES
+              ($1, $2, $3, 0)
+            RETURNING article_id;
+          `,
+            [page.title, page.body, root_user_id],
+          );
+          page.article_id = new_page.rows[0].article_id;
+        }
+      }
+    }
     /*const results = await client.query(`
       SELECT user_agent, ip_address, create_date
       FROM browsers
@@ -209,13 +264,14 @@ const server = http.createServer((req, res) => {
           body = JSON.parse(body);
           let session_uuid = "";
           let session_id = "";
+          let admin = false;
           let email = "";
 
           // Check the body session_uuid
           if (body.session_uuid) {
             const results = await client.query(
               `
-              SELECT sessions.session_uuid, sessions.session_id, users.email
+              SELECT sessions.session_uuid, sessions.session_id, users.email, users.admin
               FROM sessions
               LEFT JOIN user_sessions ON sessions.session_id = user_sessions.session_id
               LEFT JOIN users ON user_sessions.user_id = users.user_id
@@ -226,7 +282,8 @@ const server = http.createServer((req, res) => {
             if (results.rows.length > 0) {
               session_uuid = results.rows[0].session_uuid;
               session_id = results.rows[0].session_id;
-              email = results.rows[0].email;
+              email = results.rows[0].email.trim();
+              admin = results.rows[0].admin || false;
             }
           }
 
@@ -383,7 +440,7 @@ If you did not request this, please ignore this email.`,
                 JSON.stringify({
                   session_uuid,
                   error: "Reset link expired",
-                })
+                }),
               );
             }
 
@@ -411,6 +468,24 @@ If you did not request this, please ignore this email.`,
               `,
                 [session_id, user_agent, ip_address],
               );
+            }
+
+            // Get articles for path
+            const articles = [];
+            let path_to_use = "/";
+            if (pages["/" + body.path]) {
+              path_to_use = "/" + body.path;
+            }
+            const page = pages[path_to_use];
+            const add_new = !page.admin || admin;
+            if (page.article_id) {
+              const article_results = await client.query(`
+                SELECT article_id, title, body
+                FROM articles
+                WHERE parent_article_id = $1
+                ORDER BY create_date ASC
+              `, [page.article_id]);
+              articles.push(...article_results.rows);
             }
 
             // Using password reset
@@ -443,19 +518,31 @@ If you did not request this, please ignore this email.`,
                   JSON.stringify({
                     session_uuid,
                     email: user_found.rows[0].email,
+                    articles,
+                    path: path_to_use,
+                    add_new,
                   }),
                 );
               } else {
                 res.end(
                   JSON.stringify({
                     session_uuid,
+                    articles,
+                    path: path_to_use,
+                    add_new,
                     error: "Reset link expired",
                   }),
                 );
               }
             } else {
               // Return the valid session_uuid
-              res.end(JSON.stringify({ session_uuid, email }));
+              res.end(JSON.stringify({
+                session_uuid,
+                email,
+                articles,
+                path: path_to_use,
+                add_new,
+            }));
             }
           }
         } catch (err) {

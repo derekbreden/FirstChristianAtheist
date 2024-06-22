@@ -423,7 +423,7 @@
       return $this;
     };
     const debug = function () {
-      // $("debug").innerHTML = JSON.stringify([...arguments]);
+      // $("debug").innerHTML = JSON.stringify([...arguments], null, 2);
     };
     window.addEventListener("error", ($error) => {
       debug($error.message);
@@ -444,6 +444,7 @@
     const startSession = () => {
       const postBody = {
         session_uuid,
+        path,
       };
       if (reset_token_uuid) {
         postBody.reset_token_uuid = reset_token_uuid;
@@ -466,12 +467,24 @@
           if (data.error) {
             modalError(data.error);
           }
+          if (data.path) {
+            renderPage(data.path, data.articles, data.add_new);
+          }
         })
         .catch(function (error) {
           debug(error.message);
         });
     };
     startSession();
+
+    // Page level rendering
+    const loadingPage = () => {
+      
+    };
+    const renderPage = (page_path, articles, add_new) => {
+      history.pushState({}, "", page_path);
+      debug(articles, add_new)
+    };
 
     // Menu
     $("header hamburger").on("click", () => {
