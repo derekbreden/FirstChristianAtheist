@@ -118,6 +118,7 @@ CREATE TABLE IF NOT EXISTS votes (
   session_id INT NOT NULL,
   create_date TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
     `);
     const found_root_user = await client.query(`
       SELECT user_id,email FROM users

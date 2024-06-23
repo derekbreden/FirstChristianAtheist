@@ -94,6 +94,9 @@
     p[quote] + p[quote] {
       margin-top: 0;
     }
+    p[bold] {
+      font-weight: bold;
+    }
     li {
       margin-top: 10px;
       margin-left: 20px;
@@ -905,6 +908,7 @@
     // Supports:
     // ![alt](src)
     // >
+    // #
     // [text](href)
     //
     const addMarkdown = (parent_element, text) => {
@@ -920,6 +924,13 @@
           p_element.setAttribute("quote", "");
           p_content = p_content.replace(/> /g, "");
         }
+
+        // Support for #
+        if (p_content.substr(0, 2) === "# ") {
+          p_element.setAttribute("bold", "");
+          p_content = p_content.replace(/# /g, "");
+        }
+        
         let inserts = [];
         let imgs;
         let links;
