@@ -91,6 +91,9 @@
       border-left: 2px solid #999;
       background: #f5f5f5;
     }
+    p[quote] + p[quote] {
+      margin-top: 0;
+    }
     li {
       margin-top: 10px;
       margin-left: 20px;
@@ -177,6 +180,19 @@
       align-items: center;
       padding: 10px 20px;
       border-bottom: 1px solid #999;
+    }
+    a[big] {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      text-decoration: none;
+      border-radius: 2px;
+      border: 0;
+      background: #26993e;
+      color: #fff;
+      padding: 10px;
+      font-weight: bold;
     }
     modal-bg {
       display: none;
@@ -308,6 +324,10 @@
     add-new[article] {
       display: none;
     }
+    articles {
+      display: flex;
+      flex-direction: column;
+    }
     articles-loading {
       display: flex;
       flex-direction: column;
@@ -396,82 +416,12 @@
         <p></p>
       </articles-loading>
       <articles></articles>
-      <h2>What can be done to demonstrate unconditional love for all?</h2>
-      <p>
-        Exploring answers to this question together without judgement or
-        authority is the only goal here.
-      </p>
-      <p>
-        <img
-          src="/love.gif"
-          alt="A line drawing depicts Jesus with four chat bubbles: a heart around the Earth, a storm cloud, a person kneeling, and a trio of a fire and cross and clouds. Three of the chat bubbles and Jesus are animated out of the frame, only the heart around the earth remains, and is zoomed in on."
-        />
-      </p>
-
-      <h2>The Bible</h2>
-      <p quote>
-        Everything we know about God's Word is summed up in a single sentence:
-        Love others as you love yourself.<br />
-        <br />
-        — Galatians 5:14 [The Message Bible by Eugene Peterson]
-      </p>
-
-      <h2>Bishop John Shelby Spong</h2>
-      <p quote>
-        The church is still caught in pre-Darwinian pre-Copernican categories.
-        The idea that we were born in sin is a very strange idea when you’re
-        past Darwin. You know the idea that there was an original perfection
-        from which you fell and had to be redeemed doesn’t make a lot of sense
-        if you see life as emerging over 13.8 billion years from the beginning
-        of this universe. And so we’ve got to begin to lift what I think is the
-        Christ experience out of the explanations of antiquity, and then find a
-        new way to make that experience live, and I think we do this in other
-        areas of life all the time, but we don’t know how to do this in
-        religion.<br />
-        <br />
-        —
-        <a href="https://youtu.be/LnDOsdDI9Vs?t=95"
-          >https://youtu.be/LnDOsdDI9Vs?t=95</a
-        >
-      </p>
-
-      <h2>Acceptance</h2>
-      <p>
-        Christianity as it is today does not accept unrepentant atheists, with
-        the exception of Unitarian Universalism, which prioritizes worship and
-        reverence. This leaves little room for the type of pragmatic and deep
-        discussion that can be had here.
-      </p>
-      <p>
-        Perhaps here we can have a sanctuary, for those few of us who have
-        something we wish to salvage from the wreckage that is Christianity's
-        encounter with the modern age, some value that we seek to carry forward
-        without the theistic baggage.
-      </p>
-
-      <p>
-        <b>
-          I hope to add more interaction on this site, in the mean time you may
-          reach me at
-          <a href="https://x.com/abrleth">https://x.com/abrleth</a>
-        </b>
-      </p>
       <p add-new-article>
         <a href="/"> + Add New Topic </a>
       </p>
       <add-new article>
-        <input
-          title
-          placeholder="Title"
-          value="What can be done to demonstrate unconditional love for all?"
-        />
-        <textarea body placeholder="Content" rows="20">
-Exploring answers to this question together without judgement or authority is the only goal here.
-
-![A line drawing depicts Jesus with four chat bubbles: a heart around the Earth, a storm cloud, a person kneeling, and a trio of a fire and cross and clouds. Three of the chat bubbles and Jesus are animated out of the frame, only the heart around the earth remains, and is zoomed in on.](/love.gif)
-
-[Join The Discussion](/topics)</textarea
-        >
+        <input title placeholder="Title" />
+        <textarea body placeholder="Content" rows="20"></textarea>
         <button submit>Add Topic</button>
         <info></info>
         <error></error>
@@ -569,7 +519,28 @@ Exploring answers to this question together without judgement or authority is th
       $("articles-loading").style.display = "none";
       $("articles").style.display = "flex";
       $("add-new[comment]").style.display = "flex";
-      // debug("Rendered: " + page_path)
+      $("articles").innerHTML = "";
+      articles.forEach((article) => {
+        const article_element = document.createElement("article");
+        const h2_element = document.createElement("h2");
+        h2_element.innerHTML = article.title;
+        article_element.appendChild(h2_element);
+        addMarkdown(article_element, article.body);
+        $("articles").appendChild(article_element);
+      });
+      $("articles a").forEach(($a) => {
+        const new_path = $a.getAttribute("href");
+        if (new_path.substr(0, 1) === "/") {
+          $a.on("click", ($event) => {
+            $event.preventDefault();
+            if (path !== new_path) {
+              path = new_path;
+              history.pushState({}, "", path);
+            }
+            startSession();
+          });
+        }
+      });
     };
     window.addEventListener("popstate", () => {
       const new_paths = window.location.pathname.split("/").filter((x) => x);
@@ -597,19 +568,23 @@ Exploring answers to this question together without judgement or authority is th
       $("[add-new-article]").style.display = "none";
       $("add-new[article]").style.display = "flex";
     });
-    $("add-new[article] [title]").on("focus", () => { addArticleError()});
-    $("add-new[article] [body]").on("focus", () => { addArticleError()});
+    $("add-new[article] [title]").on("focus", () => {
+      addArticleError();
+    });
+    $("add-new[article] [body]").on("focus", () => {
+      addArticleError();
+    });
     $("add-new[article] [submit]").on("click", () => {
       addArticleError();
       const title = $("add-new[article] [title]").value;
       const body = $("add-new[article] [body]").value;
       if (!title) {
         addArticleError("Please enter a title");
-        return
+        return;
       }
       if (!body) {
         addArticleError("Please enter some content");
-        return
+        return;
       }
       $("add-new[article] info").innerHTML = "Validating...";
       $("add-new[article] info").style.display = "flex";
@@ -924,5 +899,101 @@ Exploring answers to this question together without judgement or authority is th
           passwordResetError("Network error");
         });
     });
+
+    // Limited markdown processing in a safe and readable way
+    //
+    // Supports:
+    // ![alt](src)
+    // >
+    // [text](href)
+    //
+    const addMarkdown = (parent_element, text) => {
+      // Double line breaks seperate paragraphs
+      const p_contents = text.split("\n\n");
+
+      // Process one <p> tag at a time
+      p_contents.forEach((p_content) => {
+        const p_element = document.createElement("p");
+
+        // Support for >
+        if (p_content.substr(0, 2) === "> ") {
+          p_element.setAttribute("quote", "");
+          p_content = p_content.replace(/> /g, "");
+        }
+        let inserts = [];
+        let imgs;
+        let links;
+
+        // Support for ![alt](src)
+        let p_content_remaining = p_content;
+        let offset = 0;
+        while (
+          (imgs = p_content_remaining.match(/!\[([^\]]*)\]\(([^\)]*)\)/))
+        ) {
+          const img_element = document.createElement("img");
+          img_element.src = imgs[2];
+          img_element.alt = imgs[1];
+          let start = p_content_remaining.indexOf(imgs[0]);
+          let finish = start + imgs[0].length;
+          inserts.push([start + offset, finish + offset, img_element]);
+          const to_replace = new Array(finish - start + 1).join("X");
+          p_content =
+            p_content.slice(0, start + offset) +
+            to_replace +
+            p_content.slice(finish + offset);
+          offset += finish;
+          p_content_remaining = p_content_remaining.slice(finish);
+        }
+
+        // Support for [text](href)
+        p_content_remaining = p_content;
+        offset = 0;
+        while (
+          (links = p_content_remaining.match(/\[([^\]]*)\]\(([^\)]*)\)/))
+        ) {
+          const link_element = document.createElement("a");
+          link_element.href = links[2];
+          link_element.textContent = links[1];
+          let start = p_content_remaining.indexOf(links[0]);
+          let finish = start + links[0].length;
+          inserts.push([start + offset, finish + offset, link_element]);
+          const to_replace = new Array(finish - start + 1).join("Y");
+          p_content =
+            p_content.slice(0, start + offset) +
+            to_replace +
+            p_content.slice(finish + offset);
+          offset += finish;
+          p_content_remaining = p_content_remaining.slice(finish);
+        }
+
+        // Now create elements for all the text around those inserts
+        offset = 0;
+        inserts.forEach((insert) => {
+          if (insert[0] - offset > 0) {
+            const span = document.createElement("span");
+            span.innerText += p_content.slice(offset, insert[0]);
+            p_element.appendChild(span);
+
+            // If we have an a tag that is the entire p tag, make it big
+          } else {
+            if (insert[1] === p_content.length) {
+              if (insert[2].tagName === "A") {
+                insert[2].setAttribute("big", "");
+              }
+            }
+          }
+          p_element.appendChild(insert[2]);
+          offset = insert[1];
+        });
+        if (offset < p_content.length) {
+          const span = document.createElement("span");
+          span.innerText += p_content.slice(offset);
+          p_element.appendChild(span);
+        }
+
+        // Finally add the completed <p> tag to the parent
+        parent_element.appendChild(p_element);
+      });
+    };
   </script>
 </html>

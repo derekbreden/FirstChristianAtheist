@@ -6,6 +6,7 @@ const { Pool } = require("pg");
 const crypto = require("node:crypto");
 const bcrypt = require("bcrypt");
 const { text } = require("stream/consumers");
+const prompts = require("./prompts");
 
 const pages = {
   "/": {
@@ -184,41 +185,38 @@ const openai = new OpenAI({
   apiKey: process.env["OPENAI_API_KEY"],
 });
 
-/*openai.chat.completions
-.create({
-  model: "gpt-4o",
-  messages: [
-    {
-      role: "system",
-      content: [
+const askAI = (text, prompt = "common") => {
+  return openai.chat.completions
+    .create({
+      model: "gpt-4o",
+      messages: [
         {
-          text: "You will perform content moderation for FirstChristianAtheist.org\n\nYou always respond with a single word of either OKAY or NOTE or BLOCK.\n\nWith NOTE, you will follow that single word with some additional text. This additional text will be shown in addition to the original text, similar to the community notes feature on Twitter.\n\nFor example “Lying is bad” gets a response of “NOTE The use of the word bad here may be judgemental.”\n\nThe goal of discussion on the site is always focused this one question “What can be done to demonstrate unconditional love for all?” and exploring answers to that question together without judgement. Please use Marshall Rosenberg's Nonviolent Communication as a guide. Specifically to be avoided are any statements of judgements (right or wrong or too much or too little) or statements of oughts (should and shouldn’t, do this, do that), with an emphasis on constructively contributing to the dialogue on the site.\n\nIf a user makes a judgement or command, add a note that affirms some value in what they said in a less judgemental way.\n\nFor example “don’t lie” gets a response of “NOTE Lying makes trust and communication difficult.”\n\nFor example “Christian atheism is a paradox” gets a response of “NOTE For some, what christianity is about is not believing in God as entity, but instead about believing in love as an effective way to cooperate with others.”\n\nFor example ”It is a fact that Jesus existed” gets a response of “NOTE The evidence we have for the existence of Jesus are the gospels and secondary sources mentioning Christians as a group.“\n\nThe intent is to be as permissive as possible, but with notes to soften and guide discussion towards the Christian Atheist goals of unconditional love for all without the baggage of theism and its judgements.\n\nThe intent is to be permissive as possible, adding notes to soften harsh words and guide discussion to a more constructive place, but even allowing links when they are relevant. Only if the text is complete spam should you reply BLOCK",
-          type: "text",
+          role: "system",
+          content: [
+            {
+              text: prompts[prompt],
+              type: "text",
+            },
+          ],
+        },
+        {
+          role: "user",
+          content: [
+            {
+              text: text,
+              type: "text",
+            },
+          ],
         },
       ],
-    },
-    {
-      role: "user",
-      content: [
-        {
-          text: "Christianity as it is today does not accept unrepentant atheists, with the exception of Unitarian Universalists whose services are still only focused on a theistic audience, focusing on the joys of worshipping God together.\n\nPerhaps here we can have a home, for those few of us who have some value (unconditional love) that we seek to retain from the Christian tradition, without the theistic baggage.",
-          type: "text",
-        },
-      ],
-    },
-  ],
-  temperature: 0,
-  max_tokens: 2048,
-  top_p: 1,
-  frequency_penalty: 0,
-  presence_penalty: 0,
-})
-.then((response) => {
-  console.log(response.choices[0].message.content);
-})
-.catch((error) => {
-  console.error(error);
-});*/
+      temperature: 0,
+      max_tokens: 520,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    });
+}
+
 
 const sendEmail = (to, subject, text, html) => {
   transporter.sendMail(
@@ -267,12 +265,13 @@ const server = http.createServer((req, res) => {
           let session_id = "";
           let admin = false;
           let email = "";
+          let user_id = "";
 
           // Check the body session_uuid
           if (body.session_uuid) {
             const results = await client.query(
               `
-              SELECT sessions.session_uuid, sessions.session_id, users.email, users.admin
+              SELECT sessions.session_uuid, sessions.session_id, users.email, users.admin, users.user_id
               FROM sessions
               LEFT JOIN user_sessions ON sessions.session_id = user_sessions.session_id
               LEFT JOIN users ON user_sessions.user_id = users.user_id
@@ -285,6 +284,7 @@ const server = http.createServer((req, res) => {
               session_id = results.rows[0].session_id;
               email = String(results.rows[0].email || "").trim();
               admin = results.rows[0].admin || false;
+              user_id = results.rows[0].user_id || "";
             }
           }
 
@@ -421,7 +421,7 @@ If you did not request this, please ignore this email.`,
               [body.reset_token_uuid],
             );
             if (token_found.rows.length > 0) {
-              const user_id = token_found.rows[0].user_id;
+              const user_id_found = token_found.rows[0].user_id;
               const password_hash = await bcrypt.hash(body.password, 12);
               await client.query(
                 `
@@ -429,7 +429,7 @@ If you did not request this, please ignore this email.`,
                   SET password_hash = $1
                 WHERE user_id = $2
               `,
-                [password_hash, user_id],
+                [password_hash, user_id_found],
               );
               res.end(
                 JSON.stringify({
@@ -448,12 +448,43 @@ If you did not request this, please ignore this email.`,
             // Adding new article
           } else if (body.title && body.body && body.path && session_id) {
 
-            const page = pages[body.path];
-            res.end(
-              JSON.stringify({
-                error: "Adding to page " + page.article_id,
-              }),
-            );
+            if (!user_id) {
+              res.end(
+                JSON.stringify({
+                  error: "Please sign up first"
+                }),
+              );
+            } else {
+              const page = pages[body.path];
+              const ai_response = await askAI(`"""CONTEXT
+${page.title}
+${page.body}
+"""
+"""USER
+${body.title}
+${body.body}
+"""`);
+              const ai_response_text = ai_response.choices[0].message.content[0].text || ai_response.choices[0].message.content;
+              if (ai_response_text === "APPROVED") {
+                await client.query(`
+                  INSERT INTO articles
+                    (title, body, parent_article_id, user_id)
+                  VALUES
+                    ($1, $2, $3, $4)
+                `, [body.title, body.body, page.article_id, user_id]);
+                res.end(
+                  JSON.stringify({
+                    success: true,
+                  }),
+                );
+              } else {
+                res.end(
+                  JSON.stringify({
+                    error: ai_response_text
+                  }),
+                );
+              }
+            }
             
             // Default session response
           } else {
@@ -491,7 +522,7 @@ If you did not request this, please ignore this email.`,
             const add_new = !page.admin || admin;
             if (page.article_id) {
               const article_results = await client.query(`
-                SELECT article_id, title, body
+                SELECT article_id, trim(title) as title, trim(body) as body
                 FROM articles
                 WHERE parent_article_id = $1
                 ORDER BY create_date ASC
