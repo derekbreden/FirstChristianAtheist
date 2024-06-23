@@ -296,6 +296,7 @@ const server = http.createServer((req, res) => {
                 (email, display_name, display_name_calculated)
               VALUES
                 ($1, $2, $3)
+              RETURNING user_id;
             `, ['', '', '']);
             await client.query(
               `
