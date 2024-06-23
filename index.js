@@ -145,9 +145,9 @@ CREATE TABLE IF NOT EXISTS votes (
           const new_page = await client.query(
             `
             INSERT INTO articles
-              (title, body, user_id, parent_article_id)
+              (title, body, user_id, parent_article_id, admin)
             VALUES
-              ($1, $2, $3, 0)
+              ($1, $2, $3, 0, true)
             RETURNING article_id;
           `,
             [page.title, page.body, root_user_id],
@@ -283,7 +283,7 @@ const server = http.createServer((req, res) => {
             if (results.rows.length > 0) {
               session_uuid = results.rows[0].session_uuid;
               session_id = results.rows[0].session_id;
-              email = String(results.rows[0].email).trim();
+              email = String(results.rows[0].email || "").trim();
               admin = results.rows[0].admin || false;
             }
           }
