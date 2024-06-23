@@ -421,6 +421,8 @@
       const $all = document.querySelectorAll(selector);
       $all.forEach(function (element) {
         element.on = element.addEventListener.bind(element);
+        // Allow forEach to be called even if 1 element is returned
+        element.forEach = f => $all.forEach(f);
       });
       if ($all.length === 1) {
         return $all[0];
