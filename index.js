@@ -5,7 +5,6 @@ const OpenAI = require("openai");
 const { Pool } = require("pg");
 const crypto = require("node:crypto");
 const bcrypt = require("bcrypt");
-const { text } = require("stream/consumers");
 const prompts = require("./prompts");
 
 const pages = {
@@ -33,7 +32,7 @@ const pool = new Pool({
 (async () => {
   const client = await pool.connect();
   try {
-    await client.query(`
+    /*await client.query(`
 -- DROP TABLE IF EXISTS sessions;
 -- DROP TABLE IF EXISTS browsers;
 -- DROP TABLE IF EXISTS users;
@@ -119,7 +118,7 @@ CREATE TABLE IF NOT EXISTS votes (
   create_date TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-    `);
+    `);*/
     const found_root_user = await client.query(`
       SELECT user_id,email FROM users
       WHERE
@@ -267,12 +266,13 @@ const server = http.createServer((req, res) => {
           let admin = false;
           let email = "";
           let user_id = "";
+          let display_name = "";
 
           // Check the body session_uuid
           if (body.session_uuid) {
             const results = await client.query(
               `
-              SELECT sessions.session_uuid, sessions.session_id, users.email, users.admin, users.user_id
+              SELECT sessions.session_uuid, sessions.session_id, trim(users.email) as email, trim(users.display_name) as display_name, users.admin, users.user_id
               FROM sessions
               LEFT JOIN user_sessions ON sessions.session_id = user_sessions.session_id
               LEFT JOIN users ON user_sessions.user_id = users.user_id
@@ -283,10 +283,30 @@ const server = http.createServer((req, res) => {
             if (results.rows.length > 0) {
               session_uuid = results.rows[0].session_uuid;
               session_id = results.rows[0].session_id;
-              email = String(results.rows[0].email || "").trim();
+              email = results.rows[0].email;
+              display_name = results.rows[0].display_name;
               admin = results.rows[0].admin || false;
               user_id = results.rows[0].user_id || "";
             }
+          }
+
+          if (session_id && !user_id && (body.display_name || body.title)) {
+            const user_inserted = await client.query(`
+              INSERT INTO users
+                (email, display_name, display_name_calculated)
+              VALUES
+                ($1, $2, $3)
+            `, ['', '', '']);
+            await client.query(
+              `
+              INSERT INTO user_sessions
+                (user_id, session_id)
+              VALUES
+                ($1, $2)
+            `,
+              [user_inserted.rows[0].user_id, session_id],
+            );
+            user_id = user_inserted.rows[0].user_id;
           }
 
           // Here we might perform additional actions using session_id
@@ -329,7 +349,7 @@ const server = http.createServer((req, res) => {
                 );
               }
             } else {
-              const admin = process.env["ROOT_EMAIL"] === body.email;
+              const make_admin = process.env["ROOT_EMAIL"] === body.email;
               const password_hash = await bcrypt.hash(body.password, 12);
               const user_inserted = await client.query(
                 `
@@ -339,7 +359,7 @@ const server = http.createServer((req, res) => {
                   (lower($1), $2, $3, $4, $5)
                 RETURNING user_id
               `,
-                [body.email, password_hash, "", "", admin],
+                [body.email, password_hash, "", "", make_admin],
               );
               await client.query(
                 `
@@ -448,16 +468,8 @@ If you did not request this, please ignore this email.`,
 
             // Adding new article
           } else if (body.title && body.body && body.path && session_id) {
-
-            if (!user_id) {
-              res.end(
-                JSON.stringify({
-                  error: "Please sign up first"
-                }),
-              );
-            } else {
-              const page = pages[body.path];
-              const ai_response = await askAI(`"""CONTEXT
+            const page = pages[body.path];
+            const ai_response = await askAI(`"""CONTEXT
 ${page.title}
 ${page.body}
 """
@@ -465,26 +477,114 @@ ${page.body}
 ${body.title}
 ${body.body}
 """`);
-              const ai_response_text = ai_response.choices[0].message.content[0].text || ai_response.choices[0].message.content;
-              if (ai_response_text === "APPROVED") {
-                await client.query(`
-                  INSERT INTO articles
-                    (title, body, parent_article_id, user_id)
-                  VALUES
-                    ($1, $2, $3, $4)
-                `, [body.title, body.body, page.article_id, user_id]);
-                res.end(
-                  JSON.stringify({
-                    success: true,
-                  }),
-                );
-              } else {
-                res.end(
-                  JSON.stringify({
-                    error: ai_response_text
-                  }),
-                );
-              }
+            const ai_response_text = ai_response.choices[0].message.content[0].text || ai_response.choices[0].message.content;
+            if (ai_response_text === "APPROVED") {
+              await client.query(`
+                INSERT INTO articles
+                  (title, body, parent_article_id, user_id)
+                VALUES
+                  ($1, $2, $3, $4)
+              `, [body.title, body.body, page.article_id, user_id]);
+              res.end(
+                JSON.stringify({
+                  success: true,
+                }),
+              );
+            } else {
+              res.end(
+                JSON.stringify({
+                  error: ai_response_text
+                }),
+              );
+            }
+
+            // Adding new comment
+          } else if (body.display_name && body.body && body.path && session_id) {
+            const page = pages[body.path];
+            let context = page.title;
+            context += "\n" + page.body;
+            const article_results = await client.query(`
+              SELECT trim(title) as title, trim(body) as body
+              FROM articles
+              WHERE parent_article_id = $1
+              ORDER BY create_date ASC
+            `, [page.article_id]);
+            for (const article of article_results.rows) {
+              context += "\n" + article.title;
+              context += "\n" + article.body;
+            }
+            const ai_response = await askAI(`"""CONTEXT
+${context}
+"""
+"""USER
+${body.body}
+- ${body.display_name}
+"""`);
+            const ai_response_text = ai_response.choices[0].message.content[0].text || ai_response.choices[0].message.content;
+            if (ai_response_text === "APPROVED") {
+              await client.query(`
+                INSERT INTO comments
+                  (body, parent_article_id, user_id)
+                VALUES
+                  ($1, $2, $3)
+              `, [body.body, page.article_id, user_id]);
+              await client.query(`
+                UPDATE users
+                SET display_name = $1
+                WHERE user_id = $2
+              `, [body.display_name, user_id]);
+              res.end(
+                JSON.stringify({
+                  success: true,
+                }),
+              );
+            } else if (ai_response_text === "SPAM") {
+              res.end(
+                JSON.stringify({
+                  error: ai_response_text
+                }),
+              );
+            } else {
+              await client.query(`
+                INSERT INTO comments
+                  (body, note, parent_article_id, user_id)
+                VALUES
+                  ($1, $2, $3, $4)
+              `, [body.body, ai_response_text, page.article_id, user_id]);
+              await client.query(`
+                UPDATE users
+                SET display_name = $1
+                WHERE user_id = $2
+              `, [body.display_name, user_id]);
+              res.end(
+                JSON.stringify({
+                  success: true,
+                }),
+              );
+            }
+
+            // Setting display name
+          } else if (body.display_name && session_id) {
+  
+            const ai_response = await askAI(body.display_name, "display_name");
+            const ai_response_text = ai_response.choices[0].message.content[0].text || ai_response.choices[0].message.content;
+            if (ai_response_text === "APPROVED") {
+              await client.query(`
+                UPDATE users
+                SET display_name = $1
+                WHERE user_id = $2
+              `, [body.display_name, user_id]);
+              res.end(
+                JSON.stringify({
+                  success: true,
+                }),
+              );
+            } else {
+              res.end(
+                JSON.stringify({
+                  error: ai_response_text
+                }),
+              );
             }
             
             // Default session response
@@ -515,12 +615,13 @@ ${body.body}
 
             // Get articles for path
             const articles = [];
+            const comments = [];
             let path_to_use = "/";
             if (pages[body.path]) {
               path_to_use = body.path;
             }
             const page = pages[path_to_use];
-            const add_new = !page.admin || admin;
+            const add_new = !page.admin_only || admin;
             if (page.article_id) {
               const article_results = await client.query(`
                 SELECT article_id, trim(title) as title, trim(body) as body
@@ -529,13 +630,21 @@ ${body.body}
                 ORDER BY create_date ASC
               `, [page.article_id]);
               articles.push(...article_results.rows);
+              const comment_results = await client.query(`
+                SELECT comments.comment_id, trim(comments.body) as body, trim(comments.note) as note, trim(users.display_name) as display_name
+                FROM comments
+                INNER JOIN users ON comments.user_id = users.user_id
+                WHERE comments.parent_article_id = $1
+                ORDER BY comments.create_date ASC
+              `, [page.article_id])
+              comments.push(...comment_results.rows);
             }
 
             // Using password reset
             if (body.reset_token_uuid) {
               const user_found = await client.query(
                 `
-                SELECT reset_tokens.user_id, users.email, user_sessions.session_id
+                SELECT reset_tokens.user_id, trim(users.email) as email, user_sessions.session_id
                 FROM reset_tokens
                 INNER JOIN users ON reset_tokens.user_id = users.user_id
                 LEFT JOIN sessions ON sessions.session_uuid = $1
@@ -562,6 +671,7 @@ ${body.body}
                     session_uuid,
                     email: user_found.rows[0].email,
                     articles,
+                    comments,
                     path: path_to_use,
                     add_new,
                   }),
@@ -571,6 +681,7 @@ ${body.body}
                   JSON.stringify({
                     session_uuid,
                     articles,
+                    comments,
                     path: path_to_use,
                     add_new,
                     error: "Reset link expired",
@@ -582,7 +693,9 @@ ${body.body}
               res.end(JSON.stringify({
                 session_uuid,
                 email,
+                display_name,
                 articles,
+                comments,
                 path: path_to_use,
                 add_new,
             }));

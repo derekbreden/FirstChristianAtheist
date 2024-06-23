@@ -242,6 +242,7 @@
       border-radius: 2px;
       max-width: 100%;
       display: none;
+      flex-direction: column;
     }
     info[show],
     error[show] {
@@ -329,6 +330,30 @@
     add-new[article] {
       display: none;
     }
+    comments {
+      display: flex;
+      flex-direction: column;
+    }
+    comments comment {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #999;
+      border-radius: 2px;
+      margin-bottom: 20px;
+      padding: 10px;
+    }
+    comments comment:last-child {
+      margin-bottom: 0;
+    }
+    comments comment p {
+      margin: 0;
+    }
+    comments comment info {
+      margin-top: 10px;
+    }
+    comments comment info b {
+      margin-bottom: 5px;
+    }
     articles {
       display: flex;
       flex-direction: column;
@@ -395,7 +420,7 @@
         <a href="/topics">Topics</a>
       </links>
       <sign-in>
-        <input placeholder="Email" type="email" autocomplete="email" />
+        <input placeholder="Email" type="email" autocomplete="email" maxlength="255" />
         <password-wrapper>
           <input
             placeholder="Password"
@@ -425,17 +450,24 @@
         <a href="/"> + Add New Topic </a>
       </p>
       <add-new article>
-        <input title placeholder="Title" />
-        <textarea body placeholder="Content" rows="20"></textarea>
+        <input title placeholder="Title" maxlength="140" />
+        <textarea body placeholder="Content" rows="20" maxlength="4000"></textarea>
         <button submit>Add Topic</button>
         <info></info>
         <error></error>
       </add-new>
-      <add-new comment></add-new>
+      <add-new comment>
+        <input display-name placeholder="Your Name" maxlength="50" />
+        <textarea body placeholder="Comment" rows="10" maxlength="1000"></textarea>
+        <button submit>Add Comment</button>
+        <info></info>
+        <error></error>
+      </add-new>
+      <comments></comments>
     </main-content>
     <modal-bg></modal-bg>
     <modal password-help>
-      <input placeholder="Email" type="email" autocomplete="email" />
+      <input placeholder="Email" type="email" autocomplete="email" maxlength="255" />
       <button submit>Reset Password</button>
       <button alt cancel>Cancel</button>
       <error></error>
@@ -512,8 +544,9 @@
       $("[add-new-article]").style.display = "none";
       $("articles-loading").style.display = "flex";
       $("articles").style.display = "none";
+      $("comments").style.display = "none";
     };
-    const renderPage = (page_path, articles, add_new) => {
+    const renderPage = (page_path, articles, comments, add_new) => {
       if (path !== page_path) {
         path = page_path;
         history.replaceState({}, "", page_path);
@@ -523,8 +556,10 @@
       }
       $("articles-loading").style.display = "none";
       $("articles").style.display = "flex";
+      $("comments").style.display = "flex";
       $("add-new[comment]").style.display = "flex";
       $("articles").innerHTML = "";
+      $("comments").innerHTML = "";
       articles.forEach((article) => {
         const article_element = document.createElement("article");
         const h2_element = document.createElement("h2");
@@ -545,6 +580,34 @@
             startSession();
           });
         }
+      });
+      comments.forEach((comment) => {
+        const comment_element = document.createElement("comment");
+        const p_element = document.createElement("p");
+        p_element.setAttribute("bold", "");
+        p_element.innerText = comment.display_name + ":";
+        comment_element.appendChild(p_element);
+        addMarkdown(comment_element, comment.body);
+        if (comment.note) {
+          const note_element = document.createElement("info");
+          note_element.setAttribute("show", "");
+          let note_title = comment.note.slice(0, comment.note.indexOf(" "))
+          note_title = ({
+            "ESCALATING": "Escalation",
+            "JUDGMENTAL": "Judgmental",
+            "MISUNDERSTANDING": "Misunderstanding",
+            "OFFTOPIC": "Off Topic",
+          })[note_title] || note_title;
+          const note_body = comment.note.slice(comment.note.indexOf(" ") + 1)
+          const b_element = document.createElement("b");
+          const span_element = document.createElement("span");
+          b_element.innerText = note_title;
+          span_element.innerText = note_body;
+          note_element.appendChild(b_element);
+          note_element.appendChild(span_element);
+          comment_element.appendChild(note_element);
+        }
+        $("comments").appendChild(comment_element);
       });
     };
     window.addEventListener("popstate", () => {
@@ -609,11 +672,100 @@
             addArticleError(data.error || "Server error");
             return;
           }
+          $("add-new[article] [title]").value = "";
+          $("add-new[article] [body]").value = "";
           startSession();
         })
         .catch(function (error) {
           $("add-new[article] info").style.display = "none";
           addArticleError("Network error");
+        });
+    });
+
+    // Add new comment
+    const addCommentError = (error) => {
+      if (error) {
+        $("add-new[comment] error").style.display = "flex";
+        $("add-new[comment] error").innerHTML = error;
+      } else {
+        $("add-new[comment] error").style.display = "none";
+      }
+    };
+    $("add-new[comment] [display-name]").on("focus", () => {
+      addCommentError();
+    });
+    $("add-new[comment] [body]").on("focus", () => {
+      addCommentError();
+    });
+    const saveDisplayName = () => {
+      const display_name = $("add-new[comment] [display-name]").value;
+      $("add-new[comment] [display-name]").setAttribute("disabled", "");
+      if (!display_name) {
+        addCommentError("Please enter your name");
+        return;
+      }
+      $("add-new[comment] info").innerHTML = "Validating...";
+      $("add-new[comment] info").style.display = "flex";
+      fetch("/session", {
+        method: "POST",
+        body: JSON.stringify({
+          session_uuid,
+          display_name,
+        }),
+      })
+        .then((response) => response.json())
+        .then(function (data) {
+          $("add-new[comment] [display-name]").removeAttribute("disabled");
+          $("add-new[comment] info").style.display = "none";
+          if (data.error || !data.success) {
+            addCommentError(data.error || "Server error");
+          }
+        })
+        .catch(function (error) {
+          $("add-new[comment] [display-name]").removeAttribute("disabled");
+          $("add-new[comment] info").style.display = "none";
+          addCommentError("Network error");
+        });
+    };
+    $("add-new[comment] [display-name]").on("blur", () => {
+      saveDisplayName();
+    });
+    $("add-new[comment] [submit]").on("click", () => {
+      addCommentError();
+      const display_name = $("add-new[comment] [display-name]").value;
+      const body = $("add-new[comment] [body]").value;
+      if (!display_name) {
+        addCommentError("Please enter your name");
+        return;
+      }
+      if (!body) {
+        addCommentError("Please enter a comment");
+        return;
+      }
+      $("add-new[comment] info").innerHTML = "Validating...";
+      $("add-new[comment] info").style.display = "flex";
+      fetch("/session", {
+        method: "POST",
+        body: JSON.stringify({
+          session_uuid,
+          path,
+          display_name,
+          body,
+        }),
+      })
+        .then((response) => response.json())
+        .then(function (data) {
+          $("add-new[comment] info").style.display = "none";
+          if (data.error || !data.success) {
+            addCommentError(data.error || "Server error");
+            return;
+          }
+          $("add-new[comment] [body]").value = "";
+          startSession();
+        })
+        .catch(function (error) {
+          $("add-new[comment] info").style.display = "none";
+          addCommentError("Network error");
         });
     });
 
@@ -643,11 +795,14 @@
               $("modal-bg").style.display = "flex";
             }
           }
+          if (data.display_name) {
+            $("add-new[comment] [display-name]").value = data.display_name;
+          }
           if (data.error) {
             modalError(data.error);
           }
           if (data.path) {
-            renderPage(data.path, data.articles, data.add_new);
+            renderPage(data.path, data.articles, data.comments, data.add_new);
           }
         })
         .catch(function (error) {
@@ -780,7 +935,7 @@
             signInError(data.error || "Server error");
             return;
           }
-          signInSuccess(email);
+          startSession();
           menuCancel();
         })
         .catch(function (error) {
