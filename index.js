@@ -119,11 +119,12 @@ CREATE TABLE IF NOT EXISTS votes (
 );
     `);
     const found_root_user = await client.query(`
-      SELECT user_id FROM users
+      SELECT user_id,email FROM users
       WHERE
-        admin = true;
+        admin = true
+      ORDER BY create_date ASC
     `);
-    if (found_root_user.rows.length === 0) {
+    if (found_root_user.rows.length) {
       root_user_id = found_root_user.rows[0].user_id;
     }
     if (root_user_id) {
@@ -138,7 +139,7 @@ CREATE TABLE IF NOT EXISTS votes (
         `,
           [page.title, root_user_id],
         );
-        if (found_page.rows.length === 0) {
+        if (found_page.rows.length) {
           page.article_id = found_page.rows[0].article_id;
         } else {
           const new_page = await client.query(
@@ -282,7 +283,7 @@ const server = http.createServer((req, res) => {
             if (results.rows.length > 0) {
               session_uuid = results.rows[0].session_uuid;
               session_id = results.rows[0].session_id;
-              email = results.rows[0].email.trim();
+              email = String(results.rows[0].email).trim();
               admin = results.rows[0].admin || false;
             }
           }
@@ -444,6 +445,16 @@ If you did not request this, please ignore this email.`,
               );
             }
 
+            // Adding new article
+          } else if (body.title && body.body && body.path && session_id) {
+
+            const page = pages[body.path];
+            res.end(
+              JSON.stringify({
+                error: "Adding to page " + page.article_id,
+              }),
+            );
+            
             // Default session response
           } else {
             // If no valid session_uuid, create one

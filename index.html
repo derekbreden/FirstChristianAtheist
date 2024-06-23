@@ -34,7 +34,11 @@
       box-sizing: border-box;
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
+    html {
+      height: 100%;
+    }
     body {
+      min-height: 100%;
       position: relative;
       font-size: 14px;
       display: flex;
@@ -55,6 +59,7 @@
       flex-direction: column;
       padding: 44px 40px 20px 40px;
       max-width: 480px;
+      width: 100%;
     }
     @media (max-width: 480px) {
       body {
@@ -183,7 +188,8 @@
       bottom: 0;
       z-index: 2;
     }
-    input {
+    input,
+    textarea {
       font-size: 14px;
       width: 240px;
       border-radius: 2px;
@@ -283,6 +289,65 @@
       border-radius: 2px;
       box-shadow: 0px 0px 5px #26323e;
     }
+    add-new {
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0 10px 0;
+    }
+    add-new > * {
+      margin-bottom: 10px;
+    }
+    add-new input,
+    add-new textarea,
+    add-new button {
+      width: 100%;
+    }
+    [add-new-article] {
+      display: none;
+    }
+    add-new[article] {
+      display: none;
+    }
+    articles-loading {
+      display: flex;
+      flex-direction: column;
+      animation: loading 1.5s ease-in-out infinite;
+    }
+    articles-loading h2 {
+      background: #ddd;
+      width: 80%;
+      height: 32px;
+    }
+    articles-loading p {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    articles-loading p::before,
+    articles-loading p::after {
+      content: "";
+      display: block;
+      width: 100%;
+      border-top: 16px solid #ddd;
+      border-bottom: 16px solid #ddd;
+      height: 10px;
+    }
+    articles-loading p::after {
+      margin-top: 10px;
+      width: 33%;
+      border-bottom: none;
+    }
+    @keyframes loading {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
   </style>
   <head>
     <title>First Christian Atheist</title>
@@ -325,7 +390,12 @@
     </menu>
     <main-content>
       <debug></debug>
-
+      <articles-loading>
+        <h2></h2>
+        <p></p>
+        <p></p>
+      </articles-loading>
+      <articles></articles>
       <h2>What can be done to demonstrate unconditional love for all?</h2>
       <p>
         Exploring answers to this question together without judgement or
@@ -386,6 +456,27 @@
           <a href="https://x.com/abrleth">https://x.com/abrleth</a>
         </b>
       </p>
+      <p add-new-article>
+        <a href="/"> + Add New Topic </a>
+      </p>
+      <add-new article>
+        <input
+          title
+          placeholder="Title"
+          value="What can be done to demonstrate unconditional love for all?"
+        />
+        <textarea body placeholder="Content" rows="20">
+Exploring answers to this question together without judgement or authority is the only goal here.
+
+![A line drawing depicts Jesus with four chat bubbles: a heart around the Earth, a storm cloud, a person kneeling, and a trio of a fire and cross and clouds. Three of the chat bubbles and Jesus are animated out of the frame, only the heart around the earth remains, and is zoomed in on.](/love.gif)
+
+[Join The Discussion](/topics)</textarea
+        >
+        <button submit>Add Topic</button>
+        <info></info>
+        <error></error>
+      </add-new>
+      <add-new comment></add-new>
     </main-content>
     <modal-bg></modal-bg>
     <modal password-help>
@@ -422,7 +513,7 @@
       $all.forEach(function (element) {
         element.on = element.addEventListener.bind(element);
         // Allow forEach to be called even if 1 element is returned
-        element.forEach = f => $all.forEach(f);
+        element.forEach = (f) => $all.forEach(f);
       });
       if ($all.length === 1) {
         return $all[0];
@@ -437,8 +528,8 @@
           message: to_render[0].message,
           // filename: to_render[0].filename,
           lineno: to_render[0].lineno,
-          colno: to_render[0].colno
-        }
+          colno: to_render[0].colno,
+        };
       } else if (to_render.length === 1) {
         to_render = to_render[0];
       }
@@ -458,9 +549,98 @@
       path = "/" + paths[0];
     }
 
+    // Page level rendering
+    const loadingPage = () => {
+      $("add-new[article]").style.display = "none";
+      addArticleError();
+      $("add-new[comment]").style.display = "none";
+      $("[add-new-article]").style.display = "none";
+      $("articles-loading").style.display = "flex";
+      $("articles").style.display = "none";
+    };
+    const renderPage = (page_path, articles, add_new) => {
+      if (path !== page_path) {
+        path = page_path;
+        history.replaceState({}, "", page_path);
+      }
+      if (add_new) {
+        $("[add-new-article]").style.display = "flex";
+      }
+      $("articles-loading").style.display = "none";
+      $("articles").style.display = "flex";
+      $("add-new[comment]").style.display = "flex";
+      // debug("Rendered: " + page_path)
+    };
+    window.addEventListener("popstate", () => {
+      const new_paths = window.location.pathname.split("/").filter((x) => x);
+      let new_path = "/";
+      if (new_paths[0]) {
+        new_path = "/" + new_paths[0];
+      }
+      if (path !== new_path) {
+        path = new_path;
+        startSession();
+      }
+    });
+
+    // Add new article
+    const addArticleError = (error) => {
+      if (error) {
+        $("add-new[article] error").style.display = "flex";
+        $("add-new[article] error").innerHTML = error;
+      } else {
+        $("add-new[article] error").style.display = "none";
+      }
+    };
+    $("[add-new-article]").on("click", ($event) => {
+      $event.preventDefault();
+      $("[add-new-article]").style.display = "none";
+      $("add-new[article]").style.display = "flex";
+    });
+    $("add-new[article] [title]").on("focus", () => { addArticleError()});
+    $("add-new[article] [body]").on("focus", () => { addArticleError()});
+    $("add-new[article] [submit]").on("click", () => {
+      addArticleError();
+      const title = $("add-new[article] [title]").value;
+      const body = $("add-new[article] [body]").value;
+      if (!title) {
+        addArticleError("Please enter a title");
+        return
+      }
+      if (!body) {
+        addArticleError("Please enter some content");
+        return
+      }
+      $("add-new[article] info").innerHTML = "Validating...";
+      $("add-new[article] info").style.display = "flex";
+      fetch("/session", {
+        method: "POST",
+        body: JSON.stringify({
+          session_uuid,
+          path,
+          title,
+          body,
+        }),
+      })
+        .then((response) => response.json())
+        .then(function (data) {
+          $("add-new[article] info").style.display = "none";
+          if (data.error || !data.success) {
+            addArticleError(data.error || "Server error");
+            return;
+          }
+          startSession();
+        })
+        .catch(function (error) {
+          $("add-new[article] info").style.display = "none";
+          addArticleError("Network error");
+        });
+    });
+
     // Session start
     let session_uuid = localStorage.getItem("session_uuid") || "";
     const startSession = () => {
+      loadingPage();
       const postBody = {
         session_uuid,
         path,
@@ -495,29 +675,6 @@
         });
     };
     startSession();
-
-    // Page level rendering
-    const loadingPage = () => {
-      
-    };
-    const renderPage = (page_path, articles, add_new) => {
-      if (path !== page_path) {
-        path = page_path;
-        history.replaceState({}, "", page_path);
-      }
-      // debug("Rendered: " + page_path)
-    };
-    window.addEventListener("popstate", () => {
-      const new_paths = window.location.pathname.split("/").filter((x) => x);
-      let new_path = "/";
-      if (new_paths[0]) {
-        new_path = "/" + new_paths[0];
-      }
-      if (path !== new_path) {
-        path = new_path;
-        startSession();
-      }
-    });
 
     // Menu
     $("header hamburger").on("click", () => {
@@ -594,15 +751,15 @@
     });
     $("sign-in [type=email]").on("keyup", (ev) => {
       if (ev.key === "Enter") {
-        $("sign-in button[submit]").click();
+        $("sign-in [submit]").click();
       }
     });
     $("sign-in [type=password]").on("keyup", (ev) => {
       if (ev.key === "Enter") {
-        $("sign-in button[submit]").click();
+        $("sign-in [submit]").click();
       }
     });
-    $("sign-in button[submit]").on("click", () => {
+    $("sign-in [submit]").on("click", () => {
       signInError();
       const email = $("sign-in [type=email]").value;
       if (!$("sign-in [type=email]").checkValidity() || !email) {
@@ -667,7 +824,7 @@
     });
     $("modal[password-help] [type=email]").on("keyup", (ev) => {
       if (ev.key === "Enter") {
-        $("modal[password-help] button[submit]").click();
+        $("modal[password-help] [submit]").click();
       }
     });
     $("password-help").on("click", () => {
@@ -677,7 +834,7 @@
     });
     $("modal-bg").on("click", passwordHelpCancel);
     $("modal[password-help] [cancel]").on("click", passwordHelpCancel);
-    $("modal[password-help] button[submit]").on("click", () => {
+    $("modal[password-help] [submit]").on("click", () => {
       passwordHelpError();
       const email = $("modal[password-help] [type=email]").value;
       if (!$("modal[password-help] [type=email]").checkValidity() || !email) {
@@ -730,12 +887,12 @@
     });
     $("modal[password-reset] [type=password]").on("keyup", (ev) => {
       if (ev.key === "Enter") {
-        $("modal[password-reset] button[submit]").click();
+        $("modal[password-reset] [submit]").click();
       }
     });
     $("modal-bg").on("click", passwordResetCancel);
     $("modal[password-reset] [cancel]").on("click", passwordResetCancel);
-    $("modal[password-reset] button[submit]").on("click", () => {
+    $("modal[password-reset] [submit]").on("click", () => {
       passwordResetError();
       const password = $("modal[password-reset] [type=password]").value;
       if (!password) {
