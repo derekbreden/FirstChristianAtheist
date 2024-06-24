@@ -758,6 +758,7 @@ ${body.body}
       let encoding = "utf-8";
       if (resources.indexOf(path) > -1) {
         filename = "resources/" + path;
+        res.setHeader("Cache-Control", "public, max-age=31536000");
       }
       const extension = filename.split(".").pop();
       const content_types = {
