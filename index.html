@@ -27,8 +27,14 @@
   <meta name="msapplication-TileColor" content="#da532c" />
   <meta name="theme-color" content="#ffffff" />
   <style>
+    @font-face {
+      font-family: 'Montserrat';
+      font-style: normal;
+      font-weight: 100 900;
+      src: url('/Montserrat-VariableFont_wght.ttf') format('truetype');
+    }
     * {
-      font-family: Arial;
+      font-family: Montserrat;
       margin: 0;
       padding: 0;
       box-sizing: border-box;
@@ -73,11 +79,12 @@
     a:visited,
     a:active {
       color: #26323e;
+      font-weight: 500;
     }
     h2 {
       margin-top: 20px;
       font-size: 18px;
-      font-weight: bold;
+      font-weight: 600;
     }
     p {
       margin-top: 10px;
@@ -95,7 +102,7 @@
       margin-top: 0;
     }
     p[bold] {
-      font-weight: bold;
+      font-weight: 600;
     }
     li {
       margin-top: 10px;
@@ -119,7 +126,7 @@
     header h1 {
       cursor: pointer;
       font-size: 18px;
-      font-weight: bold;
+      font-weight: 600;
       display: flex;
       align-items: center;
       margin: 0 20px;
@@ -143,6 +150,7 @@
     }
     header hamburger line {
       border: 2px solid #27323e;
+      border-bottom-width: 1px;
       border-radius: 2px;
       width: 100%;
     }
@@ -180,7 +188,7 @@
     }
     menu links a {
       text-decoration: none;
-      font-weight: bold;
+      font-weight: 600;
       display: flex;
       align-items: center;
       padding: 10px 20px;
@@ -197,7 +205,8 @@
       background: #26993e;
       color: #fff;
       padding: 10px;
-      font-weight: bold;
+      font-weight: 700;
+      letter-spacing: 1px;
     }
     modal-bg {
       display: none;
@@ -226,7 +235,8 @@
       background: #26323e;
       color: #fff;
       padding: 10px;
-      font-weight: bold;
+      font-weight: 700;
+      letter-spacing: 1px;
     }
     button[alt] {
       background: #f5f5f5;
@@ -244,6 +254,7 @@
       max-width: 100%;
       display: none;
       flex-direction: column;
+      font-weight: 500;
     }
     info[show],
     error[show] {
@@ -262,7 +273,7 @@
       background: #b66;
       color: #ffeeee;
       font-size: 14px;
-      font-weight: bold;
+      font-weight: 700;
       height: 17px;
       width: 17px;
     }
@@ -296,7 +307,7 @@
       border-radius: 20px;
       background: #48c;
       color: #e0f0ff;
-      font-weight: bold;
+      font-weight: 600;
       height: 17px;
       width: 17px;
     }

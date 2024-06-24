@@ -767,11 +767,13 @@ ${body.body}
         xml: "application/xml",
         gif: "image/gif",
         webmanifest: "application/manifest+json",
+        ttf: "font/ttf",
       };
       const encodings = {
         ico: "binary",
         png: "binary",
         gif: "binary",
+        ttf: "binary",
       };
       if (content_types[extension]) {
         content_type = content_types[extension];
