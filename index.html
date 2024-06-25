@@ -546,17 +546,106 @@
   </body>
   <script>
     // Debug and library setup
-    const $ = (selector) => {
-      const $all = document.querySelectorAll(selector);
-      $all.forEach(function (element) {
-        element.on = element.addEventListener.bind(element);
-        // Allow forEach to be called even if 1 element is returned
-        element.forEach = (f) => $all.forEach(f);
-      });
-      if ($all.length === 1) {
-        return $all[0];
+    const $ = (selector_or_flint, flint_args) => {
+      if (selector_or_flint.substr(0, 1) === "\n") {
+        let flint = selector_or_flint;
+        flint = flint
+          .split("\n")
+          .filter((x) => x.trim() !== "")
+          .map((original_text) => {
+            return {
+              text: original_text.trim(),
+              level: original_text.match(/^([\s]*)/)[0].length,
+            };
+          });
+
+        // Helper function to create elements recursively
+        const createElement = (nodes, index = 0, parent = null) => {
+          if (index >= nodes.length) return null;
+          const node = nodes[index];
+          const parts = node.text.split(" ");
+          let tag = parts[0];
+          const tag_parts = tag.split(/(\[.*\])/).filter(Boolean);
+          tag = tag_parts[0];
+          const attributes = tag_parts[1]
+            ? tag_parts[1]
+                .slice(1, -1)
+                .split(",")
+                .map((attr) => attr.trim())
+            : [];
+          const rest = parts.slice(1).join(" ");
+
+          let element = null;
+
+          if (tag.startsWith("$")) {
+            const arg_index = parseInt(tag.slice(1)) - 1;
+            const arg = flint_args[arg_index];
+
+            if (typeof arg === "string") {
+              element = document.createTextNode(arg);
+            } else if (Array.isArray(arg)) {
+              element = document.createDocumentFragment();
+              arg.forEach((child) => element.appendChild(child));
+            } else {
+              element = arg;
+            }
+          } else {
+            element = document.createElement(tag);
+            attributes.forEach((attr) => element.setAttribute(attr, ""));
+            if (rest.includes("$")) {
+              const content = rest.replace(/\$\d+/g, (match) => {
+                const arg_index = parseInt(match.slice(1)) - 1;
+                return flint_args[arg_index] !== undefined
+                  ? flint_args[arg_index]
+                  : match;
+              });
+              element.innerText = content;
+            } else if (rest.length) {
+              element.innerText = rest;
+            }
+          }
+
+          if (parent) {
+            parent.appendChild(element);
+          }
+
+          const children = [];
+          for (let i = index + 1; i < nodes.length; i++) {
+            if (nodes[i].level > node.level) {
+              children.push(nodes[i]);
+            } else {
+              break;
+            }
+          }
+
+          if (children.length > 0) {
+            let childIndex = index + 1;
+            children.forEach((child) => {
+              const childElement = createElement(nodes, childIndex, element);
+              if (childElement) {
+                childIndex++;
+              }
+            });
+          }
+
+          return element;
+        };
+
+        const rootElement = createElement(flint);
+        return rootElement;
       } else {
-        return $all;
+        const selector = selector_or_flint;
+        const $all = document.querySelectorAll(selector);
+        $all.forEach(function (element) {
+          element.on = element.addEventListener.bind(element);
+          // Allow forEach to be called even if 1 element is returned
+          element.forEach = (f) => $all.forEach(f);
+        });
+        if ($all.length === 1) {
+          return $all[0];
+        } else {
+          return $all;
+        }
       }
     };
     const debug = function () {
@@ -611,14 +700,14 @@
       $("add-new[comment]").style.display = "flex";
       $("articles").replaceChildren(
         ...articles.map((article) => {
-          const article_element = document.createElement("article");
-          const h2_element = document.createElement("h2");
-          h2_element.innerHTML = article.title;
-          article_element.replaceChildren(
-            h2_element,
-            ...markdownToElements(article.body)
+          return $(
+            `
+            article
+              h2 $1
+              $2
+            `,
+            [article.title, markdownToElements(article.body)],
           );
-          return article_element;
         }),
       );
       $("articles a").forEach(($a) => {
@@ -637,47 +726,43 @@
       });
       $("comments").replaceChildren(
         ...comments.map((comment) => {
-          // comment
-          //   p[bold]=$1
-          //   =$2 // [p, p, ...]
-          //   =$3 // info[show]...
-          const comment_element = document.createElement("comment");
-          const p_element = document.createElement("p");
-          p_element.setAttribute("bold", "");
-          p_element.innerText = comment.display_name + ":";
-          comment_element.replaceChildren(
-            p_element,
-            ...markdownToElements(comment.body)
+          let note = comment.note || "";
+          let note_title = note.slice(0, note.indexOf(" "));
+          note_title =
+            {
+              ESCALATING: "Escalation",
+              JUDGMENTAL: "Judgmental",
+              MISUNDERSTANDING: "Misunderstanding",
+              OFFTOPIC: "Off Topic",
+            }[note_title] || note_title;
+          const note_body = note.slice(note.indexOf(" ") + 1);
+          return $(
+            `
+            comment
+              p[bold] $1
+              $2
+              $3
+            `,
+            [
+              comment.display_name,
+              markdownToElements(comment.body),
+              comment.note
+                ? $(
+                    `
+                    info[show]
+                      b $1
+                      span $2
+                    `,
+                    [note_title, note_body],
+                  )
+                : $(
+                    `
+                    pass
+                      b OK
+                    `,
+                  ),
+            ],
           );
-          if (comment.note) {
-            // info[show]
-            //   b=$1
-            //   span=$2
-            const note_element = document.createElement("info");
-            note_element.setAttribute("show", "");
-            let note_title = comment.note.slice(0, comment.note.indexOf(" "));
-            note_title =
-              {
-                ESCALATING: "Escalation",
-                JUDGMENTAL: "Judgmental",
-                MISUNDERSTANDING: "Misunderstanding",
-                OFFTOPIC: "Off Topic",
-              }[note_title] || note_title;
-            const note_body = comment.note.slice(comment.note.indexOf(" ") + 1);
-            const b_element = document.createElement("b");
-            const span_element = document.createElement("span");
-            b_element.innerText = note_title;
-            span_element.innerText = note_body;
-            note_element.replaceChildren(b_element, span_element);
-            comment_element.appendChild(note_element);
-          } else {
-            pass_element = document.createElement("pass");
-            const b_element = document.createElement("b");
-            b_element.innerText = "OK";
-            pass_element.replaceChildren(b_element);
-            comment_element.appendChild(pass_element);
-          }
-          return comment_element;
         }),
       );
     };
@@ -1245,7 +1330,7 @@
         }
 
         // Finally return the completed <p> tag in the array
-        return (p_element);
+        return p_element;
       });
     };
   </script>
