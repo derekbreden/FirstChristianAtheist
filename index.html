@@ -28,10 +28,10 @@
   <meta name="theme-color" content="#ffffff" />
   <style>
     @font-face {
-      font-family: 'Montserrat';
+      font-family: "Montserrat";
       font-style: normal;
       font-weight: 100 900;
-      src: url('/Montserrat-VariableFont_wght.ttf') format('truetype');
+      src: url("/Montserrat-VariableFont_wght.ttf") format("truetype");
     }
     * {
       font-family: Montserrat;
@@ -291,7 +291,7 @@
       color: #e0f0ff;
     }
     pass {
-      padding: 5px 5px 5px 31px;
+      padding: 5px 10px 5px 36px;
       border-color: #7a4;
       background: #f0fff0;
       color: #7a4;
@@ -300,7 +300,6 @@
     }
     pass::before {
       top: 5px;
-      left: 5px;
       content: "✓"; /*✓✔*/
       background: #7a4;
       color: #f0fff0;
@@ -357,7 +356,8 @@
     [add-new-article] {
       display: none;
     }
-    add-new[article] {
+    add-new[article],
+    add-new[comment] {
       display: none;
     }
     comments {
@@ -451,7 +451,12 @@
         <a href="/topics">Topics</a>
       </links>
       <sign-in>
-        <input placeholder="Email" type="email" autocomplete="email" maxlength="255" />
+        <input
+          placeholder="Email"
+          type="email"
+          autocomplete="email"
+          maxlength="255"
+        />
         <password-wrapper>
           <input
             placeholder="Password"
@@ -482,14 +487,24 @@
       </p>
       <add-new article>
         <input title placeholder="Title" maxlength="140" />
-        <textarea body placeholder="Content" rows="20" maxlength="4000"></textarea>
+        <textarea
+          body
+          placeholder="Content"
+          rows="20"
+          maxlength="4000"
+        ></textarea>
         <button submit>Add Topic</button>
         <info></info>
         <error></error>
       </add-new>
       <add-new comment>
         <input display-name placeholder="Your Name" maxlength="50" />
-        <textarea body placeholder="Comment" rows="10" maxlength="1000"></textarea>
+        <textarea
+          body
+          placeholder="Comment"
+          rows="10"
+          maxlength="1000"
+        ></textarea>
         <button submit>Add Comment</button>
         <info></info>
         <error></error>
@@ -498,7 +513,12 @@
     </main-content>
     <modal-bg></modal-bg>
     <modal password-help>
-      <input placeholder="Email" type="email" autocomplete="email" maxlength="255" />
+      <input
+        placeholder="Email"
+        type="email"
+        autocomplete="email"
+        maxlength="255"
+      />
       <button submit>Reset Password</button>
       <button alt cancel>Cancel</button>
       <error></error>
@@ -589,16 +609,18 @@
       $("articles").style.display = "flex";
       $("comments").style.display = "flex";
       $("add-new[comment]").style.display = "flex";
-      $("articles").innerHTML = "";
-      $("comments").innerHTML = "";
-      articles.forEach((article) => {
-        const article_element = document.createElement("article");
-        const h2_element = document.createElement("h2");
-        h2_element.innerHTML = article.title;
-        article_element.appendChild(h2_element);
-        addMarkdown(article_element, article.body);
-        $("articles").appendChild(article_element);
-      });
+      $("articles").replaceChildren(
+        ...articles.map((article) => {
+          const article_element = document.createElement("article");
+          const h2_element = document.createElement("h2");
+          h2_element.innerHTML = article.title;
+          article_element.replaceChildren(
+            h2_element,
+            ...markdownToElements(article.body)
+          );
+          return article_element;
+        }),
+      );
       $("articles a").forEach(($a) => {
         const new_path = $a.getAttribute("href");
         if (new_path.substr(0, 1) === "/") {
@@ -607,52 +629,57 @@
             if (path !== new_path) {
               path = new_path;
               history.pushState({}, "", path);
+              loadingPage();
             }
             startSession();
           });
         }
       });
-      comments.forEach((comment) => {
-        // comment
-        //   p[bold]=$1
-        //   =$2 // [p, p, ...]
-        //   =$3 // info[show]...
-        const comment_element = document.createElement("comment");
-        const p_element = document.createElement("p");
-        p_element.setAttribute("bold", "");
-        p_element.innerText = comment.display_name + ":";
-        comment_element.appendChild(p_element);
-        addMarkdown(comment_element, comment.body);
-        if (comment.note) {
-          // info[show]
-          //   b=$1
-          //   span=$2
-          const note_element = document.createElement("info");
-          note_element.setAttribute("show", "");
-          let note_title = comment.note.slice(0, comment.note.indexOf(" "))
-          note_title = ({
-            "ESCALATING": "Escalation",
-            "JUDGMENTAL": "Judgmental",
-            "MISUNDERSTANDING": "Misunderstanding",
-            "OFFTOPIC": "Off Topic",
-          })[note_title] || note_title;
-          const note_body = comment.note.slice(comment.note.indexOf(" ") + 1)
-          const b_element = document.createElement("b");
-          const span_element = document.createElement("span");
-          b_element.innerText = note_title;
-          span_element.innerText = note_body;
-          note_element.appendChild(b_element);
-          note_element.appendChild(span_element);
-          comment_element.appendChild(note_element);
-        } else {
-          pass_element = document.createElement("pass");
-          const b_element = document.createElement("b");
-          b_element.innerText = "OK";
-          pass_element.appendChild(b_element);
-          comment_element.appendChild(pass_element);
-        }
-        $("comments").appendChild(comment_element);
-      });
+      $("comments").replaceChildren(
+        ...comments.map((comment) => {
+          // comment
+          //   p[bold]=$1
+          //   =$2 // [p, p, ...]
+          //   =$3 // info[show]...
+          const comment_element = document.createElement("comment");
+          const p_element = document.createElement("p");
+          p_element.setAttribute("bold", "");
+          p_element.innerText = comment.display_name + ":";
+          comment_element.replaceChildren(
+            p_element,
+            ...markdownToElements(comment.body)
+          );
+          if (comment.note) {
+            // info[show]
+            //   b=$1
+            //   span=$2
+            const note_element = document.createElement("info");
+            note_element.setAttribute("show", "");
+            let note_title = comment.note.slice(0, comment.note.indexOf(" "));
+            note_title =
+              {
+                ESCALATING: "Escalation",
+                JUDGMENTAL: "Judgmental",
+                MISUNDERSTANDING: "Misunderstanding",
+                OFFTOPIC: "Off Topic",
+              }[note_title] || note_title;
+            const note_body = comment.note.slice(comment.note.indexOf(" ") + 1);
+            const b_element = document.createElement("b");
+            const span_element = document.createElement("span");
+            b_element.innerText = note_title;
+            span_element.innerText = note_body;
+            note_element.replaceChildren(b_element, span_element);
+            comment_element.appendChild(note_element);
+          } else {
+            pass_element = document.createElement("pass");
+            const b_element = document.createElement("b");
+            b_element.innerText = "OK";
+            pass_element.replaceChildren(b_element);
+            comment_element.appendChild(pass_element);
+          }
+          return comment_element;
+        }),
+      );
     };
     window.addEventListener("popstate", () => {
       const new_paths = window.location.pathname.split("/").filter((x) => x);
@@ -662,6 +689,7 @@
       }
       if (path !== new_path) {
         path = new_path;
+        loadingPage();
         startSession();
       }
     });
@@ -816,7 +844,6 @@
     // Session start
     let session_uuid = localStorage.getItem("session_uuid") || "";
     const startSession = () => {
-      loadingPage();
       const postBody = {
         session_uuid,
         path,
@@ -877,6 +904,7 @@
         if (path !== new_path) {
           path = new_path;
           history.pushState({}, "", path);
+          loadingPage();
         }
         startSession();
       });
@@ -889,6 +917,7 @@
         if (path !== new_path) {
           path = new_path;
           history.pushState({}, "", path);
+          loadingPage();
         }
         startSession();
       });
@@ -1124,12 +1153,12 @@
     // #
     // [text](href)
     //
-    const addMarkdown = (parent_element, text) => {
+    const markdownToElements = (text) => {
       // Double line breaks seperate paragraphs
       const p_contents = text.split("\n\n");
 
       // Process one <p> tag at a time
-      p_contents.forEach((p_content) => {
+      return p_contents.map((p_content) => {
         const p_element = document.createElement("p");
 
         // Support for >
@@ -1143,7 +1172,7 @@
           p_element.setAttribute("bold", "");
           p_content = p_content.replace(/# /g, "");
         }
-        
+
         let inserts = [];
         let imgs;
         let links;
@@ -1215,8 +1244,8 @@
           p_element.appendChild(span);
         }
 
-        // Finally add the completed <p> tag to the parent
-        parent_element.appendChild(p_element);
+        // Finally return the completed <p> tag in the array
+        return (p_element);
       });
     };
   </script>
