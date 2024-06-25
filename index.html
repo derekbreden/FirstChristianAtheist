@@ -202,8 +202,8 @@
       text-decoration: none;
       border-radius: 2px;
       border: 0;
-      background: #26993e;
       color: #fff;
+      background: #7a4;
       padding: 10px;
       font-weight: 700;
       letter-spacing: 1px;
@@ -243,6 +243,7 @@
       color: #26323e;
       border: 1px solid #999;
     }
+    pass,
     info,
     error {
       padding: 10px 10px 10px 36px;
@@ -256,10 +257,12 @@
       flex-direction: column;
       font-weight: 500;
     }
+    pass,
     info[show],
     error[show] {
       display: flex;
     }
+    pass::before,
     info::before,
     error::before {
       content: "!";
@@ -286,6 +289,21 @@
       content: "i";
       background: #48c;
       color: #e0f0ff;
+    }
+    pass {
+      padding: 5px 5px 5px 31px;
+      border-color: #7a4;
+      background: #f0fff0;
+      color: #7a4;
+      display: inline-flex;
+      align-self: flex-end;
+    }
+    pass::before {
+      top: 5px;
+      left: 5px;
+      content: "✓"; /*✓✔*/
+      background: #7a4;
+      color: #f0fff0;
     }
     password-wrapper {
       display: flex;
@@ -360,6 +378,7 @@
     comments comment p {
       margin: 0;
     }
+    comments comment pass,
     comments comment info {
       margin-top: 10px;
     }
@@ -594,6 +613,10 @@
         }
       });
       comments.forEach((comment) => {
+        // comment
+        //   p[bold]=$1
+        //   =$2 // [p, p, ...]
+        //   =$3 // info[show]...
         const comment_element = document.createElement("comment");
         const p_element = document.createElement("p");
         p_element.setAttribute("bold", "");
@@ -601,6 +624,9 @@
         comment_element.appendChild(p_element);
         addMarkdown(comment_element, comment.body);
         if (comment.note) {
+          // info[show]
+          //   b=$1
+          //   span=$2
           const note_element = document.createElement("info");
           note_element.setAttribute("show", "");
           let note_title = comment.note.slice(0, comment.note.indexOf(" "))
@@ -618,6 +644,12 @@
           note_element.appendChild(b_element);
           note_element.appendChild(span_element);
           comment_element.appendChild(note_element);
+        } else {
+          pass_element = document.createElement("pass");
+          const b_element = document.createElement("b");
+          b_element.innerText = "OK";
+          pass_element.appendChild(b_element);
+          comment_element.appendChild(pass_element);
         }
         $("comments").appendChild(comment_element);
       });
