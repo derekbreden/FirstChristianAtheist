@@ -565,14 +565,22 @@
           const node = nodes[index];
           const parts = node.text.split(" ");
           let tag = parts[0];
-          const tag_parts = tag.split(/(\[.*\])/).filter(Boolean);
-          tag = tag_parts[0];
-          const attributes = tag_parts[1]
-            ? tag_parts[1]
-                .slice(1, -1)
-                .split(",")
-                .map((attr) => attr.trim())
-            : [];
+          const attributes = (tag.match(/\[[^\]]*\]/g) || []).map((attr) => {
+            let [key, value] = attr.slice(1, -1).split("=");
+            if (value) {
+              if (value.startsWith("$")) {
+                const arg_index = parseInt(value.slice(1)) - 1;
+                value = flint_args[arg_index];
+              }
+            } else {
+              value = "";
+            }
+            return {
+              key,
+              value,
+            };
+          });
+          tag = tag.replace(/\[.*\]/g, "");
           const rest = parts.slice(1).join(" ");
 
           let element = null;
@@ -591,7 +599,15 @@
             }
           } else {
             element = document.createElement(tag);
-            attributes.forEach((attr) => element.setAttribute(attr, ""));
+            attributes.forEach((attr) => {
+              if (
+                attr.value !== false &&
+                attr.value !== null &&
+                attr.value !== undefined
+              ) {
+                element.setAttribute(attr.key, attr.value);
+              }
+            });
             if (rest.includes("$")) {
               const content = rest.replace(/\$\d+/g, (match) => {
                 const arg_index = parseInt(match.slice(1)) - 1;
@@ -1268,10 +1284,12 @@
         while (
           (imgs = p_content_remaining.match(/!\[([^\]]*)\]\(([^\)]*)\)/))
         ) {
-          // img[src=$1] $2
-          const img_element = document.createElement("img");
-          img_element.src = imgs[2];
-          img_element.alt = imgs[1];
+          const img_element = $(
+            `
+            img[alt=$1][src=$2]
+            `,
+            [imgs[1], imgs[2]],
+          );
           let start = p_content_remaining.indexOf(imgs[0]);
           let finish = start + imgs[0].length;
           inserts.push([start + offset, finish + offset, img_element]);
@@ -1290,10 +1308,13 @@
         while (
           (links = p_content_remaining.match(/\[([^\]]*)\]\(([^\)]*)\)/))
         ) {
-          // a[href=$1] $2
-          const link_element = document.createElement("a");
-          link_element.href = links[2];
-          link_element.textContent = links[1];
+          const big = Boolean(links[0] === p_content_remaining && offset === 0);
+          const link_element = $(
+            `
+            a[href=$1][big=$2] $3
+            `,
+            [links[2], big, links[1]],
+          );
           let start = p_content_remaining.indexOf(links[0]);
           let finish = start + links[0].length;
           inserts.push([start + offset, finish + offset, link_element]);
@@ -1318,12 +1339,6 @@
                 [p_content.slice(offset, insert[0])],
               ),
             );
-
-            // If we have an a tag that is the entire p tag, make it big
-          } else if (insert[1] === p_content.length) {
-            if (insert[2].tagName === "A") {
-              insert[2].setAttribute("big", "");
-            }
           }
           p_element.appendChild(insert[2]);
           offset = insert[1];
