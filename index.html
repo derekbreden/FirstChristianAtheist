@@ -356,7 +356,6 @@
     [add-new-article] {
       display: none;
     }
-    add-new[article],
     add-new[comment] {
       display: none;
     }
@@ -485,18 +484,6 @@
       <p add-new-article>
         <a href="/"> + Add New Topic </a>
       </p>
-      <add-new article>
-        <input title placeholder="Title" maxlength="140" />
-        <textarea
-          body
-          placeholder="Content"
-          rows="20"
-          maxlength="4000"
-        ></textarea>
-        <button submit>Add Topic</button>
-        <info></info>
-        <error></error>
-      </add-new>
       <add-new comment>
         <input display-name placeholder="Your Name" maxlength="50" />
         <textarea
@@ -546,9 +533,16 @@
   </body>
   <script>
     // Debug and library setup
-    const $ = (selector_or_flint, flint_args) => {
+    const $ = (selector_or_flint, flint_args_or_element) => {
+      const addHelpers = (element, $all) => {
+        element.on = element.addEventListener.bind(element);
+        // Allow forEach to be called even if 1 element is returned
+        element.forEach = (f) => $all.forEach(f);
+        element.$ = (selector) => $(selector, element);
+      };
       if (selector_or_flint.substr(0, 1) === "\n") {
         let flint = selector_or_flint;
+        const flint_args = flint_args_or_element;
         flint = flint
           .split("\n")
           .filter((x) => x.trim() !== "")
@@ -648,17 +642,17 @@
         };
 
         const rootElement = createElement(flint);
+        addHelpers(rootElement);
         return rootElement;
       } else {
+        const element = flint_args_or_element || document;
         const selector = selector_or_flint;
-        const $all = document.querySelectorAll(selector);
-        $all.forEach(function (element) {
-          element.on = element.addEventListener.bind(element);
-          // Allow forEach to be called even if 1 element is returned
-          element.forEach = (f) => $all.forEach(f);
-        });
+        const $all = element.querySelectorAll(selector);
+        $all.forEach((element) => addHelpers(element, $all));
         if ($all.length === 1) {
           return $all[0];
+        } else if ($all.length === 0) {
+          return null;
         } else {
           return $all;
         }
@@ -694,8 +688,6 @@
 
     // Page level rendering
     const loadingPage = () => {
-      $("add-new[article]").style.display = "none";
-      addArticleError();
       $("add-new[comment]").style.display = "none";
       $("[add-new-article]").style.display = "none";
       $("articles-loading").style.display = "flex";
@@ -726,7 +718,7 @@
           );
         }),
       );
-      $("articles a").forEach(($a) => {
+      ($("articles a"))?.forEach(($a) => {
         const new_path = $a.getAttribute("href");
         if (new_path.substr(0, 1) === "/") {
           $a.on("click", ($event) => {
@@ -796,63 +788,87 @@
     });
 
     // Add new article
-    const addArticleError = (error) => {
-      if (error) {
-        $("add-new[article] error").style.display = "flex";
-        $("add-new[article] error").innerHTML = error;
-      } else {
-        $("add-new[article] error").style.display = "none";
-      }
+    const showAddNewArticle = (article_id) => {
+      const $add_new = $(
+        `
+        add-new[article]
+          input[title][placeholder=Title][maxlength=140]
+          textarea[body][placeholder=Content][rows=20][maxlength=4000]
+          button[submit] $1
+          button[alt][cancel] Cancel
+        `,
+        [article_id ? "Save Changes" : "Add Topic"],
+      );
+
+      const addArticleError = (error) => {
+        $add_new.appendChild(
+          $(
+            `
+            error[show] $1
+            `,
+            [error],
+          ),
+        );
+      };
+
+      $add_new.$("[title]").on("focus", () => {
+        ($add_new.$("error"))?.remove();
+      });
+      $add_new.$("[body]").on("focus", () => {
+        ($add_new.$("error"))?.remove();
+      });
+      $add_new.$("[cancel]").on("click", () => {
+        $add_new.remove();
+        $("[add-new-article]").style.display = "block";
+      });
+      $add_new.$("[submit]").on("click", () => {
+        ($add_new.$("error"))?.remove();
+        const title = $add_new.$("[title]").value;
+        const body = $add_new.$("[body]").value;
+        if (!title) {
+          addArticleError("Please enter a title");
+          return;
+        }
+        if (!body) {
+          addArticleError("Please enter some content");
+          return;
+        }
+        $add_new.appendChild(
+          $(
+            `
+              info[show] Validating...
+            `
+          )
+        );
+        fetch("/session", {
+          method: "POST",
+          body: JSON.stringify({
+            session_uuid,
+            path,
+            title,
+            body,
+          }),
+        })
+          .then((response) => response.json())
+          .then(function (data) {
+            ($add_new.$("info"))?.remove();
+            if (data.error || !data.success) {
+              addArticleError(data.error || "Server error");
+              return;
+            }
+            startSession();
+          })
+          .catch(function (error) {
+            ($add_new.$("info"))?.remove();
+            addArticleError("Network error");
+          });
+      });
+      $("articles").appendChild($add_new);
     };
     $("[add-new-article]").on("click", ($event) => {
       $event.preventDefault();
       $("[add-new-article]").style.display = "none";
-      $("add-new[article]").style.display = "flex";
-    });
-    $("add-new[article] [title]").on("focus", () => {
-      addArticleError();
-    });
-    $("add-new[article] [body]").on("focus", () => {
-      addArticleError();
-    });
-    $("add-new[article] [submit]").on("click", () => {
-      addArticleError();
-      const title = $("add-new[article] [title]").value;
-      const body = $("add-new[article] [body]").value;
-      if (!title) {
-        addArticleError("Please enter a title");
-        return;
-      }
-      if (!body) {
-        addArticleError("Please enter some content");
-        return;
-      }
-      $("add-new[article] info").innerHTML = "Validating...";
-      $("add-new[article] info").style.display = "flex";
-      fetch("/session", {
-        method: "POST",
-        body: JSON.stringify({
-          session_uuid,
-          path,
-          title,
-          body,
-        }),
-      })
-        .then((response) => response.json())
-        .then(function (data) {
-          $("add-new[article] info").style.display = "none";
-          if (data.error || !data.success) {
-            addArticleError(data.error || "Server error");
-            return;
-          }
-          $("add-new[article] [title]").value = "";
-          $("add-new[article] [body]").value = "";
-          startSession();
-        })
-        .catch(function (error) {
-          $("add-new[article] info").style.display = "none";
-          addArticleError("Network error");
-        });
+      showAddNewArticle();
     });
 
     // Add new comment

@@ -517,7 +517,7 @@ ${body.body}
             context += "\n" + page.body;
             const article_results = await client.query(
               `
-              SELECT title, body
+              SELECT title, body, article_id, user_id
               FROM articles
               WHERE parent_article_id = $1
               ORDER BY create_date ASC
