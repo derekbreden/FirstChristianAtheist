@@ -483,15 +483,34 @@ ${body.body}
               ai_response.choices[0].message.content[0].text ||
               ai_response.choices[0].message.content;
             if (ai_response_text === "APPROVED") {
-              await client.query(
-                `
-                INSERT INTO articles
-                  (title, body, parent_article_id, user_id)
-                VALUES
-                  ($1, $2, $3, $4)
-              `,
-                [body.title, body.body, page.article_id, user_id],
-              );
+
+              // Update existing
+              if (body.article_id) {
+                await client.query(
+                  `
+                  UPDATE articles
+                  SET title = $1, body = $2
+                  WHERE
+                    article_id = $3
+                    AND user_id = $4
+                  `,
+                  [body.title, body.body, body.article_id, user_id]
+                );
+
+                // Add new
+              } else {
+                await client.query(
+                  `
+                  INSERT INTO articles
+                    (title, body, parent_article_id, user_id)
+                  VALUES
+                    ($1, $2, $3, $4)
+                `,
+                  [body.title, body.body, page.article_id, user_id],
+                );
+              }
+
+              // Respond with success so the client reloads
               res.end(
                 JSON.stringify({
                   success: true,
@@ -517,7 +536,7 @@ ${body.body}
             context += "\n" + page.body;
             const article_results = await client.query(
               `
-              SELECT title, body, article_id, user_id
+              SELECT title, body
               FROM articles
               WHERE parent_article_id = $1
               ORDER BY create_date ASC
@@ -539,15 +558,28 @@ ${body.body}
               ai_response.choices[0].message.content[0].text ||
               ai_response.choices[0].message.content;
             if (ai_response_text === "APPROVED") {
-              await client.query(
-                `
-                INSERT INTO comments
-                  (body, parent_article_id, user_id)
-                VALUES
-                  ($1, $2, $3)
-              `,
-                [body.body, page.article_id, user_id],
-              );
+              if (body.comment_id) {
+                await client.query(
+                  `
+                  UPDATE comments
+                  SET body = $1, note = NULL
+                  WHERE
+                    comment_id = $2
+                    AND user_id = $3
+                  `,
+                  [body.body, body.comment_id, user_id]
+                );
+              } else {
+                await client.query(
+                  `
+                  INSERT INTO comments
+                    (body, parent_article_id, user_id)
+                  VALUES
+                    ($1, $2, $3)
+                `,
+                  [body.body, page.article_id, user_id],
+                );
+              }
               await client.query(
                 `
                 UPDATE users
@@ -568,15 +600,29 @@ ${body.body}
                 }),
               );
             } else {
-              await client.query(
-                `
-                INSERT INTO comments
-                  (body, note, parent_article_id, user_id)
-                VALUES
-                  ($1, $2, $3, $4)
-              `,
-                [body.body, ai_response_text, page.article_id, user_id],
-              );
+
+              if (body.comment_id) {
+                await client.query(
+                  `
+                  UPDATE comments
+                  SET body = $1, note = $2
+                  WHERE
+                    comment_id = $3
+                    AND user_id = $4
+                  `,
+                  [body.body, ai_response_text, body.comment_id, user_id]
+                );
+              } else {
+                await client.query(
+                  `
+                  INSERT INTO comments
+                    (body, note, parent_article_id, user_id)
+                  VALUES
+                    ($1, $2, $3, $4)
+                `,
+                  [body.body, ai_response_text, page.article_id, user_id],
+                );
+              }
               await client.query(
                 `
                 UPDATE users
@@ -658,23 +704,25 @@ ${body.body}
             if (page.article_id) {
               const article_results = await client.query(
                 `
-                SELECT article_id, title, body
+                SELECT article_id, title, body,
+                  CASE WHEN user_id = $1 THEN true ELSE false END AS edit
                 FROM articles
-                WHERE parent_article_id = $1
+                WHERE parent_article_id = $2
                 ORDER BY create_date ASC
               `,
-                [page.article_id],
+                [user_id || 0, page.article_id],
               );
               articles.push(...article_results.rows);
               const comment_results = await client.query(
                 `
-                SELECT comments.comment_id, comments.body, comments.note, users.display_name
+                SELECT comments.comment_id, comments.body, comments.note, users.display_name,
+                  CASE WHEN comments.user_id = $1 THEN true ELSE false END AS edit
                 FROM comments
                 INNER JOIN users ON comments.user_id = users.user_id
-                WHERE comments.parent_article_id = $1
+                WHERE comments.parent_article_id = $2
                 ORDER BY comments.create_date ASC
               `,
-                [page.article_id],
+                [user_id || 0, page.article_id],
               );
               comments.push(...comment_results.rows);
             }
