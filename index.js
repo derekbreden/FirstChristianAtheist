@@ -102,6 +102,7 @@ CREATE TABLE IF NOT EXISTS comments (
   parent_article_id INT,
   parent_article_paragraph_index INT,
   parent_comment_id INT,
+  root_comment_id INT,
   body VARCHAR(1000),
   note VARCHAR(500),
   user_id INT NOT NULL,
@@ -483,7 +484,6 @@ ${body.body}
               ai_response.choices[0].message.content[0].text ||
               ai_response.choices[0].message.content;
             if (ai_response_text === "APPROVED") {
-
               // Update existing
               if (body.article_id) {
                 await client.query(
@@ -494,7 +494,7 @@ ${body.body}
                     article_id = $3
                     AND user_id = $4
                   `,
-                  [body.title, body.body, body.article_id, user_id]
+                  [body.title, body.body, body.article_id, user_id],
                 );
 
                 // Add new
@@ -567,7 +567,7 @@ ${body.body}
                     comment_id = $2
                     AND user_id = $3
                   `,
-                  [body.body, body.comment_id, user_id]
+                  [body.body, body.comment_id, user_id],
                 );
               } else {
                 await client.query(
@@ -600,7 +600,6 @@ ${body.body}
                 }),
               );
             } else {
-
               if (body.comment_id) {
                 await client.query(
                   `
@@ -610,7 +609,7 @@ ${body.body}
                     comment_id = $3
                     AND user_id = $4
                   `,
-                  [body.body, ai_response_text, body.comment_id, user_id]
+                  [body.body, ai_response_text, body.comment_id, user_id],
                 );
               } else {
                 await client.query(
