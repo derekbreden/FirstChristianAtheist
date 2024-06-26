@@ -359,7 +359,7 @@
     add-new {
       display: flex;
       flex-direction: column;
-      padding: 20px 0 10px 0;
+      padding: 10px 0;
     }
     add-new > * {
       margin-bottom: 10px;
@@ -373,6 +373,7 @@
       display: none;
     }
     comments {
+      padding: 10px 0 0 0;
       display: flex;
       flex-direction: column;
     }
@@ -558,9 +559,7 @@
         const createElement = (nodes, index = 0, parent = null) => {
           if (index >= nodes.length) return null;
           const node = nodes[index];
-          const parts = node.text.split(" ");
-          let tag = parts[0];
-          const attributes = (tag.match(/\[[^\]]*\]/g) || []).map((attr) => {
+          const attributes = (node.text.match(/\[[^\]]*\]/g) || []).map((attr) => {
             let [key, value] = attr.slice(1, -1).split("=");
             if (value) {
               if (value.startsWith("$")) {
@@ -575,7 +574,9 @@
               value,
             };
           });
-          tag = tag.replace(/\[.*\]/g, "");
+          node.text = node.text.replace(/\[[^\]]*\]/g, "");
+          const parts = node.text.split(" ");
+          let tag = parts[0];
           const rest = parts.slice(1).join(" ");
 
           let element = null;
@@ -926,20 +927,18 @@
       const $add_new = $(
         `
         add-new[comment]
-          input[display-name][placeholder=$1][maxlength=50][value=$2]
-          textarea[body][placeholder=Comment][rows=10][maxlength=1000] $3
-          button[submit] $4
+          input[display-name][placeholder=Your Name][maxlength=50][value=$1]
+          textarea[body][placeholder=Comment][rows=10][maxlength=1000] $2
+          button[submit] $3
           button[alt][cancel] Cancel
           info
           error
         `,
         comment ? [
-          "Your Name",
           display_name,
           comment.body,
           "Save Changes",
         ] : [
-          "Your Name",
           display_name,
           "",
           "Add Comment"
