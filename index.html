@@ -861,17 +861,18 @@
             (c) => c.comment_id === comment.parent_comment_id,
           );
 
-          // When a parent is an only child we act like a sibling instead of a child
-          let grandparent = null;
-          if (parent.parent_comment_id) {
+          // When all ancestors are an only child we act like a sibling instead of a child
+          let ancestor = parent;
+          let found_siblings = false;
+          while (!found_siblings && ancestor.parent_comment_id) {
             const siblings = comments.filter(
               (c) =>
-                c.parent_comment_id === parent.parent_comment_id &&
-                c.comment_id !== parent.comment_id,
+                c.parent_comment_id === ancestor.parent_comment_id &&
+                c.comment_id !== ancestor.comment_id,
             );
             if (siblings.length === 0) {
-              grandparent = comments.find(
-                (c) => c.comment_id === parent.parent_comment_id,
+              ancestor = comments.find(
+                (c) => c.comment_id === ancestor.parent_comment_id,
               );
             } else {
               siblings.forEach((sibling) => {
@@ -881,15 +882,10 @@
                 $reply.setAttribute("alt", "");
                 $reply.setAttribute("faint", "");
               });
+              found_siblings = true;
             }
           }
-          if (grandparent) {
-            grandparent.$comment.appendChild(comment.$comment);
-
-            // Otherwise just append to the parent
-          } else if (parent) {
-            parent.$comment.appendChild(comment.$comment);
-          }
+          ancestor.$comment.appendChild(comment.$comment);
           const $reply = parent.$comment.$(":scope > reply-wrapper [reply]");
           $reply.setAttribute("alt", "");
           $reply.setAttribute("faint", "");
@@ -970,6 +966,8 @@
             `,
           ),
         );
+        $add_new.$("[title]").setAttribute("disabled", "");
+        $add_new.$("[body]").setAttribute("disabled", "");
         fetch("/session", {
           method: "POST",
           body: JSON.stringify({
@@ -982,8 +980,10 @@
         })
           .then((response) => response.json())
           .then(function (data) {
-            $add_new.$("info")?.remove();
             if (data.error || !data.success) {
+              $add_new.$("info")?.remove();
+              $add_new.$("[title]").removeAttribute("disabled");
+              $add_new.$("[body]").removeAttribute("disabled");
               addArticleError(data.error || "Server error");
               return;
             }
@@ -1083,14 +1083,14 @@
           .then((response) => response.json())
           .then(function (data) {
             $add_new.$("[display-name]").removeAttribute("disabled");
-            $add_new.$("info").remove();
+            $add_new.$("info")?.remove();
             if (data.error || !data.success) {
               addCommentError(data.error || "Server error");
             }
           })
           .catch(function (error) {
             $add_new.$("[display-name]").removeAttribute("disabled");
-            $add_new.$("info").remove();
+            $add_new.$("info")?.remove();
             addCommentError("Network error");
           });
       };
@@ -1116,6 +1116,8 @@
             `,
           ),
         );
+        $add_new.$("[body]").setAttribute("disabled", "");
+        $add_new.$("[display-name]").setAttribute("disabled", "");
         fetch("/session", {
           method: "POST",
           body: JSON.stringify({
@@ -1131,16 +1133,23 @@
         })
           .then((response) => response.json())
           .then(function (data) {
-            $add_new.$("info").remove();
             if (data.error || !data.success) {
+              $add_new.$("info")?.remove();
+              $add_new.$("[body]").removeAttribute("disabled");
+              $add_new.$("[display-name]").removeAttribute("disabled");
               addCommentError(data.error || "Server error");
               return;
             }
-            $add_new.$("[body]").value = "";
+            if (!comment && !parent_comment) {
+              $add_new.$("[body]").value = "";
+              $add_new.$("info")?.remove();
+              $add_new.$("[body]").removeAttribute("disabled");
+              $add_new.$("[display-name]").removeAttribute("disabled");
+            }
             startSession();
           })
           .catch(function (error) {
-            $add_new.$("info").remove();
+            $add_new.$("info")?.remove();
             addCommentError("Network error");
           });
       });
