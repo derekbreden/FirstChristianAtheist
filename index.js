@@ -217,7 +217,7 @@ const askAI = (text, prompt = "common") => {
         ],
       },
     ],
-    temperature: 0,
+    temperature: 1,
     max_tokens: 520,
     top_p: 1,
     frequency_penalty: 0,
@@ -559,9 +559,10 @@ ${body.body}
             }
             const ancestor_ids = [];
             if (body.parent_comment_id) {
+              context += "\n\n" + "Comment thread:";
               const comment_ancestors = await client.query(
                 `
-                SELECT users.display_name, comments.body, comments.comment_id
+                SELECT users.display_name, comments.body, comments.note, comments.comment_id
                 FROM comments
                 INNER JOIN users ON comments.user_id = users.user_id
                 WHERE comments.comment_id = $1
@@ -575,8 +576,12 @@ ${body.body}
                 [body.parent_comment_id],
               );
               for (const comment_ancestor of comment_ancestors.rows) {
+                context += "\n\n" + comment_ancestor.display_name + ":";
                 context += "\n" + comment_ancestor.body;
-                context += "\n- " + comment_ancestor.display_name;
+                if (comment_ancestor.note) {
+                  context += "\n\nChatGPT:";
+                  context += "\n" + comment_ancestor.note;
+                }
               }
               ancestor_ids.push(
                 ...comment_ancestors.rows.map((c) => c.comment_id),
@@ -586,8 +591,8 @@ ${body.body}
 ${context}
 """
 """USER
+${body.display_name}:
 ${body.body}
-- ${body.display_name}
 """`);
             const ai_response_text =
               ai_response.choices[0].message.content[0].text ||
@@ -675,7 +680,7 @@ ${body.body}
               );
             }
             // Insert all of the ancestors
-            if (ancestor_ids.length > 0) {
+            if (ancestor_ids.length > 0 && !body.comment_id) {
 
               // Create a values string for the bulk insert
               const values = ancestor_ids
@@ -691,8 +696,6 @@ ${body.body}
                 [comment_id, ...ancestor_ids],
               );
             }
-
-            await client.end();
 
             // Respond with success so the client reloads
             res.end(

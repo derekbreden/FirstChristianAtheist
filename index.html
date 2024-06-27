@@ -1128,7 +1128,9 @@
             comment_id: comment ? comment.comment_id : undefined,
             parent_comment_id: parent_comment
               ? parent_comment.comment_id
-              : undefined,
+              : (comment && comment.parent_comment_id)
+                ? comment.parent_comment_id
+                : undefined,
           }),
         })
           .then((response) => response.json())
