@@ -448,7 +448,9 @@ If you did not request this, please ignore this email.`,
               `
               SELECT reset_tokens.user_id
               FROM reset_tokens
-              WHERE reset_tokens.token_uuid = $1
+              WHERE
+                reset_tokens.token_uuid = $1
+                AND reset_tokens.create_date > NOW() - INTERVAL '60 minutes'
             `,
               [body.reset_token_uuid],
             );
@@ -802,7 +804,10 @@ ${body.body}
                 INNER JOIN users ON reset_tokens.user_id = users.user_id
                 LEFT JOIN sessions ON sessions.session_uuid = $1
                 LEFT JOIN user_sessions ON user_sessions.user_id = users.user_id AND user_sessions.session_id = sessions.session_id
-                WHERE reset_tokens.token_uuid = $2
+                WHERE
+                  reset_tokens.token_uuid = $2
+                  AND reset_tokens.create_date > NOW() - INTERVAL '60 minutes'
+                
               `,
                 [session_uuid, body.reset_token_uuid],
               );

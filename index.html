@@ -514,13 +514,13 @@
           />
           <password-help></password-help>
         </password-wrapper>
-        <button submit>Sign Up / Sign In</button>
+        <button submit>Sign up / Sign in</button>
         <button alt cancel>Cancel</button>
         <error></error>
         <info></info>
       </sign-in>
       <signed-in>
-        <button sign-out>Log Out</button>
+        <button sign-out>Log out</button>
       </signed-in>
     </menu>
     <main-content>
@@ -532,7 +532,7 @@
       </articles-loading>
       <articles></articles>
       <p add-new-article>
-        <a href="/"> + Add New Topic </a>
+        <a href="/"> + Add new topic </a>
       </p>
       <comments></comments>
     </main-content>
@@ -544,18 +544,18 @@
         autocomplete="email"
         maxlength="255"
       />
-      <button submit>Reset Password</button>
+      <button submit>Reset password</button>
       <button alt cancel>Cancel</button>
       <error></error>
       <info></info>
     </modal>
     <modal password-reset>
       <input
-        placeholder="New Password"
+        placeholder="New password"
         type="password"
         autocomplete="new-password"
       />
-      <button submit>Set Password</button>
+      <button submit>Set password</button>
       <button alt cancel>Cancel</button>
       <error></error>
       <info></info>
@@ -797,7 +797,7 @@
             ESCALATING: "Escalation",
             JUDGMENTAL: "Judgmental",
             MISUNDERSTANDING: "Misunderstanding",
-            OFFTOPIC: "Off Topic",
+            OFFTOPIC: "Off topic",
           }[note_title] || note_title;
         const note_body = note.slice(note.indexOf(" ") + 1);
         let $comment = $(
@@ -922,8 +922,8 @@
           button[alt][cancel] Cancel
         `,
         article
-          ? [article.title, article.body, "Save Changes"]
-          : ["", "", "Add Topic"],
+          ? [article.title, article.body, "Save changes"]
+          : ["", "", "Add topic"],
       );
 
       const addArticleError = (error) => {
@@ -1017,16 +1017,16 @@
       const $add_new = $(
         `
         add-new[comment]
-          input[display-name][placeholder=Your Name][maxlength=50][value=$1]
+          input[display-name][placeholder=Your name][maxlength=50][value=$1]
           textarea[body][placeholder=Comment][rows=5][maxlength=1000] $2
           button[submit] $3
           button[alt][cancel] Cancel
         `,
         comment
-          ? [display_name, comment.body, "Save Changes"]
+          ? [display_name, comment.body, "Save changes"]
           : parent_comment
             ? [display_name, "", "Reply"]
-            : [display_name, "", "Add Comment"],
+            : [display_name, "", "Add comment"],
       );
       if (comment) {
         $add_new.$("[cancel]").on("click", () => {
@@ -1456,7 +1456,7 @@
             return;
           }
           passwordResetCancel();
-          modalInfo("Your password has been set.");
+          modalInfo("Your password has been set");
         })
         .catch(function (error) {
           $("modal[password-reset] info").style.display = "none";
