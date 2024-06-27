@@ -183,7 +183,7 @@
     modal {
       display: flex;
       flex-direction: column;
-      padding: 20px 20px 10px 20px;
+      padding: 20px 20px 15px 20px;
       position: relative;
       width: 280px;
     }
@@ -193,7 +193,7 @@
     menu signed-in > *,
     menu sign-in > *,
     modal > * {
-      margin-bottom: 10px;
+      margin-bottom: 5px;
     }
     menu links {
       display: flex;
@@ -316,6 +316,7 @@
       background: #f0fff0;
       color: #4a5;
       display: inline-flex;
+      display: none;
     }
     pass::before {
       top: 3.5px;
@@ -365,10 +366,12 @@
     add-new {
       display: flex;
       flex-direction: column;
-      padding: 10px 0;
     }
     add-new > * {
-      margin-bottom: 10px;
+      margin-bottom: 5px;
+    }
+    add-new > *:last-child {
+      margin-bottom: 0;
     }
     add-new input,
     add-new textarea,
@@ -379,20 +382,25 @@
       display: none;
     }
     comments {
-      padding: 10px 0 0 0;
       display: flex;
       flex-direction: column;
     }
     comments comment {
       display: flex;
       flex-direction: column;
-      border: 1px solid #999;
+      border: 1px solid #DDD;
       border-radius: 2px;
       margin-bottom: 20px;
       padding: 10px;
     }
     comments comment:last-child {
       margin-bottom: 0;
+    }
+    comments comment comment {
+      margin-top: 10px;
+    }
+    comments comment comment + comment {
+      margin-top: -10px;
     }
     comments comment p {
       margin-top: 5px;
@@ -404,17 +412,27 @@
     comments comment info b {
       margin-bottom: 5px;
     }
+    comments > add-new:first-child {
+      margin: 20px 0;
+    }
+    comments > add-new:not(:first-child) {
+      margin: 0 0 20px 0;
+      border: 1px solid #DDD;
+      border-radius: 2px;
+      margin-bottom: 20px;
+      padding: 10px;
+    }
+    articles > add-new:last-child {
+      margin: 20px 0 0 0;
+    }
+    comment add-new {
+      margin-top: 10px;
+    }
     reply-wrapper {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-    }
-    reply-wrapper button {
-      visibility: hidden; /**/
-    }
-    info + reply-wrapper {
       margin-top: 10px;
-      display: none; /**/
     }
     articles {
       display: flex;
@@ -653,7 +671,6 @@
                 child_level = nodes[i].level;
               }
               if (nodes[i].level === child_level) {
-                console.log(element.tagName, i);
                 createElement(nodes, i, element);
               }
             } else {
@@ -772,68 +789,113 @@
           });
         }
       });
-      $("comments").replaceChildren(
-        ...comments.map((comment) => {
-          let note = comment.note || "";
-          let note_title = note.slice(0, note.indexOf(" "));
-          note_title =
-            {
-              ESCALATING: "Escalation",
-              JUDGMENTAL: "Judgmental",
-              MISUNDERSTANDING: "Misunderstanding",
-              OFFTOPIC: "Off Topic",
-            }[note_title] || note_title;
-          const note_body = note.slice(note.indexOf(" ") + 1);
-          let $comment = $(
-            `
-            comment
-              h3
-                $1
-                $2
-              $3
-              $4
-            `,
-            [
-              comment.display_name + ":",
-              comment.edit
-                ? $(
-                    `
-                    button[edit][small][alt][faint] Edit
-                    `,
-                    [],
-                  )
-                : [],
-              markdownToElements(comment.body),
-              comment.note
-                ? $(
-                    `
-                    info-wrapper
-                      info[show]
-                        b $1
-                        span $2
-                      reply-wrapper
-                        button[small][alt][faint] Reply
-                    `,
-                    [note_title, note_body],
-                  )
-                : $(
-                    `
-                    reply-wrapper
-                      button[small] Reply
-                      pass
-                        b OK
-                    `,
-                  ),
-            ],
+      const $comments = comments.map((comment) => {
+        let note = comment.note || "";
+        let note_title = note.slice(0, note.indexOf(" "));
+        note_title =
+          {
+            ESCALATING: "Escalation",
+            JUDGMENTAL: "Judgmental",
+            MISUNDERSTANDING: "Misunderstanding",
+            OFFTOPIC: "Off Topic",
+          }[note_title] || note_title;
+        const note_body = note.slice(note.indexOf(" ") + 1);
+        let $comment = $(
+          `
+          comment
+            h3
+              $1
+              $2
+            $3
+            $4
+            $5
+          `,
+          [
+            comment.display_name + ":",
+            comment.edit
+              ? $(
+                  `
+                  button[edit][small][alt][faint] Edit
+                  `,
+                  [],
+                )
+              : [],
+            markdownToElements(comment.body),
+            comment.note
+              ? $(
+                  `
+                  info-wrapper
+                    info[show]
+                      b $1
+                      span $2
+                  `,
+                  [note_title, note_body],
+                )
+              : [],
+            $(
+              `
+              reply-wrapper
+                button[small][reply] Reply
+                pass
+                  b OK
+              `,
+            ),
+          ],
+        );
+        $comment.$("[reply]").on("click", () => {
+          $comment.$(":scope > reply-wrapper").style.display = "none";
+          showAddNewComment(null, null, comment, $comment);
+        });
+        $comment.$("[edit]")?.on("click", () => {
+          showAddNewComment(comment, $comment);
+        });
+        comment.$comment = $comment;
+        return $comment;
+      });
+      const $root_comments = comments
+        .filter((c) => !c.parent_comment_id)
+        .map((c) => c.$comment);
+      comments.forEach((comment) => {
+        if (comment.parent_comment_id) {
+          const parent = comments.find(
+            (c) => c.comment_id === comment.parent_comment_id,
           );
-          if (comment.edit) {
-            $comment.$("[edit]").on("click", () => {
-              showAddNewComment(comment, $comment);
-            });
+
+          // When a parent is an only child we act like a sibling instead of a child
+          let grandparent = null;
+          if (parent.parent_comment_id) {
+            const siblings = comments.filter(
+              (c) =>
+                c.parent_comment_id === parent.parent_comment_id &&
+                c.comment_id !== parent.comment_id,
+            );
+            if (siblings.length === 0) {
+              grandparent = comments.find(
+                (c) => c.comment_id === parent.parent_comment_id,
+              );
+            } else {
+              siblings.forEach((sibling) => {
+                const $reply = sibling.$comment.$(
+                  ":scope > reply-wrapper [reply]",
+                );
+                $reply.setAttribute("alt", "");
+                $reply.setAttribute("faint", "");
+              });
+            }
           }
-          return $comment;
-        }),
-      );
+          if (grandparent) {
+            grandparent.$comment.appendChild(comment.$comment);
+
+            // Otherwise just append to the parent
+          } else if (parent) {
+            parent.$comment.appendChild(comment.$comment);
+          }
+          const $reply = parent.$comment.$(":scope > reply-wrapper [reply]");
+          $reply.setAttribute("alt", "");
+          $reply.setAttribute("faint", "");
+        }
+      });
+      $("comments").replaceChildren(...$root_comments);
       showAddNewComment();
     };
     window.addEventListener("popstate", () => {
@@ -937,6 +999,7 @@
       } else {
         $("articles").appendChild($add_new);
       }
+      $add_new.$("[body]").focus();
     };
     $("[add-new-article]").on("click", ($event) => {
       $event.preventDefault();
@@ -945,41 +1008,53 @@
     });
 
     // Add new comment
-    const showAddNewComment = (comment, $comment) => {
+    const showAddNewComment = (
+      comment,
+      $comment,
+      parent_comment,
+      $parent_comment,
+    ) => {
       const $add_new = $(
         `
         add-new[comment]
           input[display-name][placeholder=Your Name][maxlength=50][value=$1]
-          textarea[body][placeholder=Comment][rows=10][maxlength=1000] $2
+          textarea[body][placeholder=Comment][rows=5][maxlength=1000] $2
           button[submit] $3
           button[alt][cancel] Cancel
-          info
-          error
         `,
         comment
           ? [display_name, comment.body, "Save Changes"]
-          : [display_name, "", "Add Comment"],
+          : parent_comment
+            ? [display_name, "", "Reply"]
+            : [display_name, "", "Add Comment"],
       );
       if (comment) {
         $add_new.$("[cancel]").on("click", () => {
           $add_new.replaceWith($comment);
         });
+      } else if ($parent_comment) {
+        $add_new.$("[cancel]").on("click", () => {
+          $parent_comment.$(":scope > reply-wrapper").style.display = "flex";
+          $add_new.remove();
+        });
       } else {
         $add_new.$("[cancel]").remove();
       }
       const addCommentError = (error) => {
-        if (error) {
-          $add_new.$("error").style.display = "flex";
-          $add_new.$("error").innerHTML = error;
-        } else {
-          $add_new.$("error").style.display = "none";
-        }
+        $add_new.appendChild(
+          $(
+            `
+            error[show] $1
+            `,
+            [error],
+          ),
+        );
       };
       $add_new.$("[display-name]").on("focus", () => {
-        addCommentError();
+        $add_new.$("error")?.remove();
       });
       $add_new.$("[body]").on("focus", () => {
-        addCommentError();
+        $add_new.$("error")?.remove();
       });
       const saveDisplayName = () => {
         if (display_name === $add_new.$("[display-name]").value) {
@@ -991,8 +1066,13 @@
           addCommentError("Please enter your name");
           return;
         }
-        $add_new.$("info").innerHTML = "Validating...";
-        $add_new.$("info").style.display = "flex";
+        $add_new.appendChild(
+          $(
+            `
+              info[show] Validating...
+            `,
+          ),
+        );
         fetch("/session", {
           method: "POST",
           body: JSON.stringify({
@@ -1003,14 +1083,14 @@
           .then((response) => response.json())
           .then(function (data) {
             $add_new.$("[display-name]").removeAttribute("disabled");
-            $add_new.$("info").style.display = "none";
+            $add_new.$("info").remove();
             if (data.error || !data.success) {
               addCommentError(data.error || "Server error");
             }
           })
           .catch(function (error) {
             $add_new.$("[display-name]").removeAttribute("disabled");
-            $add_new.$("info").style.display = "none";
+            $add_new.$("info").remove();
             addCommentError("Network error");
           });
       };
@@ -1018,7 +1098,7 @@
         saveDisplayName();
       });
       $add_new.$("[submit]").on("click", () => {
-        addCommentError();
+        $add_new.$("error")?.remove();
         display_name = $add_new.$("[display-name]").value;
         const body = $add_new.$("[body]").value;
         if (!display_name) {
@@ -1029,8 +1109,13 @@
           addCommentError("Please enter a comment");
           return;
         }
-        $add_new.$("info").innerHTML = "Validating...";
-        $add_new.$("info").style.display = "flex";
+        $add_new.appendChild(
+          $(
+            `
+              info[show] Validating...
+            `,
+          ),
+        );
         fetch("/session", {
           method: "POST",
           body: JSON.stringify({
@@ -1039,11 +1124,14 @@
             display_name,
             body,
             comment_id: comment ? comment.comment_id : undefined,
+            parent_comment_id: parent_comment
+              ? parent_comment.comment_id
+              : undefined,
           }),
         })
           .then((response) => response.json())
           .then(function (data) {
-            $add_new.$("info").style.display = "none";
+            $add_new.$("info").remove();
             if (data.error || !data.success) {
               addCommentError(data.error || "Server error");
               return;
@@ -1052,12 +1140,20 @@
             startSession();
           })
           .catch(function (error) {
-            $add_new.$("info").style.display = "none";
+            $add_new.$("info").remove();
             addCommentError("Network error");
           });
       });
       if ($comment) {
         $comment.replaceWith($add_new);
+        $add_new.$("[body]").focus();
+      } else if ($parent_comment) {
+        $parent_comment.$(":scope > reply-wrapper").after($add_new);
+        if (!display_name) {
+          $add_new.$("[display-name]").focus();
+        } else {
+          $add_new.$("[body]").focus();
+        }
       } else {
         $("comments").prepend($add_new);
       }
