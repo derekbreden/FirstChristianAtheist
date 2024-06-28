@@ -606,7 +606,6 @@ ${body.body}
               return;
             }
             let comment_id = body.comment_id;
-            console.warn(context, ai_response_text);
             if (ai_response_text === "OK") {
               if (body.comment_id) {
                 await client.query(
