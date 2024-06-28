@@ -385,6 +385,10 @@
       display: flex;
       flex-direction: column;
     }
+    comments > add-new:first-child {
+      padding: 10px;
+      border: 1px solid #DDD;
+    }
     comments comment {
       display: flex;
       flex-direction: column;
@@ -437,6 +441,19 @@
     articles {
       display: flex;
       flex-direction: column;
+    }
+    articles article + article {
+      margin-top: 21px;
+      position: relative;
+    }
+    articles article + article::before {
+      content: "";
+      display: block;
+      position: absolute;
+      top: 0px;
+      left: 20px;
+      right: 20px;
+      border-top: 1px solid #999;
     }
     articles-loading {
       display: flex;
