@@ -493,7 +493,7 @@ ${body.body}
             const ai_response_text =
               ai_response.choices[0].message.content[0].text ||
               ai_response.choices[0].message.content;
-            if (ai_response_text === "APPROVED") {
+            if (ai_response_text === "OK") {
               // Update existing
               if (body.article_id) {
                 await client.query(
@@ -606,7 +606,8 @@ ${body.body}
               return;
             }
             let comment_id = body.comment_id;
-            if (ai_response_text === "APPROVED") {
+            console.warn(context, ai_response_text);
+            if (ai_response_text === "OK") {
               if (body.comment_id) {
                 await client.query(
                   `
@@ -681,7 +682,6 @@ ${body.body}
             }
             // Insert all of the ancestors
             if (ancestor_ids.length > 0 && !body.comment_id) {
-
               // Create a values string for the bulk insert
               const values = ancestor_ids
                 .map((ancestor_id, index) => `($1, $${index + 2})`)
@@ -710,7 +710,7 @@ ${body.body}
             const ai_response_text =
               ai_response.choices[0].message.content[0].text ||
               ai_response.choices[0].message.content;
-            if (ai_response_text === "APPROVED") {
+            if (ai_response_text === "OK") {
               await client.query(
                 `
                 UPDATE users
