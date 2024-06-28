@@ -1120,7 +1120,7 @@
         })
           .then((response) => response.json())
           .then(function (data) {
-            $add_new.$("[display-name]").removeAttribute("disabled");
+            $add_new.$("[display-name]")?.removeAttribute("disabled");
             $add_new.$("info")?.remove();
             if (data.error || !data.success) {
               addCommentError(data.error || "Server error");
@@ -1129,7 +1129,7 @@
             hideDisplayNameInput();
           })
           .catch(function (error) {
-            $add_new.$("[display-name]").removeAttribute("disabled");
+            $add_new.$("[display-name]")?.removeAttribute("disabled");
             $add_new.$("info")?.remove();
             addCommentError("Network error");
           });
@@ -1140,7 +1140,7 @@
       hideDisplayNameInput();
       $add_new.$("[submit]").on("click", () => {
         $add_new.$("error")?.remove();
-        display_name = $add_new.$("[display-name]").value;
+        display_name = $add_new.$("[display-name]")?.value || display_name;
         const body = $add_new.$("[body]").value;
         if (!display_name) {
           addCommentError("Please enter your name");
@@ -1158,7 +1158,7 @@
           ),
         );
         $add_new.$("[body]").setAttribute("disabled", "");
-        $add_new.$("[display-name]").setAttribute("disabled", "");
+        $add_new.$("[display-name]")?.setAttribute("disabled", "");
         fetch("/session", {
           method: "POST",
           body: JSON.stringify({
@@ -1179,7 +1179,7 @@
             if (data.error || !data.success) {
               $add_new.$("info")?.remove();
               $add_new.$("[body]").removeAttribute("disabled");
-              $add_new.$("[display-name]").removeAttribute("disabled");
+              $add_new.$("[display-name]")?.removeAttribute("disabled");
               addCommentError(data.error || "Server error");
               return;
             }
@@ -1187,7 +1187,7 @@
               $add_new.$("[body]").value = "";
               $add_new.$("info")?.remove();
               $add_new.$("[body]").removeAttribute("disabled");
-              $add_new.$("[display-name]").removeAttribute("disabled");
+              $add_new.$("[display-name]")?.removeAttribute("disabled");
             }
             startSession();
           })
