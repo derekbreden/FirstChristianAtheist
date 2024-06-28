@@ -438,6 +438,9 @@
       align-items: flex-end;
       margin-top: 10px;
     }
+    display-name-wrapper {
+      padding-bottom: 5px;
+    }
     articles {
       display: flex;
       flex-direction: column;
@@ -1073,8 +1076,26 @@
       $add_new.$("[body]").on("focus", () => {
         $add_new.$("error")?.remove();
       });
+      const hideDisplayNameInput = () => {
+        const $display_name = $add_new.$("[display-name]");
+        if (display_name && $display_name) {
+          const $display_name_wrapper = $(
+            `
+            display-name-wrapper
+              b $1
+            `,
+            [display_name + ":"],
+          )
+          $display_name_wrapper.on("click", () => {
+            $display_name_wrapper.replaceWith($display_name);
+            $display_name.focus();
+          });
+          $display_name.replaceWith($display_name_wrapper);
+        }
+      };
       const saveDisplayName = () => {
         if (display_name === $add_new.$("[display-name]").value) {
+          hideDisplayNameInput();
           return;
         }
         display_name = $add_new.$("[display-name]").value;
@@ -1103,7 +1124,9 @@
             $add_new.$("info")?.remove();
             if (data.error || !data.success) {
               addCommentError(data.error || "Server error");
+              display_name = "";
             }
+            hideDisplayNameInput();
           })
           .catch(function (error) {
             $add_new.$("[display-name]").removeAttribute("disabled");
@@ -1114,6 +1137,7 @@
       $add_new.$("[display-name]").on("blur", () => {
         saveDisplayName();
       });
+      hideDisplayNameInput();
       $add_new.$("[submit]").on("click", () => {
         $add_new.$("error")?.remove();
         display_name = $add_new.$("[display-name]").value;
