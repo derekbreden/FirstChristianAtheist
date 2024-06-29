@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS articles (
   title VARCHAR(140),
   body VARCHAR(4000),
   note VARCHAR(500),
+  slug VARCHAR(140),
   user_id INT NOT NULL,
   votes_raw INT DEFAULT 0,
   votes_weighted FLOAT DEFAULT 0.0,
@@ -155,12 +156,12 @@ CREATE TABLE IF NOT EXISTS votes (
           const new_page = await client.query(
             `
             INSERT INTO articles
-              (title, body, user_id, parent_article_id, admin)
+              (title, slug, body, user_id, parent_article_id, admin)
             VALUES
-              ($1, $2, $3, 0, true)
+              ($1, $2, $3, $4, 0, true)
             RETURNING article_id;
           `,
-            [page.title, page.body, root_user_id],
+            [page.title, page.title, page.body, root_user_id],
           );
           page.article_id = new_page.rows[0].article_id;
         }
@@ -481,6 +482,26 @@ If you did not request this, please ignore this email.`,
 
             // Adding new article
           } else if (body.title && body.body && body.path && session_id) {
+
+            // Get page context if modifying an article from its slug page
+            //   where path is no longer the page slug
+            if (body.article_id) {
+              const page_result = await client.query(
+                `
+                SELECT slug
+                FROM articles
+                WHERE article_id = (
+                  SELECT parent_article_id
+                  FROM articles
+                  WHERE article_id = $1
+                )
+                `,
+                [body.article_id],
+              );
+              body.path = "/" + page_result.rows[0].slug.toLowerCase();
+            }
+
+            // Always moderate based on page context
             const page = pages[body.path];
             const ai_response = await askAI(`"""CONTEXT
 ${page.title}
@@ -494,17 +515,20 @@ ${body.body}
               ai_response.choices[0].message.content[0].text ||
               ai_response.choices[0].message.content;
             if (ai_response_text === "OK") {
+              const slug = body.title
+                .replace(/[^a-z0-9 ]/ig, "")
+                .replace(/ {1,}/g, "_");
               // Update existing
               if (body.article_id) {
                 await client.query(
                   `
                   UPDATE articles
-                  SET title = $1, body = $2
+                  SET title = $1, slug = $2, body = $3
                   WHERE
-                    article_id = $3
-                    AND user_id = $4
+                    article_id = $4
+                    AND user_id = $5
                   `,
-                  [body.title, body.body, body.article_id, user_id],
+                  [body.title, slug, body.body, body.article_id, user_id],
                 );
 
                 // Add new
@@ -512,11 +536,11 @@ ${body.body}
                 await client.query(
                   `
                   INSERT INTO articles
-                    (title, body, parent_article_id, user_id)
+                    (title, slug, body, parent_article_id, user_id)
                   VALUES
-                    ($1, $2, $3, $4)
+                    ($1, $2, $3, $4, $5)
                 `,
-                  [body.title, body.body, page.article_id, user_id],
+                  [body.title, slug, body.body, page.article_id, user_id],
                 );
               }
 
@@ -541,7 +565,22 @@ ${body.body}
             body.path &&
             session_id
           ) {
-            const page = pages[body.path];
+            const page = pages[body.path] || pages["/"];
+            let article_id = page.article_id;
+            if (body.path.substr(0, 8) === "/article") {
+              const slug = body.path.substr(9);
+              const article_results = await client.query(
+                `
+                SELECT article_id
+                FROM articles
+                WHERE slug = $1
+                `,
+                [slug],
+              );
+              if (article_results.rows.length) {
+                article_id = article_results.rows[0].article_id;
+              }
+            }
             let context = page.title;
             context += "\n" + page.body;
             const article_results = await client.query(
@@ -551,7 +590,7 @@ ${body.body}
               WHERE parent_article_id = $1
               ORDER BY create_date ASC
             `,
-              [page.article_id],
+              [article_id],
             );
             for (const article of article_results.rows) {
               context += "\n" + article.title;
@@ -627,7 +666,7 @@ ${body.body}
                     ($1, $2, $3, $4)
                   RETURNING comment_id
                 `,
-                  [body.body, page.article_id, user_id, body.parent_comment_id],
+                  [body.body, article_id, user_id, body.parent_comment_id],
                 );
                 comment_id = comment_inserted.rows[0].comment_id;
               }
@@ -760,21 +799,54 @@ ${body.body}
             // Get articles for path
             const articles = [];
             const comments = [];
+            let add_new = false;
             let path_to_use = "/";
             if (pages[body.path]) {
               path_to_use = body.path;
-            }
-            const page = pages[path_to_use];
-            const add_new = !page.admin_only || admin;
-            if (page.article_id) {
+            } else if (body.path.substr(0, 8) === "/article") {
+              const slug = body.path.substr(9);
               const article_results = await client.query(
                 `
-                SELECT article_id, title, body,
+                SELECT article_id, title, slug, body,
+                  CASE WHEN user_id = $1 THEN true ELSE false END AS edit
+                FROM articles
+                WHERE slug = $2
+                `,
+                [user_id || 0, slug],
+              );
+              if (article_results.rows.length) {
+                path_to_use = `/article/${slug}`;
+                articles.push(...article_results.rows);
+                const comment_results = await client.query(
+                  `
+                  SELECT
+                    comments.comment_id,
+                    comments.body,
+                    comments.note,
+                    comments.parent_comment_id,
+                    users.display_name,
+                    CASE WHEN comments.user_id = $1 THEN true ELSE false END AS edit
+                  FROM comments
+                  INNER JOIN users ON comments.user_id = users.user_id
+                  WHERE comments.parent_article_id = $2
+                  ORDER BY comments.create_date ASC
+                `,
+                  [user_id || 0, article_results.rows[0].article_id],
+                );
+                comments.push(...comment_results.rows);
+              }
+            }
+            if (pages[path_to_use]) {
+              const page = pages[path_to_use];
+              add_new = !page.admin_only || admin;
+              const article_results = await client.query(
+                `
+                SELECT article_id, title, slug, LEFT(body, 1000) as body,
                   CASE WHEN user_id = $1 THEN true ELSE false END AS edit
                 FROM articles
                 WHERE parent_article_id = $2
                 ORDER BY create_date ASC
-              `,
+                `,
                 [user_id || 0, page.article_id],
               );
               articles.push(...article_results.rows);
