@@ -579,6 +579,13 @@ ${body.body}
               );
               if (article_results.rows.length) {
                 article_id = article_results.rows[0].article_id;
+              } else {
+                res.end(
+                  JSON.stringify({
+                    error: "Path not found",
+                  }),
+                );
+                return;
               }
             }
             let context = page.title;
@@ -702,7 +709,7 @@ ${body.body}
                   [
                     body.body,
                     ai_response_text,
-                    page.article_id,
+                    article_id,
                     user_id,
                     body.parent_comment_id,
                   ],
