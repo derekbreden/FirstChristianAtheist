@@ -333,6 +333,9 @@
       background: #4a5;
       color: #f0fff0;
     }
+    error p {
+      margin-top: 5px;
+    }
     password-wrapper {
       display: flex;
       align-items: center;
@@ -1041,7 +1044,8 @@
         $add_new.appendChild(
           $(
             `
-            error[show] $1
+            error[show]
+              $1
             `,
             [error],
           ),
@@ -1102,7 +1106,30 @@
               $add_new.$("info")?.remove();
               $add_new.$("[title]").removeAttribute("disabled");
               $add_new.$("[body]").removeAttribute("disabled");
-              addArticleError(data.error || "Server error");
+              if (data.error) {
+                const first_word = data.error.slice(0, data.error.indexOf(" "));
+                const title = {
+                  ESCALATING: "Escalation",
+                  JUDGMENTAL: "Judgmental",
+                  MISUNDERSTANDING: "Misunderstanding",
+                  OFFTOPIC: "Off topic",
+                }[first_word];
+                if (title) {
+                  addArticleError(
+                    $(
+                      `
+                      b $1
+                      p $2
+                      `,
+                      [title, data.error.slice(data.error.indexOf(" ") + 1)],
+                    ),
+                  );
+                } else {
+                  addArticleError(data.error);
+                }
+              } else {
+                addArticleError("Server error");
+              }
               return;
             }
             startSession();
