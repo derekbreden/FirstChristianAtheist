@@ -120,6 +120,9 @@
     p[ellipsis] {
       margin-bottom: 10px;
     }
+    ul {
+      margin: 10px 0 0 17px;
+    }
     back-wrapper {
       margin-top: 20px;
       display: flex;
@@ -1636,6 +1639,25 @@
         if (p_content.substr(0, 2) === "# ") {
           p_element.setAttribute("bold", "");
           p_content = p_content.replace(/# /g, "");
+        }
+
+        // Support for -
+        if (p_content.substr(0, 3) === "- ") {
+          const li_contents = p_content.split("\n");
+          if (li_contents.length > 1) {
+            const $ul = document.createElement("ul");
+            li_contents.forEach((li_content) => {
+              $ul.appendChild(
+                $(
+                  `
+                  li $1
+                  `,
+                  [li_content.replace(/^- /g, "")],
+                ),
+              );
+            });
+            return $ul;
+          }
         }
 
         let inserts = [];
