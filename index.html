@@ -785,7 +785,7 @@
       if (path === "/topics") {
         showAddNewArticle();
       } else {
-        $("main-content add-new:first-child")?.remove();
+        $("main-content > add-new:first-child")?.remove();
       }
       if (path.substr(0, 8) === "/article") {
         const $back = $(
