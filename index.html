@@ -1073,6 +1073,10 @@
           addArticleError("Please enter some content");
           return;
         }
+        if (title.length >= body.length) {
+          addArticleError("The content must be longer than the title");
+          return;
+        }
         $add_new.appendChild(
           $(
             `
