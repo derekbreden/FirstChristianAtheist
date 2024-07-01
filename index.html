@@ -246,6 +246,27 @@
       border: 1px solid #26323e;
       padding: 10px;
     }
+    textarea-wrapper height-detector {
+      position: relative;
+      z-index: -1;
+      white-space: pre-wrap;
+      min-height: 77px;
+      padding: 11px;
+      max-height: 200px;
+      overflow: hidden;
+    }
+    textarea-wrapper {
+      display: flex;
+      position: relative;
+    }
+    textarea-wrapper textarea {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+    }
     button {
       cursor: pointer;
       font-size: 14px;
@@ -1029,7 +1050,9 @@
         `
         add-new[article]
           input[title][placeholder=Title][maxlength=140][value=$1]
-          textarea[body][placeholder=Content][rows=10][maxlength=4000] $2
+          textarea-wrapper
+            height-detector $2
+            textarea[body][placeholder=Content][rows=10][maxlength=4000] $2
           button[submit] $3
           button[alt][cancel] Cancel
         `,
@@ -1037,6 +1060,14 @@
           ? [article.title, article.body, "Save changes"]
           : ["", "", "Add topic"],
       );
+      $textarea = $add_new.$("textarea");
+      $height_detector = $add_new.$("height-detector");
+      $textarea.on("input", function(){
+        this.previousSibling.innerText = this.value;
+        if (this.value.slice(this.value.length - 1) === "\n") {
+          this.previousSibling.innerText = this.value + "&nbsp;";
+        }
+      });
 
       const addArticleError = (error) => {
         $add_new.appendChild(
@@ -1133,7 +1164,9 @@
         `
         add-new[comment]
           input[display-name][placeholder=Your name][maxlength=50][value=$1]
-          textarea[body][placeholder=Comment][rows=5][maxlength=1000] $2
+          textarea-wrapper
+            height-detector $2
+            textarea[body][placeholder=Comment][rows=5][maxlength=1000] $2
           button[submit] $3
           button[alt][cancel] Cancel
         `,
@@ -1143,6 +1176,14 @@
             ? [display_name, "", "Reply"]
             : [display_name, "", "Add comment"],
       );
+      $textarea = $add_new.$("textarea");
+      $height_detector = $add_new.$("height-detector");
+      $textarea.on("input", function(){
+        this.previousSibling.innerText = this.value;
+        if (this.value.slice(this.value.length - 1) === "\n") {
+          this.previousSibling.innerText = this.value + "&nbsp;";
+        }
+      });
       if (comment) {
         $add_new.$("[cancel]").on("click", () => {
           $add_new.replaceWith($comment);
