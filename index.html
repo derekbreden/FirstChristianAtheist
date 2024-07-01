@@ -387,7 +387,8 @@
     }
     [add-new-article] {
       display: none;
-      margin-top: 20px;
+      padding: 20px 0;
+      margin-bottom: -20px;
     }
     [add-new-article] button {
       width: 100%;
@@ -437,8 +438,9 @@
       margin-bottom: 20px;
       padding: 10px;
     }
-    articles > add-new:last-child {
-      margin: 20px 0 0 0;
+    articles > add-new:first-child {
+      padding: 20px 0;
+      margin-bottom: -20px;
     }
     comment add-new {
       margin-top: 10px;
@@ -561,10 +563,10 @@
         <p></p>
         <p></p>
       </articles-loading>
-      <articles></articles>
       <p add-new-article>
-        <button alt>Add topic</button>
+        <button alt>Add new topic</button>
       </p>
+      <articles></articles>
       <comments></comments>
     </main-content>
     <modal-bg></modal-bg>
@@ -779,12 +781,12 @@
       $("articles").style.display = "none";
       $("comments").style.display = "none";
     };
-    const renderPage = (page_path, articles, comments, add_new) => {
+    const renderPage = (page_path, articles, comments) => {
       if (path !== page_path) {
         path = page_path;
         history.replaceState({}, "", page_path);
       }
-      if (add_new) {
+      if (path === "/topics") {
         $("[add-new-article]").style.display = "flex";
       }
       $("articles-loading").style.display = "none";
@@ -824,12 +826,6 @@
               );
               $article_body.push($more);
             }
-            $more.on("click", () => {
-              path = "/article/" + article.slug;
-              history.pushState({}, "", path);
-              loadingPage();
-              startSession();
-            });
           }
           const $article = $(
             `
@@ -853,8 +849,18 @@
             ],
           );
           if (article.edit) {
-            $article.$("[edit]").on("click", () => {
+            $article.$("[edit]").on("click", ($event) => {
+              $event.preventDefault();
               showAddNewArticle(article, $article);
+            });
+          }
+          if (path === "/topics") {
+            $article.on("click", ($event) => {
+              $event.preventDefault();
+              path = "/article/" + article.slug;
+              history.pushState({}, "", path);
+              loadingPage();
+              startSession();
             });
           }
           return $article;
@@ -1014,13 +1020,13 @@
         `
         add-new[article]
           input[title][placeholder=Title][maxlength=140][value=$1]
-          textarea[body][placeholder=Content][rows=20][maxlength=4000] $2
+          textarea[body][placeholder=Content][rows=10][maxlength=4000] $2
           button[submit] $3
           button[alt][cancel] Cancel
         `,
         article
           ? [article.title, article.body, "Save changes"]
-          : ["", "", "Add topic"],
+          : ["", "", "Add new topic"],
       );
 
       const addArticleError = (error) => {
@@ -1098,9 +1104,9 @@
       if ($article) {
         $article.replaceWith($add_new);
       } else {
-        $("articles").appendChild($add_new);
+        $("articles").prepend($add_new);
       }
-      $add_new.$("[body]").focus();
+      $add_new.$("[title]").focus();
     };
     $("[add-new-article]").on("click", ($event) => {
       $event.preventDefault();
@@ -1325,7 +1331,7 @@
             modalError(data.error);
           }
           if (data.path) {
-            renderPage(data.path, data.articles, data.comments, data.add_new);
+            renderPage(data.path, data.articles, data.comments);
           }
         })
         .catch(function (error) {

@@ -806,7 +806,6 @@ ${body.body}
             // Get articles for path
             const articles = [];
             const comments = [];
-            let add_new = false;
             let path_to_use = "/";
             if (pages[body.path]) {
               path_to_use = body.path;
@@ -845,7 +844,6 @@ ${body.body}
             }
             if (pages[path_to_use]) {
               const page = pages[path_to_use];
-              add_new = !page.admin_only || admin;
               const article_results = await client.query(
                 `
                 SELECT article_id, title, slug, LEFT(body, 1000) as body,
@@ -912,7 +910,6 @@ ${body.body}
                     articles,
                     comments,
                     path: path_to_use,
-                    add_new,
                   }),
                 );
               } else {
@@ -922,7 +919,6 @@ ${body.body}
                     articles,
                     comments,
                     path: path_to_use,
-                    add_new,
                     error: "Reset link expired",
                   }),
                 );
@@ -937,7 +933,6 @@ ${body.body}
                   articles,
                   comments,
                   path: path_to_use,
-                  add_new,
                 }),
               );
             }
