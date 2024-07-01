@@ -124,20 +124,6 @@
       margin-top: 20px;
       display: flex;
     }
-    ol {
-      margin: 10px 0 0 0;
-      list-style: none;
-      counter-reset: section;
-    }
-    ol li::before {
-      display: inline-flex;
-      counter-increment: section;
-      content: counters(section, ".") ". ";
-      width: 100px;
-      margin-left: -83px;
-      padding-right: 5px;
-      justify-content: flex-end;
-    }
     debug {
       white-space: pre;
     }
@@ -1650,25 +1636,6 @@
         if (p_content.substr(0, 2) === "# ") {
           p_element.setAttribute("bold", "");
           p_content = p_content.replace(/# /g, "");
-        }
-
-        // Support for 1.
-        if (p_content.substr(0, 3) === "1. ") {
-          const li_contents = p_content.split("\n");
-          if (li_contents.length > 1) {
-            const $ol = document.createElement("ol");
-            li_contents.forEach((li_content) => {
-              $ol.appendChild(
-                $(
-                  `
-                li $1
-                `,
-                  [li_content.replace(/^\d{1,}\. /g, "")],
-                ),
-              );
-            });
-            return $ol;
-          }
         }
 
         let inserts = [];
