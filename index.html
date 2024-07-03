@@ -841,6 +841,13 @@
         $("main-content back-wrapper")?.remove();
       }
     };
+    const renderName = (display_name, display_name_index) => {
+      return display_name + (
+          Number(display_name_index)
+            ? (" (" + display_name_index + ")")
+            : ""
+        );
+    };
     const renderArticle = (article) => {
       let $article_body = markdownToElements(article.body);
       let characters_used = 0;
@@ -927,7 +934,7 @@
           $5
         `,
         [
-          comment.display_name + ":",
+          renderName(comment.display_name, comment.display_name_index) + ":",
           comment.edit
             ? $(
                 `
@@ -1045,9 +1052,9 @@
           if (activity.type === "comment") {
             const $comment = renderComment(activity);
             $comment.$("reply-wrapper")?.remove();
-            let preamble = `${activity.display_name} commented on ${activity.parent_article_title}`;
+            let preamble = `${renderName(activity.display_name, activity.display_name_index)} commented on ${activity.parent_article_title}`;
             if (activity.parent_comment_display_name) {
-              preamble = `${activity.display_name} replied to ${activity.parent_comment_display_name} on ${activity.parent_article_title}`;
+              preamble = `${renderName(activity.display_name, activity.display_name_index)} replied to ${renderName(activity.parent_comment_display_name, activity.parent_comment_display_name_index)} on ${activity.parent_article_title}`;
             }
             let $comment_wrapper = $comment;
             if (activity.parent_comment_body) {
