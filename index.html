@@ -405,31 +405,33 @@
       padding: 10px;
       border: 1px solid #ddd;
     }
-    comments comment {
+    comment {
       display: flex;
       flex-direction: column;
       border: 1px solid #ddd;
       border-radius: 2px;
-      margin-bottom: 20px;
       padding: 10px;
+    }
+    comments comment {
+      margin-bottom: 20px;
     }
     comments comment:last-child {
       margin-bottom: 0;
     }
-    comments comment comment {
+    comment comment {
       margin-top: 10px;
     }
-    comments comment comment + comment {
+    comment comment + comment {
       margin-top: -10px;
     }
-    comments comment p {
+    comment p {
       margin-top: 5px;
     }
-    comments comment pass,
-    comments comment info {
+    comment pass,
+    comment info {
       margin-top: 10px;
     }
-    comments comment info b {
+    comment info b {
       margin-bottom: 5px;
     }
     comments > add-new:first-child {
@@ -462,10 +464,12 @@
       display: flex;
       flex-direction: column;
     }
+    activities activity + activity,
     articles article + article {
       margin-top: 21px;
       position: relative;
     }
+    activities activity + activity::before,
     articles article + article::before {
       content: "";
       display: block;
@@ -473,7 +477,7 @@
       top: 0px;
       left: 20px;
       right: 20px;
-      border-top: 1px solid #999;
+      border-top: 1px solid #ddd;
     }
     articles-loading {
       display: none;
@@ -503,6 +507,26 @@
       margin-top: 10px;
       width: 33%;
       border-bottom: none;
+    }
+    activities {
+      display: flex;
+      flex-direction: column;
+    }
+    activity > h2 {
+      font-size: 11px;
+      margin-bottom: 5px;
+    }
+    activity > article h2 {
+      margin-top: 0;
+    }
+    activity > article p[ellipsis] {
+      margin-bottom: 0;
+    }
+    activity > [parent-comment] {
+      background: #f5f5f5;
+    }
+    activity > [parent-comment] comment {
+      background: #fff;
     }
     @keyframes loading {
       0% {
@@ -535,6 +559,7 @@
       <links>
         <a href="/">Home</a>
         <a href="/topics">Topics</a>
+        <a href="/recent">Recent activity</a>
       </links>
       <sign-in>
         <input
@@ -572,6 +597,7 @@
         <button alt>Add comment</button>
       </p>
       <comments></comments>
+      <activities></activities>
     </main-content>
     <modal-bg></modal-bg>
     <modal password-help>
@@ -784,6 +810,7 @@
       $("articles-loading").style.display = "flex";
       $("articles").style.display = "none";
       $("comments").style.display = "none";
+      $("activities").style.display = "none";
       if (path === "/topics") {
         showAddNewArticle();
       } else {
@@ -808,89 +835,146 @@
         $("main-content back-wrapper")?.remove();
       }
     };
-    const renderPage = (page_path, articles, comments) => {
+    const renderArticle = (article) => {
+      let $article_body = markdownToElements(article.body);
+      let characters_used = 0;
+      let trimmed = false;
+      if (path === "/topics" || path === "/recent") {
+        article.edit = false;
+        $article_body = $article_body.reduce((acc, child) => {
+          characters_used += child.textContent.length;
+          if (characters_used < 280) {
+            acc.push(child);
+          } else {
+            trimmed = true;
+          }
+          return acc;
+        }, []);
+        if (trimmed) {
+          $article_body.push(
+            $(
+              `
+              p[ellipsis] ...
+              button[alt][small] Read more
+              `,
+            ),
+          );
+        }
+      }
+      const $article = $(
+        `
+        article
+          h2
+            $1
+            $2
+          $3
+        `,
+        [
+          article.title,
+          article.edit
+            ? $(
+                `
+                button[edit][small][alt][faint] Edit
+                `,
+                [],
+              )
+            : [],
+          $article_body,
+        ],
+      );
+      if (article.edit) {
+        $article.$("[edit]").on("click", ($event) => {
+          $event.preventDefault();
+          showAddNewArticle(article, $article);
+        });
+      }
+      if (path === "/topics" || path === "/recent") {
+        $article.on("click", ($event) => {
+          $event.preventDefault();
+          path = "/article/" + article.slug;
+          history.pushState({}, "", path);
+          loadingPage();
+          startSession();
+        });
+      }
+      return $article;
+    };
+    const renderComment = (comment) => {
+      let note = comment.note || "";
+      let note_title = note.slice(0, note.indexOf(" "));
+      note_title =
+        {
+          ESCALATING: "Escalation",
+          JUDGMENTAL: "Judgmental",
+          MISUNDERSTANDING: "Misunderstanding",
+          OFFTOPIC: "Off topic",
+        }[note_title] || note_title;
+      const note_body = note.slice(note.indexOf(" ") + 1);
+      let $comment = $(
+        `
+        comment
+          h3
+            $1
+            $2
+          $3
+          $4
+          $5
+        `,
+        [
+          comment.display_name + ":",
+          comment.edit
+            ? $(
+                `
+                button[edit][small][alt][faint] Edit
+                `,
+                [],
+              )
+            : [],
+          markdownToElements(comment.body),
+          comment.note
+            ? $(
+                `
+                info-wrapper
+                  info[show]
+                    b $1
+                    span $2
+                `,
+                [note_title, note_body],
+              )
+            : [],
+          $(
+            `
+            reply-wrapper
+              button[small][reply] Reply
+              pass
+                b OK
+            `,
+          ),
+        ],
+      );
+      $comment.$("[reply]").on("click", () => {
+        $comment.$(":scope > reply-wrapper").style.display = "none";
+        showAddNewComment(null, null, comment, $comment);
+      });
+      $comment.$("[edit]")?.on("click", () => {
+        showAddNewComment(comment, $comment);
+      });
+      comment.$comment = $comment;
+      return $comment;
+    };
+    const renderPage = (page_path, articles, comments, activities) => {
       if (path !== page_path) {
         path = page_path;
         history.replaceState({}, "", page_path);
       }
-      $("[add-new-comment]").style.display = "flex";
+      if (path !== "/recent") {
+        $("[add-new-comment]").style.display = "flex";
+      }
       $("articles-loading").style.display = "none";
       $("articles").style.display = "flex";
       $("comments").style.display = "flex";
-      $("articles").replaceChildren(
-        ...articles.map((article) => {
-          let $article_body = markdownToElements(article.body);
-          let characters_used = 0;
-          let trimmed = false;
-          if (path === "/topics") {
-            article.edit = false;
-            $article_body = $article_body.reduce((acc, child) => {
-              characters_used += child.textContent.length;
-              if (characters_used < 280) {
-                acc.push(child);
-              } else {
-                trimmed = true;
-              }
-              return acc;
-            }, []);
-            let $more = null;
-            if (trimmed) {
-              const $more_wrapper = $(
-                `
-                p[ellipsis] ...
-                button[alt][small][more] Read more
-                `,
-              );
-              $more = $more_wrapper.$("[more]");
-              $article_body.push($more_wrapper);
-            } else {
-              $more = $(
-                `
-                button[alt][small][more] Read more
-                `,
-              );
-              $article_body.push($more);
-            }
-          }
-          const $article = $(
-            `
-            article
-              h2
-                $1
-                $2
-              $3
-            `,
-            [
-              article.title,
-              article.edit
-                ? $(
-                    `
-                    button[edit][small][alt][faint] Edit
-                    `,
-                    [],
-                  )
-                : [],
-              $article_body,
-            ],
-          );
-          if (article.edit) {
-            $article.$("[edit]").on("click", ($event) => {
-              $event.preventDefault();
-              showAddNewArticle(article, $article);
-            });
-          }
-          if (path === "/topics") {
-            $article.on("click", ($event) => {
-              $event.preventDefault();
-              path = "/article/" + article.slug;
-              history.pushState({}, "", path);
-              loadingPage();
-              startSession();
-            });
-          }
-          return $article;
-        }),
-      );
+      $("activities").style.display = "flex";
+      $("articles").replaceChildren(...articles.map(renderArticle));
       $("articles a")?.forEach(($a) => {
         const new_path = $a.getAttribute("href");
         if (new_path.substr(0, 1) === "/") {
@@ -908,69 +992,7 @@
       if (path === "/topics") {
         showAddNewArticle();
       }
-      const $comments = comments.map((comment) => {
-        let note = comment.note || "";
-        let note_title = note.slice(0, note.indexOf(" "));
-        note_title =
-          {
-            ESCALATING: "Escalation",
-            JUDGMENTAL: "Judgmental",
-            MISUNDERSTANDING: "Misunderstanding",
-            OFFTOPIC: "Off topic",
-          }[note_title] || note_title;
-        const note_body = note.slice(note.indexOf(" ") + 1);
-        let $comment = $(
-          `
-          comment
-            h3
-              $1
-              $2
-            $3
-            $4
-            $5
-          `,
-          [
-            comment.display_name + ":",
-            comment.edit
-              ? $(
-                  `
-                  button[edit][small][alt][faint] Edit
-                  `,
-                  [],
-                )
-              : [],
-            markdownToElements(comment.body),
-            comment.note
-              ? $(
-                  `
-                  info-wrapper
-                    info[show]
-                      b $1
-                      span $2
-                  `,
-                  [note_title, note_body],
-                )
-              : [],
-            $(
-              `
-              reply-wrapper
-                button[small][reply] Reply
-                pass
-                  b OK
-              `,
-            ),
-          ],
-        );
-        $comment.$("[reply]").on("click", () => {
-          $comment.$(":scope > reply-wrapper").style.display = "none";
-          showAddNewComment(null, null, comment, $comment);
-        });
-        $comment.$("[edit]")?.on("click", () => {
-          showAddNewComment(comment, $comment);
-        });
-        comment.$comment = $comment;
-        return $comment;
-      });
+      const $comments = comments.map(renderComment);
       const $root_comments = comments
         .filter((c) => !c.parent_comment_id)
         .map((c) => c.$comment);
@@ -1011,6 +1033,52 @@
         }
       });
       $("comments").replaceChildren(...$root_comments);
+      $("activities").replaceChildren(
+        ...activities.map((activity) => {
+          if (activity.type === "comment") {
+            const $comment = renderComment(activity);
+            $comment.$("reply-wrapper")?.remove();
+            let preamble = `${activity.display_name} commented on ${activity.parent_article_title}`;
+            if (activity.parent_comment_display_name) {
+              preamble = `${activity.display_name} replied to ${activity.parent_comment_display_name} on ${activity.parent_article_title}`;
+            }
+            let $comment_wrapper = $comment;
+            if (activity.parent_comment_body) {
+              const parent_comment = {
+                display_name: activity.parent_comment_display_name,
+                body: activity.parent_comment_body,
+                note: activity.parent_comment_note,
+              };
+              const $parent_comment = renderComment(parent_comment);
+              $parent_comment.setAttribute("parent-comment", "");
+              $parent_comment.$("reply-wrapper")?.remove();
+              $parent_comment.appendChild($comment);
+              $comment_wrapper = $parent_comment;
+            }
+            const $activity = $(
+              `
+                activity
+                  h2 $1
+                  $2
+              `,
+              [preamble, $comment_wrapper],
+            );
+            return $activity;
+          } else {
+            const $article = renderArticle(activity);
+            let preamble = `A new topic was posted`;
+            const $activity = $(
+              `
+                activity
+                  h2 $1
+                  $2
+              `,
+              [preamble, $article],
+            );
+            return $activity;
+          }
+        }),
+      );
     };
     window.addEventListener("popstate", () => {
       const new_paths = window.location.pathname.split("/").filter((x) => x);
@@ -1371,7 +1439,12 @@
             modalError(data.error);
           }
           if (data.path) {
-            renderPage(data.path, data.articles, data.comments);
+            renderPage(
+              data.path,
+              data.articles,
+              data.comments,
+              data.activities,
+            );
           }
         })
         .catch(function (error) {
