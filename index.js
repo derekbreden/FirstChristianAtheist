@@ -746,7 +746,7 @@ ${body.body}
                   SET display_name_index = (
                     SELECT max(display_name_index)
                     FROM users
-                    WHERE display_name = $1
+                    WHERE lower(display_name) = lower($1)
                   ) + 1
                   WHERE user_id = $2
                 `,
@@ -804,7 +804,7 @@ ${body.body}
                     SET display_name_index = (
                       SELECT max(display_name_index)
                       FROM users
-                      WHERE display_name = $1
+                      WHERE lower(display_name) = lower($1)
                     ) + 1
                     WHERE user_id = $2
                   `,
