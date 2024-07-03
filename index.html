@@ -826,13 +826,13 @@
               ? "‹ Back to topics"
               : previous_path === "/recent"
                 ? "‹ Back to recent activity"
-                : "‹ Back",
+                : "‹ Back to topics",
           ],
         );
         $("main-content").prepend($back);
         $back.on("click", () => {
           path_history = path_history.slice(0, -2);
-          path = previous_path;
+          path = previous_path || "/topics";
           history.pushState({}, "", path);
           loadingPage();
           startSession();
