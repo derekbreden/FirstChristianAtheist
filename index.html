@@ -790,6 +790,7 @@
     });
 
     // Read URL
+    let path_history = [];
     let path = "/";
     const paths = window.location.pathname.split("/").filter((x) => x);
     let reset_token_uuid = "";
@@ -814,16 +815,24 @@
         $("main-content > add-new:first-child")?.remove();
       }
       if (path.substr(0, 8) === "/article") {
+        const previous_path = path_history[path_history.length - 1];
         const $back = $(
           `
           back-wrapper
-            button[back][small][alt] ‹ Back to topics
+            button[back][small][alt] $1
           `,
-          [],
+          [
+            previous_path === "/topics"
+              ? "‹ Back to topics"
+              : previous_path === "/recent"
+                ? "‹ Back to recent activity"
+                : "‹ Back",
+          ],
         );
         $("main-content").prepend($back);
         $back.on("click", () => {
-          path = "/topics";
+          path_history = path_history.slice(0, -2);
+          path = previous_path;
           history.pushState({}, "", path);
           loadingPage();
           startSession();
@@ -964,6 +973,7 @@
         path = page_path;
         history.replaceState({}, "", page_path);
       }
+      path_history.push(path);
       if (path !== "/recent") {
         $("[add-new-comment]").style.display = "flex";
       }
@@ -1060,6 +1070,13 @@
               `,
               [preamble, $comment_wrapper],
             );
+            $activity.on("click", ($event) => {
+              $event.preventDefault();
+              path = "/article/" + activity.parent_article_slug;
+              history.pushState({}, "", path);
+              loadingPage();
+              startSession();
+            });
             return $activity;
           } else {
             const $article = renderArticle(activity);
