@@ -1073,6 +1073,12 @@
             $activity.on("click", ($event) => {
               $event.preventDefault();
               path = "/article/" + activity.parent_article_slug;
+              if (activity.parent_article_slug === "Home") {
+                path = "/";
+              }
+              if (activity.parent_article_slug === "Topics") {
+                path = "/topics";
+              }
               history.pushState({}, "", path);
               loadingPage();
               startSession();
