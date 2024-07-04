@@ -46,25 +46,45 @@ module.exports = async (req, res) => {
     } else {
       const make_admin = process.env["ROOT_EMAIL"] === req.body.email;
       const password_hash = await bcrypt.hash(req.body.password, 12);
-      const user_inserted = await req.client.query(
-        `
-        INSERT INTO users
-          (email, password_hash, display_name, admin)
-        VALUES
-          (lower($1), $2, $3, $4)
-        RETURNING user_id
-        `,
-        [req.body.email, password_hash, "", make_admin],
-      );
-      await req.client.query(
-        `
-        INSERT INTO user_sessions
-          (user_id, session_id)
-        VALUES
-          ($1, $2)
-        `,
-        [user_inserted.rows[0].user_id, req.session.session_id],
-      );
+
+      // If they posted a comment first, they may have a user_id already
+      if (req.session.user_id) {
+        await req.client.query(
+          `
+          UPDATE users
+          SET
+            email = lower($1),
+            password_hash = $2,
+            admin = $3
+          WHERE user_id = $4
+          `,
+          [req.body.email, password_hash, make_admin, req.session.user_id],
+        );
+
+        // Otherwise, create a new user tied to their session
+      } else {
+        const user_inserted = await req.client.query(
+          `
+          INSERT INTO users
+            (email, password_hash, display_name, admin)
+          VALUES
+            (lower($1), $2, $3, $4)
+          RETURNING user_id
+          `,
+          [req.body.email, password_hash, "", make_admin],
+        );
+        await req.client.query(
+          `
+          INSERT INTO user_sessions
+            (user_id, session_id)
+          VALUES
+            ($1, $2)
+          `,
+          [user_inserted.rows[0].user_id, req.session.session_id],
+        );
+      }
+
+      // Return success so the client reloads
       res.end(
         JSON.stringify({
           success: true,
