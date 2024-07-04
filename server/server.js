@@ -113,7 +113,6 @@ module.exports = {
         // Handle Server Side Includes for .html files
         if (extension === "html") {
           const lines = data.split("\n");
-          let result = "";
           for (const line of lines) {
             if (line.indexOf('<!--#include file="') > -1) {
               const file = line.split('"')[1];
