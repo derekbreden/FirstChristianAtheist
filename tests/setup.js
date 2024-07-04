@@ -1,5 +1,5 @@
 state.session_uuid = "";
-const test_mode = "playback"; // "record";
+const test_mode = "playback"; // "record"; // "end2end"; // "playback";
 const tests = [];
 const delay = 50;
 
@@ -39,7 +39,7 @@ tests.push(() => {
 // Clicked /recent
 tests.push(() => {
   expect("activities h3");
-  history.pushState({}, "", "/test");
+  testCleanup();
 });
 
 // Fire each test function on each page render
@@ -50,3 +50,16 @@ $("body").on("page-rendered", () => {
     this_test();
   }, delay);
 });
+
+const testCleanup = () => {
+  history.pushState({}, "", "/test");
+  if (test_mode !== "playback") {
+    originalFetch("/test_cleanup", {
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Cleanup returned", data);
+      });
+  }
+};

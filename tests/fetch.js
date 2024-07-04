@@ -1,6 +1,10 @@
 const originalFetch = fetch;
 
-if (test_mode === "record") {
+// Do nothing for end2end
+if (test_mode === "end2end") {
+
+  // Always record with record
+} else if (test_mode === "record") {
   const fetch_cache = {};
   const $fetch_cache_output = $(`
     textarea[rows=20]
@@ -20,6 +24,8 @@ if (test_mode === "record") {
       });
     return original_fetch;
   };
+
+  // Otherwise attempt to use cache, but record if cache not found
 } else {
   fetch = (url, options) => {
     if (fetch_cache[JSON.stringify([url, options])]) {
