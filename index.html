@@ -11,44 +11,32 @@
   <script>
 
     // Global state
-    let path_history = [];
-    let display_name = "";
-    let path = "/";
-    let session_uuid = localStorage.getItem("session_uuid") || "";
-    let reset_token_uuid = "";
+    const state = {
+      path: "/",
+      path_history: [],
+      display_name: "",
+      email: "",
+      session_uuid: localStorage.getItem("session_uuid") || "",
+      reset_token_uuid: "",
+    };
 
     // <!--#include file="client/flint.js" -->
     // <!--#include file="client/debug.js" -->
-
     // <!--#include file="client/path.js" -->
-
     // <!--#include file="client/loadingPage.js" -->
     // <!--#include file="client/renderName.js" -->
     // <!--#include file="client/renderArticle.js" -->
     // <!--#include file="client/renderComment.js" -->
     // <!--#include file="client/renderPage.js" -->
-
-    $("[add-new-comment]").on("click", ($event) => {
-      $event.preventDefault();
-      $("[add-new-comment]").style.display = "none";
-      showAddNewComment();
-    });
-
     // <!--#include file="client/showAddNewComment.js" -->
     // <!--#include file="client/showAddNewArticle.js" -->
-
     // <!--#include file="client/startSession.js" -->
+    // <!--#include file="client/menu.js" -->
+    // <!--#include file="client/modals.js" -->
+    // <!--#include file="client/resetPassword.js" -->
+    // <!--#include file="client/markdownToElements.js" -->
 
     loadingPage();
     startSession();
-
-    // <!--#include file="client/menu.js" -->
-
-    // <!--#include file="client/modals.js" -->
-
-    // <!--#include file="client/signUpSignIn.js" -->
-    // <!--#include file="client/passwordReset.js" -->
-
-    // <!--#include file="client/markdownToElements.js" -->
   </script>
 </html>

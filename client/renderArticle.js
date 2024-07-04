@@ -2,7 +2,7 @@ const renderArticle = (article) => {
   let $article_body = markdownToElements(article.body);
   let characters_used = 0;
   let trimmed = false;
-  if (path === "/topics" || path === "/recent") {
+  if (state.path === "/topics" || state.path === "/recent") {
     article.edit = false;
     $article_body = $article_body.reduce((acc, child) => {
       characters_used += child.textContent.length;
@@ -51,11 +51,11 @@ const renderArticle = (article) => {
       showAddNewArticle(article, $article);
     });
   }
-  if (path === "/topics" || path === "/recent") {
+  if (state.path === "/topics" || state.path === "/recent") {
     $article.on("click", ($event) => {
       $event.preventDefault();
-      path = "/article/" + article.slug;
-      history.pushState({}, "", path);
+      state.path = "/article/" + article.slug;
+      history.pushState({}, "", state.path);
       loadingPage();
       startSession();
     });

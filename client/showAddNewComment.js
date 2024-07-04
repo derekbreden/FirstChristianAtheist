@@ -1,3 +1,17 @@
+const showAddNewCommentButton = () => {
+  const $add_new_button = $(
+    `
+    p[add-new-comment]
+      button[alt] Add comment
+    `
+  );
+  $add_new_button.on("click", ($event) => {
+    $event.preventDefault();
+    $add_new_button.remove();
+    showAddNewComment();
+  });
+  $("comments").prepend($add_new_button);
+};
 const showAddNewComment = (
   comment,
   $comment,
@@ -13,10 +27,10 @@ const showAddNewComment = (
       button[alt][cancel] Cancel
     `,
     comment
-      ? [display_name, comment.body, "Save changes"]
+      ? [state.display_name, comment.body, "Save changes"]
       : parent_comment
-        ? [display_name, "", "Reply"]
-        : [display_name, "", "Add comment"],
+        ? [state.display_name, "", "Reply"]
+        : [state.display_name, "", "Add comment"],
   );
   if (comment) {
     $add_new.$("[cancel]").on("click", () => {
@@ -30,7 +44,7 @@ const showAddNewComment = (
   } else {
     $add_new.$("[cancel]").on("click", () => {
       $add_new.remove();
-      $("[add-new-comment]").style.display = "block";
+      showAddNewCommentButton();
     });
   }
   const addCommentError = (error) => {
@@ -51,13 +65,13 @@ const showAddNewComment = (
   });
   const hideDisplayNameInput = () => {
     const $display_name = $add_new.$("[display-name]");
-    if (display_name && $display_name) {
+    if (state.display_name && $display_name) {
       const $display_name_wrapper = $(
         `
         display-name-wrapper
           b $1
         `,
-        [display_name + ":"],
+        [state.display_name + ":"],
       );
       $display_name_wrapper.on("click", () => {
         $display_name_wrapper.replaceWith($display_name);
@@ -67,13 +81,13 @@ const showAddNewComment = (
     }
   };
   const saveDisplayName = () => {
-    if (display_name === $add_new.$("[display-name]").value) {
+    if (state.display_name === $add_new.$("[display-name]").value) {
       hideDisplayNameInput();
       return;
     }
-    display_name = $add_new.$("[display-name]").value;
+    state.display_name = $add_new.$("[display-name]").value;
     $add_new.$("[display-name]").setAttribute("disabled", "");
-    if (!display_name) {
+    if (!state.display_name) {
       addCommentError("Please enter your name");
       return;
     }
@@ -87,8 +101,8 @@ const showAddNewComment = (
     fetch("/session", {
       method: "POST",
       body: JSON.stringify({
-        session_uuid,
-        display_name,
+        session_uuid: state.session_uuid,
+        display_name: state.display_name,
       }),
     })
       .then((response) => response.json())
@@ -97,7 +111,7 @@ const showAddNewComment = (
         $add_new.$("info")?.remove();
         if (data.error || !data.success) {
           addCommentError(data.error || "Server error");
-          display_name = "";
+          state.display_name = "";
         }
         hideDisplayNameInput();
       })
@@ -113,9 +127,9 @@ const showAddNewComment = (
   hideDisplayNameInput();
   $add_new.$("[submit]").on("click", () => {
     $add_new.$("error")?.remove();
-    display_name = $add_new.$("[display-name]")?.value || display_name;
+    state.display_name = $add_new.$("[display-name]")?.value || state.display_name;
     const body = $add_new.$("[body]").value;
-    if (!display_name) {
+    if (!state.display_name) {
       addCommentError("Please enter your name");
       return;
     }
@@ -135,9 +149,9 @@ const showAddNewComment = (
     fetch("/session", {
       method: "POST",
       body: JSON.stringify({
-        session_uuid,
-        path,
-        display_name,
+        session_uuid: state.session_uuid,
+        path: state.path,
+        display_name: state.display_name,
         body,
         comment_id: comment ? comment.comment_id : undefined,
         parent_comment_id: parent_comment
@@ -176,7 +190,7 @@ const showAddNewComment = (
   } else {
     $("comments").prepend($add_new);
   }
-  if (!display_name) {
+  if (!state.display_name) {
     $add_new.$("[display-name]").focus();
   } else {
     $add_new.$("[body]").focus();

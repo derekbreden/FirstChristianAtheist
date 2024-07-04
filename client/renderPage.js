@@ -1,16 +1,13 @@
 const renderPage = (page_path, articles, comments, activities) => {
 
   // Update global state
-  if (path !== page_path) {
-    path = page_path;
+  if (state.path !== page_path) {
+    state.path = page_path;
     history.replaceState({}, "", page_path);
   }
-  path_history.push(path);
+  state.path_history.push(state.path);
 
   // Hide and show constant elements
-  if (path !== "/recent") {
-    $("[add-new-comment]").style.display = "flex";
-  }
   $("articles-loading").style.display = "none";
   $("articles").style.display = "flex";
   $("comments").style.display = "flex";
@@ -23,21 +20,21 @@ const renderPage = (page_path, articles, comments, activities) => {
     if (new_path.substr(0, 1) === "/") {
       $a.on("click", ($event) => {
         $event.preventDefault();
-        if (path !== new_path) {
-          path = new_path;
-          history.pushState({}, "", path);
+        if (state.path !== new_path) {
+          state.path = new_path;
+          history.pushState({}, "", state.path);
           loadingPage();
         }
         startSession();
       });
     }
   });
-  if (path === "/topics") {
+  if (state.path === "/topics") {
     showAddNewArticle();
   }
 
   // Render Comments
-  const $comments = comments.map(renderComment);
+  comments.forEach(renderComment);
   const $root_comments = comments
     .filter((c) => !c.parent_comment_id)
     .map((c) => c.$comment);
@@ -78,6 +75,9 @@ const renderPage = (page_path, articles, comments, activities) => {
     }
   });
   $("comments").replaceChildren(...$root_comments);
+  if (state.path !== "/recent") {
+    showAddNewCommentButton();
+  }
 
   // Render activities
   $("activities").replaceChildren(
@@ -112,14 +112,14 @@ const renderPage = (page_path, articles, comments, activities) => {
         );
         $activity.on("click", ($event) => {
           $event.preventDefault();
-          path = "/article/" + activity.parent_article_slug;
+          state.path = "/article/" + activity.parent_article_slug;
           if (activity.parent_article_slug === "Home") {
-            path = "/";
+            state.path = "/";
           }
           if (activity.parent_article_slug === "Topics") {
-            path = "/topics";
+            state.path = "/topics";
           }
-          history.pushState({}, "", path);
+          history.pushState({}, "", state.path);
           loadingPage();
           startSession();
         });

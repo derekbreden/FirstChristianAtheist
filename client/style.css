@@ -145,7 +145,7 @@ header hamburger line {
   width: 100%;
 }
 menu {
-  display: none;
+  display: flex;
   flex-direction: column;
   position: fixed;
   top: 0;
@@ -163,9 +163,6 @@ modal {
   padding: 20px 20px 15px 20px;
   position: relative;
   width: 280px;
-}
-menu signed-in {
-  display: none;
 }
 menu signed-in > *,
 menu sign-in > *,
@@ -199,7 +196,7 @@ a[big] {
   letter-spacing: 1px;
 }
 modal-bg {
-  display: none;
+  display: flex;
   background: #00000077;
   position: absolute;
   top: 0;
@@ -250,14 +247,9 @@ error {
   color: #b66;
   border-radius: 2px;
   max-width: 100%;
-  display: none;
+  display: flex;
   flex-direction: column;
   font-weight: 500;
-}
-pass,
-info[show],
-error[show] {
-  display: flex;
 }
 pass::before,
 info::before,
@@ -293,7 +285,6 @@ pass {
   background: #f0fff0;
   color: #4a5;
   display: inline-flex;
-  display: none;
 }
 pass::before {
   top: 3.5px;
@@ -333,7 +324,6 @@ password-help::before {
 }
 modal {
   position: fixed;
-  display: none;
   flex-direction: column;
   z-index: 4;
   top: 64px;
@@ -362,7 +352,6 @@ main-content add-new:first-child {
   margin-top: 20px;
 }
 [add-new-comment] {
-  display: none;
   padding: 10px 0 20px 0;
 }
 [add-new-comment] button {
@@ -371,10 +360,6 @@ main-content add-new:first-child {
 comments {
   display: flex;
   flex-direction: column;
-}
-comments > add-new:first-child {
-  padding: 10px;
-  border: 1px solid #ddd;
 }
 comment {
   display: flex;
@@ -406,6 +391,8 @@ comment info b {
   margin-bottom: 5px;
 }
 comments > add-new:first-child {
+  padding: 10px;
+  border: 1px solid #ddd;
   margin: 20px 0;
 }
 comments > add-new:not(:first-child) {

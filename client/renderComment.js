@@ -45,8 +45,6 @@ const renderComment = (comment) => {
         `
         reply-wrapper
           button[small][reply] Reply
-          pass
-            b OK
         `,
       ),
     ],

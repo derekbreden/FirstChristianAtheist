@@ -1,25 +1,37 @@
 // Generic modal info
-const modalInfoCancel = () => {
-  $("modal[info]").style.display = "none";
-  $("modal-bg").style.display = "none";
-};
-$("modal[info] [close]").on("click", modalInfoCancel);
-$("modal-bg").on("click", modalInfoCancel);
 const modalInfo = (message) => {
-  $("modal[info] info").innerHTML = message;
-  $("modal[info]").style.display = "flex";
-  $("modal-bg").style.display = "flex";
+  const $modal = $(
+    `
+    modal[info]
+      info[show] $1
+      button[close] Okay
+    modal-bg
+    `,
+    [ message ]
+  );
+  const modalCancel = () => {
+    $modal.remove();
+  };
+  $modal.$("[close]").on("click", modalCancel);
+  $modal.$("modal-bg").on("click", modalCancel);
+  $("body").appendChild($modal);
 };
 
 // Generic modal error
-const modalErrorCancel = () => {
-  $("modal[error]").style.display = "none";
-  $("modal-bg").style.display = "none";
-};
-$("modal[error] [close]").on("click", modalErrorCancel);
-$("modal-bg").on("click", modalErrorCancel);
 const modalError = (message) => {
-  $("modal[error] error").innerHTML = message;
-  $("modal[error]").style.display = "flex";
-  $("modal-bg").style.display = "flex";
+  const $modal = $(
+    `
+    modal[error]
+      error[show] $1
+      button[close] Okay
+    modal-bg
+    `,
+    [ message ]
+  );
+  const modalCancel = () => {
+    $modal.remove();
+  };
+  $modal.$("[close]").on("click", modalCancel);
+  $modal.$("modal-bg").on("click", modalCancel);
+  $("body").appendChild($modal);
 };
