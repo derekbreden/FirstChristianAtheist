@@ -1,5 +1,5 @@
 const http = require("node:http");
-const fs = require("node:fs");
+const fs = require("node:fs/promises");
 const pages = require("./pages");
 const pool = require("./pool");
 
@@ -67,9 +67,8 @@ module.exports = {
     req.on("readable", () => {
       req.body += req.read() || "";
     });
-    req.on("end", () => {
-      // Start an async function
-      (async () => {
+    req.on("end", async () => {
+      try {
         // PATH session
         if (req.path === "session") {
           await this.handleSession(req, res);
@@ -109,25 +108,39 @@ module.exports = {
         }
 
         res.setHeader("Content-Type", content_type);
-        fs.readFile(filename, encoding, (err, data) => {
-          if (err) {
-            console.error(err);
-            res.end("Error reading file\n");
-            return;
+        const data = await fs.readFile(filename, encoding);
+
+        // Handle Server Side Includes for .html files
+        if (extension === "html") {
+          const lines = data.split("\n");
+          let result = "";
+          for (const line of lines) {
+            if (line.indexOf('<!--#include file="') > -1) {
+              const file = line.split('"')[1];
+              const file_content = await fs.readFile(file, encoding);
+              res.write(file_content + "\n", encoding);
+            } else {
+              res.write(line + "\n", encoding);
+            }
           }
+          res.end("", encoding);
+
+          // Return any other file as is
+        } else {
           res.end(data, encoding);
-        });
-      })();
+        }
+      } catch ($error) {
+        console.error($error);
+        res.end("Error reading file\n");
+      }
     });
   },
-  init() {
+  async init() {
     const hostname = "0.0.0.0";
     const port = 3000;
 
     this.resources = [];
-    fs.readdir("resources", (err, files) => {
-      this.resources = this.resources.concat(files);
-    });
+    this.resources = await fs.readdir("resources");
 
     const server = http.createServer(this.handleRequest.bind(this));
     server.listen(port, hostname, () => {
