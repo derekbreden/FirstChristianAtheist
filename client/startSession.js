@@ -28,12 +28,7 @@ const startSession = () => {
         modalError(data.error);
       }
       if (data.path) {
-        renderPage(
-          data.path,
-          data.articles,
-          data.comments,
-          data.activities,
-        );
+        renderPage(data);
       }
     })
     .catch(function (error) {

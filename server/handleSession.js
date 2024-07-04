@@ -34,6 +34,7 @@ module.exports = async (req, res) => {
     await require("./session/saveArticle")(req, res);
     await require("./session/saveComment")(req, res);
     await require("./session/saveDisplayName")(req, res);
+    await require("./session/getAdminImage")(req, res);
     await require("./session/createSessionIfNotExists")(req, res);
     await require("./session/getSingleArticle")(req, res);
     await require("./session/getRecentActivity")(req, res);

@@ -301,6 +301,21 @@ test-wrapper error + info {
 test-wrapper + add-new {
   margin-top: 20px;
 }
+image-prompt {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+image-prompt textarea {
+  width: 100%;
+}
+image-prompt > * {
+  margin-top: 10px;
+}
+image-prompt + img {
+  margin-top: 10px;
+  width: 100%;
+}
 password-wrapper {
   display: flex;
   align-items: center;

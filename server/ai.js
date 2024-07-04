@@ -41,4 +41,13 @@ module.exports = {
       ai_response.choices[0].message.content
     );
   },
+  async generateImage(prompt){
+    const ai_response = await this.openai.images.generate({
+      model: "dall-e-3",
+      quality: "hd",
+      style: "vivid",
+      prompt: prompt,
+    });
+    return ai_response.data[0].url;
+  },
 };
