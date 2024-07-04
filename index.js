@@ -1,5 +1,4 @@
 // Server
-const pages = require("./server/pages");
 const schema = require("./server/schema");
 const email = require("./server/email");
 const ai = require("./server/ai");
