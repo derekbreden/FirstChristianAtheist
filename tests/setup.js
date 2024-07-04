@@ -1,45 +1,52 @@
 state.session_uuid = "";
-const test_mode = "_record";
+const test_mode = "playback"; // "record";
+const tests = [];
+const delay = 50;
 
-const originalFetch = fetch;
+// Sign up
+tests.push(() => {
+  $("hamburger").click();
+  $("sign-in [submit]").click();
+  expect("sign-in error", "Please enter a valid email address");
+  $("sign-in [type=email]").value = "testemail@testemail.com";
+  $("sign-in [type=password]").value = "1234";
+  setTimeout(() => {
+    $("sign-in [submit]").click();
+    expect("sign-in info", "Validating...");
+  }, delay);
+});
 
-if (test_mode === "record") {
-  const fetch_cache = {};
-  const $fetch_cache_output = $(`
-    textarea[rows=20]
-  `);
-  $fetch_cache_output.style.position = "absolute";
-  $fetch_cache_output.style.top = "0";
-  $fetch_cache_output.style.left = "0";
-  $("body").appendChild($fetch_cache_output);
-  fetch = (url, options) => {
-    const original_fetch = originalFetch(url, options);
-    original_fetch
-      .then((response) => response.clone().json())
-      .then((data) => {
-        fetch_cache[JSON.stringify([url, options])] = data;
-        $fetch_cache_output.value =
-          "const fetch_cache = " + JSON.stringify(fetch_cache, null, 2) + ";";
-      });
-    return original_fetch;
-  };
-} else {
-  fetch = (url, options) => {
-    const cached_result = new Promise((resolve) => {
-      const cached_response = {};
-      cached_response.json = () =>
-        new Promise((resolve) => {
-          resolve(fetch_cache[JSON.stringify([url, options])]);
-        });
-      resolve(cached_response);
-    });
-    return cached_result;
-  };
-}
+// Signed in
+tests.push(() => {
+  $("hamburger").click();
+  expect("signed-in button", "Log out");
+  setTimeout(() => {
+    $('menu [href="/topics"]').click();
+  }, delay);
+});
 
-$("body").on("page-rendered", () => {
-  console.log("I saw a page render");
+// Clicked /topics
+tests.push(() => {
+  expect("add-new [submit]", "Add topic");
+  expect("[add-new-comment] button", "Add comment");
+  $("hamburger").click();
+  setTimeout(() => {
+    $("test-wrapper")?.remove();
+    $('menu [href="/recent"]').click();
+  }, delay);
+});
+
+// Clicked /recent
+tests.push(() => {
+  expect("activities h3");
   history.pushState({}, "", "/test");
 });
 
-console.log("Tests loaded");
+// Fire each test function on each page render
+$("body").on("page-rendered", () => {
+  const this_test = tests.shift();
+  expect("body");
+  setTimeout(() => {
+    this_test();
+  }, delay);
+});
