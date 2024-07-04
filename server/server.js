@@ -116,6 +116,10 @@ module.exports = {
           for (const line of lines) {
             if (line.indexOf('<!--#include file="') > -1) {
               const file = line.split('"')[1];
+              const dir = file.split("/")[0];
+              if (dir === "tests" && req.path !== "test") {
+                continue;
+              }
               const file_content = await fs.readFile(file, encoding);
               res.write(file_content + "\n", encoding);
             } else {

@@ -20,21 +20,34 @@
       reset_token_uuid: "",
     };
 
+    // Libraries
     // <!--#include file="client/flint.js" -->
     // <!--#include file="client/debug.js" -->
+    // <!--#include file="client/markdownToElements.js" -->
+
+    // Navigation
+    // <!--#include file="client/menu.js" -->
+    // <!--#include file="client/resetPassword.js" -->
+    // <!--#include file="client/modals.js" -->
     // <!--#include file="client/path.js" -->
+
+    // Render
     // <!--#include file="client/loadingPage.js" -->
+    // <!--#include file="client/renderPage.js" -->
     // <!--#include file="client/renderName.js" -->
     // <!--#include file="client/renderArticle.js" -->
     // <!--#include file="client/renderComment.js" -->
-    // <!--#include file="client/renderPage.js" -->
+
+    // Add new
     // <!--#include file="client/showAddNewComment.js" -->
     // <!--#include file="client/showAddNewArticle.js" -->
+
+    // Init
     // <!--#include file="client/startSession.js" -->
-    // <!--#include file="client/menu.js" -->
-    // <!--#include file="client/modals.js" -->
-    // <!--#include file="client/resetPassword.js" -->
-    // <!--#include file="client/markdownToElements.js" -->
+
+    // Optional tests
+    // <!--#include file="tests/setup.js" -->
+    // <!--#include file="tests/fetch_cache.js" -->
 
     loadingPage();
     startSession();

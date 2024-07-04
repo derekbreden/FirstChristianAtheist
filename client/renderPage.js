@@ -139,4 +139,7 @@ const renderPage = (page_path, articles, comments, activities) => {
       }
     }),
   );
+
+  // Emit rendered event
+  $("body").dispatchEvent(new CustomEvent("page-rendered"));
 };
