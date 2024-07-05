@@ -14,14 +14,15 @@ const loadingPage = () => {
     const $back = $(
       `
       back-wrapper
-        button[back][small][alt] $1
+        button[expand-left]
+        p $1
       `,
       [
         previous_path === "/topics"
-          ? "‹ Back to topics"
+          ? "Back to topics"
           : previous_path === "/recent"
-            ? "‹ Back to recent activity"
-            : "‹ Back to topics",
+            ? "Back to recent activity"
+            : "Back to topics",
       ],
     );
     $("main-content").prepend($back);

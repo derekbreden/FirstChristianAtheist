@@ -13,16 +13,15 @@ const renderArticle = (article) => {
       }
       return acc;
     }, []);
-    if (trimmed) {
-      $article_body.push(
-        $(
-          `
-          p[ellipsis] ...
-          button[alt][small] Read more
-          `,
-        ),
-      );
-    }
+    $article_body.push(
+      $(
+        `
+        expand-wrapper
+          p Read more
+          button[expand-down]
+        `,
+      ),
+    );
   }
   const $article = $(
     `
