@@ -46,6 +46,9 @@ const showForgotPassword = () => {
         `
       )
     );
+    $modal.$("[type=email]").setAttribute("disabled", "");
+    $modal.$("[submit]").setAttribute("disabled", "");
+    $modal.$("[cancel]").setAttribute("disabled", "");
     fetch("/session", {
       method: "POST",
       body: JSON.stringify({
@@ -57,6 +60,9 @@ const showForgotPassword = () => {
       .then(function (data) {
         $modal.$("info")?.remove();
         if (data.error || !data.success) {
+          $modal.$("[type=email]").removeAttribute("disabled");
+          $modal.$("[submit]").removeAttribute("disabled");
+          $modal.$("[cancel]").removeAttribute("disabled");
           passwordError(data.error || "Server error");
           return;
         }
@@ -120,6 +126,9 @@ const showResetPassword = () => {
         `
       )
     );
+    $modal.$("[type=password]").setAttribute("disabled", "");
+    $modal.$("[submit]").setAttribute("disabled", "");
+    $modal.$("[cancel]").setAttribute("disabled", "");
     fetch("/session", {
       method: "POST",
       body: JSON.stringify({
@@ -132,6 +141,9 @@ const showResetPassword = () => {
       .then(function (data) {
         $modal.$("info")?.remove();
         if (data.error || !data.success) {
+          $modal.$("[type=password]").removeAttribute("disabled");
+          $modal.$("[submit]").removeAttribute("disabled");
+          $modal.$("[cancel]").removeAttribute("disabled");
           passwordError(data.error || "Server error");
           return;
         }

@@ -146,6 +146,8 @@ const showAddNewComment = (
     );
     $add_new.$("[body]").setAttribute("disabled", "");
     $add_new.$("[display-name]")?.setAttribute("disabled", "");
+    $add_new.$("[submit]").setAttribute("disabled", "");
+    $add_new.$("[cancel]").setAttribute("disabled", "");
     fetch("/session", {
       method: "POST",
       body: JSON.stringify({
@@ -167,6 +169,8 @@ const showAddNewComment = (
           $add_new.$("info")?.remove();
           $add_new.$("[body]").removeAttribute("disabled");
           $add_new.$("[display-name]")?.removeAttribute("disabled");
+          $add_new.$("[submit]").removeAttribute("disabled");
+          $add_new.$("[cancel]").removeAttribute("disabled");
           addCommentError(data.error || "Server error");
           return;
         }
@@ -175,11 +179,17 @@ const showAddNewComment = (
           $add_new.$("info")?.remove();
           $add_new.$("[body]").removeAttribute("disabled");
           $add_new.$("[display-name]")?.removeAttribute("disabled");
+          $add_new.$("[submit]").removeAttribute("disabled");
+          $add_new.$("[cancel]").removeAttribute("disabled");
         }
         startSession();
       })
       .catch(function (error) {
         $add_new.$("info")?.remove();
+        $add_new.$("[body]").removeAttribute("disabled");
+        $add_new.$("[display-name]")?.removeAttribute("disabled");
+        $add_new.$("[submit]").removeAttribute("disabled");
+        $add_new.$("[cancel]").removeAttribute("disabled");
         addCommentError("Network error");
       });
   });

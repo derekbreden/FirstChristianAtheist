@@ -62,6 +62,8 @@ const showAddNewArticle = (article, $article) => {
     );
     $add_new.$("[title]").setAttribute("disabled", "");
     $add_new.$("[body]").setAttribute("disabled", "");
+    $add_new.$("[submit]").setAttribute("disabled", "");
+    $add_new.$("[cancel]")?.setAttribute("disabled", "");
     fetch("/session", {
       method: "POST",
       body: JSON.stringify({
@@ -78,6 +80,8 @@ const showAddNewArticle = (article, $article) => {
           $add_new.$("info")?.remove();
           $add_new.$("[title]").removeAttribute("disabled");
           $add_new.$("[body]").removeAttribute("disabled");
+          $add_new.$("[submit]").removeAttribute("disabled");
+          $add_new.$("[cancel]")?.removeAttribute("disabled");
           if (data.error) {
             const first_word = data.error.slice(0, data.error.indexOf(" "));
             const title = {
@@ -103,6 +107,14 @@ const showAddNewArticle = (article, $article) => {
             addArticleError("Server error");
           }
           return;
+        }
+        if (!article) {
+          $add_new.$("[body]").value = "";
+          $add_new.$("info")?.remove();
+          $add_new.$("[title]").removeAttribute("disabled");
+          $add_new.$("[body]").removeAttribute("disabled");
+          $add_new.$("[submit]").removeAttribute("disabled");
+          $add_new.$("[cancel]")?.removeAttribute("disabled");
         }
         startSession();
       })

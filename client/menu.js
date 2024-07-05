@@ -105,6 +105,10 @@ const showMenu = () => {
         `,
         ),
       );
+      $sign_in.$("[type=email]").setAttribute("disabled", "");
+      $sign_in.$("[type=password]").setAttribute("disabled", "");
+      $sign_in.$("[submit]").setAttribute("disabled", "");
+      $sign_in.$("[cancel]").setAttribute("disabled", "");
       fetch("/session", {
         method: "POST",
         body: JSON.stringify({
@@ -117,6 +121,10 @@ const showMenu = () => {
         .then(function (data) {
           $sign_in.$("info")?.remove();
           if (data.error || !data.success) {
+            $sign_in.$("[type=email]").removeAttribute("disabled");
+            $sign_in.$("[type=password]").removeAttribute("disabled");
+            $sign_in.$("[submit]").removeAttribute("disabled");
+            $sign_in.$("[cancel]").removeAttribute("disabled");
             signInError(data.error || "Server error");
             return;
           }
