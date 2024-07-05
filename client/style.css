@@ -131,39 +131,6 @@ hamburger line {
   border-radius: 2px;
   width: 100%;
 }
-footer {
-  display: none;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #fff;
-  height: 54px;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0px 0px 5px #26323e;
-  z-index: 1;
-}
-footer a {
-  text-decoration: none;
-  font-weight: 600;
-}
-footer h1 {
-  display: flex;
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 11px;
-  align-items: center;
-  padding-left: 20px;
-}
-footer h1 img {
-  height: 32px;
-  width: 32px;
-  margin-right: 5px;
-}
-footer hamburger {
-  padding: 15px 20px 15px 0;
-}
 menu {
   display: flex;
   flex-direction: column;
@@ -176,22 +143,11 @@ menu {
   border-radius: 0 0 0 2px;
 }
 @media (max-width: 480px) {
-  header {
-    display: none;
-  }
-  footer {
-    display: flex;
-  }
   body {
     background: #fff;
   }
   main-content {
-    padding: 0 20px 114px 20px;
-  }
-  menu {
-    top: unset;
-    bottom: 0;
-    border-radius: 2px 0 0 0;
+    padding: 44px 20px 20px 20px;
   }
 }
 menu signed-in,
