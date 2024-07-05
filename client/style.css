@@ -436,6 +436,43 @@ reply-wrapper {
 display-name-wrapper {
   padding-bottom: 5px;
 }
+comment expand-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0 0 0;
+}
+comment expand-wrapper button {
+  height: 15px;
+  background: #fff;
+  border-color: #fff;
+  position: relative;
+}
+[expand-down]::before,
+[expand-up]::before {
+  content: "";
+  border-top: 1.5px solid #26323e;
+  border-left: 1.5px solid #26323e;
+  border-right: 1.5px solid transparent;
+  border-bottom: 1.5px solid transparent;
+  height: 15px;
+  width: 15px;
+  position: absolute;
+  top: 7px;
+  left: calc(50% - 10px);
+  transform: rotate(45deg);
+  opacity: .5;
+}
+[expand-down]::before {
+  top: -7px;
+  transform: rotate(-135deg);
+}
+comment expand-wrapper p {
+  font-size: 11px;
+  font-weight: 600;
+  margin: 5px 0;
+  opacity: .5;
+  text-align: center;
+}
 articles {
   display: flex;
   flex-direction: column;
@@ -510,5 +547,17 @@ activity > [parent-comment] comment {
   }
   100% {
     opacity: 1;
+  }
+}
+[flash-focus] {
+  animation: flash-focus .5s ease-in 1;
+}
+
+@keyframes flash-focus {
+  0% {
+    box-shadow: 0 0 5px #0061fe;
+  }
+  100% {
+    box-shadow: none;
   }
 }

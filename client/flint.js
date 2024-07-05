@@ -22,23 +22,21 @@ const $ = (selector_or_flint, flint_args_or_element) => {
     const createElement = (nodes, index = 0, parent = null) => {
       if (index >= nodes.length) return null;
       const node = nodes[index];
-      const attributes = (node.text.match(/\[[^\]]*\]/g) || []).map(
-        (attr) => {
-          let [key, value] = attr.slice(1, -1).split("=");
-          if (value) {
-            if (value.startsWith("$")) {
-              const arg_index = parseInt(value.slice(1)) - 1;
-              value = flint_args[arg_index];
-            }
-          } else {
-            value = "";
+      const attributes = (node.text.match(/\[[^\]]*\]/g) || []).map((attr) => {
+        let [key, value] = attr.slice(1, -1).split("=");
+        if (value) {
+          if (value.startsWith("$")) {
+            const arg_index = parseInt(value.slice(1)) - 1;
+            value = flint_args[arg_index];
           }
-          return {
-            key,
-            value,
-          };
-        },
-      );
+        } else {
+          value = "";
+        }
+        return {
+          key,
+          value,
+        };
+      });
       node.text = node.text.replace(/\[[^\]]*\]/g, "");
       const parts = node.text.split(" ");
       let tag = parts[0];
