@@ -5,7 +5,7 @@ const delay = 50;
 
 // Sign up
 tests.push(() => {
-  $("hamburger").click();
+  $("header hamburger").click();
   $("sign-in [submit]").click();
   expect("sign-in error", "Please enter a valid email address");
   $("sign-in [type=email]").value = "testemail@testemail.com";
@@ -18,7 +18,7 @@ tests.push(() => {
 
 // Signed in
 tests.push(() => {
-  $("hamburger").click();
+  $("header hamburger").click();
   expect("signed-in button", "Log out");
   setTimeout(() => {
     $('menu [href="/topics"]').click();
@@ -29,7 +29,7 @@ tests.push(() => {
 tests.push(() => {
   expect("add-new [submit]", "Add topic");
   expect("[add-new-comment] button", "Add comment");
-  $("hamburger").click();
+  $("header hamburger").click();
   setTimeout(() => {
     $("test-wrapper")?.remove();
     $('menu [href="/recent"]').click();

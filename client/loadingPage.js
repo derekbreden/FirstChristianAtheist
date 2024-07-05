@@ -21,7 +21,7 @@ const loadingPage = () => {
         previous_path === "/topics"
           ? "Back to topics"
           : previous_path === "/recent"
-            ? "Back to recent activity"
+            ? "Back to recent"
             : "Back to topics",
       ],
     );

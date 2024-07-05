@@ -6,12 +6,12 @@ const showMenu = () => {
       links
         a[href=/] Home
         a[href=/topics] Topics
-        a[href=/recent] Recent activity
-    `
+        a[href=/recent] Recent
+    `,
   );
   const menuCancel = () => {
     $menu.remove();
-  }
+  };
   $menu.$("modal-bg").on("click", menuCancel);
 
   $menu.$("links a").forEach(($el) => {
@@ -32,7 +32,7 @@ const showMenu = () => {
       `
       signed-in
         button[sign-out] Log out
-      `
+      `,
     );
     $signed_in.$("[sign-out]").on("click", () => {
       menuCancel();
@@ -52,7 +52,7 @@ const showMenu = () => {
           password-help
         button[submit] Sign up / Sign in
         button[alt][cancel] Cancel
-      `
+      `,
     );
     $sign_in.$("password-help").on("click", () => {
       menuCancel();
@@ -98,11 +98,13 @@ const showMenu = () => {
         signInError("Please enter a password");
         return;
       }
-      $sign_in.appendChild($(
-        `
+      $sign_in.appendChild(
+        $(
+          `
         info[show] Validating...
-        `
-      ));
+        `,
+        ),
+      );
       fetch("/session", {
         method: "POST",
         body: JSON.stringify({
@@ -130,11 +132,13 @@ const showMenu = () => {
     $menu.$("menu").appendChild($sign_in);
   }
   $("body").appendChild($menu);
-}
-$("header hamburger").on("click", () => {
-  showMenu();
+};
+$("hamburger").forEach(($el) => {
+  $el.on("click", () => {
+    showMenu();
+  });
 });
-$("h1").forEach(($el) => {
+$("[href]").forEach(($el) => {
   $el.on("click", ($event) => {
     $event.preventDefault();
     const new_path = $el.getAttribute("href");

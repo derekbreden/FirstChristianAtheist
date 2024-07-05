@@ -38,14 +38,6 @@ main-content {
   max-width: 480px;
   width: 100%;
 }
-@media (max-width: 480px) {
-  body {
-    background: #fff;
-  }
-  main-content {
-    padding: 44px 20px 20px 20px;
-  }
-}
 a,
 a:visited,
 a:active {
@@ -105,6 +97,7 @@ header {
   right: 0;
   height: 44px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   box-shadow: 0px 0px 5px #26323e;
   z-index: 1;
@@ -122,23 +115,54 @@ header h1 img {
   width: 24px;
   margin-right: 5px;
 }
-header hamburger {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 74px;
-  padding: 10px 20px;
+hamburger {
+  position: relative;
+  height: 100%;
+  width: 54px;
+  padding: 10px 20px 10px 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
 }
-header hamburger line {
-  border: 2px solid #27323e;
+hamburger line {
+  border: 1.5px solid #27323e;
   border-bottom-width: 1px;
   border-radius: 2px;
   width: 100%;
+}
+footer {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  height: 54px;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0px 0px 5px #26323e;
+  z-index: 1;
+}
+footer a {
+  text-decoration: none;
+  font-weight: 600;
+}
+footer h1 {
+  display: flex;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 11px;
+  align-items: center;
+  padding-left: 20px;
+}
+footer h1 img {
+  height: 32px;
+  width: 32px;
+  margin-right: 5px;
+}
+footer hamburger {
+  padding: 15px 20px 15px 0;
 }
 menu {
   display: flex;
@@ -150,6 +174,25 @@ menu {
   background: #fff;
   box-shadow: 0px 0px 5px #26323e;
   border-radius: 0 0 0 2px;
+}
+@media (max-width: 480px) {
+  header {
+    display: none;
+  }
+  footer {
+    display: flex;
+  }
+  body {
+    background: #fff;
+  }
+  main-content {
+    padding: 0 20px 114px 20px;
+  }
+  menu {
+    top: unset;
+    bottom: 0;
+    border-radius: 2px 0 0 0;
+  }
 }
 menu signed-in,
 menu sign-in,
