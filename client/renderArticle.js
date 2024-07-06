@@ -50,6 +50,19 @@ const renderArticle = (article) => {
       showAddNewArticle(article, $article);
     });
   }
+  if (article.image_uuids) {
+    const image_uuids = article.image_uuids.split(",").reverse();
+    for (const image_uuid of image_uuids) {
+      const $image = $(
+        `
+        p
+          img[src=$1]
+        `,
+        [ "/image/" + image_uuid]
+      );
+      $article.$("h2").after($image);
+    }
+  }
   if (state.path === "/topics" || state.path === "/recent") {
     $article.on("click", ($event) => {
       $event.preventDefault();

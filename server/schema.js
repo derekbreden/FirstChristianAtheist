@@ -141,7 +141,7 @@ CREATE INDEX idx_votes_user_id_create_date ON votes(user_id, create_date);
           const page = pages[page_path];
           const found_page = await client.query(
             `
-            SELECT article_id
+            SELECT article_id, body
             FROM articles
             WHERE title = $1 AND user_id = $2 AND admin = true;
             `,
@@ -149,6 +149,16 @@ CREATE INDEX idx_votes_user_id_create_date ON votes(user_id, create_date);
           );
           if (found_page.rows.length) {
             page.article_id = found_page.rows[0].article_id;
+            if (page.body !== found_page.rows[0].body) {
+              await client.query(
+                `
+                UPDATE articles
+                SET body = $1
+                WHERE article_id = $2;
+                `,
+                [page.body, found_page.rows[0].article_id],
+              );
+            }
           } else {
             const new_page = await client.query(
               `

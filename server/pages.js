@@ -9,6 +9,13 @@ module.exports = {
 
 "What can be done to demonstrate unconditional love for all?"
 
-And exploring answers to that question together without judgement or authority or theistic baggage.`,
+And exploring answers to that question together without judgement or authority or theistic baggage.
+
+Anything that deals with love in any way whatsoever is appropriate here.
+
+Anything that talks about Christianity in any way whatsoever is appropriate here.
+
+Anything that talks about atheism in any way whatsoever is appropriate here.
+`,
   },
 };

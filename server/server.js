@@ -19,6 +19,12 @@ module.exports = {
           return;
         }
 
+        // Path image
+        if (req.path.substr(0, 5) === "image" && req.path.length > 20) {
+          await require("./handleImage")(req, res);
+          return;
+        }
+
         // PATH test
         if (req.path === "test_cleanup") {
           await require("./handleTest")(req, res);

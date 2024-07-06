@@ -7,7 +7,21 @@ module.exports = {
       apiKey: process.env["OPENAI_API_KEY"],
     });
   },
-  async ask(text, prompt = "common") {
+  async ask(text, prompt = "common", pngs = []) {
+    const content = [
+        {
+          text: text,
+          type: "text",
+        },
+      ];
+    pngs.forEach((png) => {
+      content.push({
+        image_url: {
+          url: png.url,
+        },
+        type: "image_url",
+      });
+    });
     const ai_response = await this.openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
@@ -22,12 +36,7 @@ module.exports = {
         },
         {
           role: "user",
-          content: [
-            {
-              text: text,
-              type: "text",
-            },
-          ],
+          content: content,
         },
       ],
       temperature: 1,

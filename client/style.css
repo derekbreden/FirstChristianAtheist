@@ -365,6 +365,94 @@ add-new button {
 main-content add-new:first-child {
   margin-top: 20px;
 }
+[img-icon] input {
+  display: none;
+}
+image-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+[img-icon] {
+  display: flex;
+  border: 2px solid #26323e;
+  border-radius: 4px;
+  height: 25px;
+  width: 30px;
+  position: relative;
+  overflow: hidden;
+}
+[img-icon]::before {
+  display: flex;
+  content: "";
+  border-top: 2px solid #26323e;
+  border-left: 2px solid #26323e;
+  border-right: 2px solid transparent;
+  border-bottom: 2px solid transparent;
+  border-radius: 4px;
+  height: 20px;
+  width: 20px;
+  transform: rotate(45deg);
+  position: absolute;
+  top: 12px;
+  left: -5px;
+}
+[img-icon]::after {
+  display: flex;
+  content: "";
+  border: 2px solid #26323e;
+  border-radius: 50%;
+  height: 3px;
+  width: 3px;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}
+image-wrapper previews {
+  display: flex;
+  width: calc(100% - 30px);
+  justify-content: flex-end;
+}
+image-wrapper previews preview {
+  border: 1px solid #26323e;
+  border-radius: 2px;
+  margin-left: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: calc(25% - 5px);
+}
+image-wrapper previews preview remove-icon {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  display: flex;
+  border-radius: 50%;
+  background: #26323e;
+  font-weight: 600;
+  height: 25px;
+  width: 25px;
+}
+image-wrapper previews preview remove-icon::before,
+image-wrapper previews preview remove-icon::after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  transform: rotate(45deg);
+  top: 11px;
+  left: 4px;
+}
+image-wrapper previews preview remove-icon::after {
+  transform: rotate(-45deg);
+}
+image-wrapper previews preview img {
+  max-height: 200px;
+  max-width: 100%;
+}
 [add-new-comment] {
   padding: 10px 0 20px 0;
 }

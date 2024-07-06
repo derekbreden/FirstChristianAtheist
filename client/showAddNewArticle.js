@@ -4,6 +4,10 @@ const showAddNewArticle = (article, $article) => {
     add-new[article]
       input[title][placeholder=Title][maxlength=140][value=$1]
       textarea[body][placeholder=Content][rows=10][maxlength=4000] $2
+      image-wrapper
+        label[img-icon]
+          input[img][type=file][multiple]
+        previews
       button[submit] $3
       button[alt][cancel] Cancel
     `,
@@ -22,6 +26,71 @@ const showAddNewArticle = (article, $article) => {
         [error],
       ),
     );
+  };
+
+  const pngs = [];
+
+  $add_new.$("[img]").on("change", () => {
+    Array.from($add_new.$("[img]").files).forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = ($event) => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const img = new Image();
+        img.onload = () => {
+          const ratio =
+            1024 / (img.width > img.height ? img.width : img.height);
+          canvas.width = img.width * ratio;
+          canvas.height = img.height * ratio;
+          ctx.drawImage(
+            img,
+            0,
+            0,
+            img.width,
+            img.height,
+            0,
+            0,
+            canvas.width,
+            canvas.height,
+          );
+          const data_url = canvas.toDataURL("image/png");
+          pngs.push({
+            url: data_url,
+            width: canvas.width,
+            height: canvas.height,
+          });
+          if (pngs.length > 4) {
+            pngs.splice(4, pngs.length - 4);
+            if (!$("modal[error]")) {
+              modalError("Each article is limited to 4 images");
+            }
+          }
+          previewPngs();
+        };
+        img.src = $event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  const previewPngs = () => {
+    $add_new.$("image-wrapper previews")?.remove();
+    $add_new.$("image-wrapper").appendChild(document.createElement("previews"));
+    pngs.forEach((png, i) => {
+      const $preview = $(
+        `
+        preview
+          remove-icon
+          img[src=$1]
+        `,
+        [png.url],
+      );
+      $preview.$("remove-icon").on("click", () => {
+        pngs.splice(i, 1);
+        previewPngs();
+      });
+      $add_new.$("image-wrapper previews").appendChild($preview);
+    });
   };
 
   $add_new.$("[title]").on("focus", () => {
@@ -71,6 +140,7 @@ const showAddNewArticle = (article, $article) => {
         path: state.path,
         title,
         body,
+        pngs,
         article_id: article ? article.article_id : undefined,
       }),
     })

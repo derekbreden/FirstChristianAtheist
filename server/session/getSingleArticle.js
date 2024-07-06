@@ -7,10 +7,22 @@ module.exports = async (req, res) => {
     const slug = req.body.path.substr(9);
     const article_results = await req.client.query(
       `
-      SELECT article_id, title, slug, body,
-        CASE WHEN user_id = $1 THEN true ELSE false END AS edit
-      FROM articles
-      WHERE slug = $2
+      SELECT
+        a.article_id,
+        a.title,
+        a.slug,
+        a.body,
+        CASE WHEN a.user_id = $1 THEN true ELSE false END AS edit,
+        STRING_AGG(i.image_uuid, ',') AS image_uuids
+      FROM articles a
+      LEFT JOIN article_images i ON a.article_id = i.article_id
+      WHERE a.slug = $2
+      GROUP BY
+        a.article_id,
+        a.title,
+        a.slug,
+        a.body,
+        CASE WHEN a.user_id = $1 THEN true ELSE false END
       `,
       [req.session.user_id || 0, slug],
     );
