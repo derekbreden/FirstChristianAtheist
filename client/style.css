@@ -384,6 +384,7 @@ main-content add-new:first-child {
 title-wrapper {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 [img-icon] input {
   display: none;
@@ -538,6 +539,7 @@ reply-wrapper {
 }
 display-name-wrapper {
   padding-bottom: 5px;
+  flex: 1;
 }
 expand-wrapper {
   display: flex;

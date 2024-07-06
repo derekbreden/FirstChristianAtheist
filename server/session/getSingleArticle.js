@@ -40,7 +40,7 @@ module.exports = async (req, res) => {
           u.display_name_index,
           CASE WHEN c.user_id = $1 THEN true ELSE false END AS edit,
           STRING_AGG(i.image_uuid, ',') AS image_uuids
-        FROM comments
+        FROM comments c
         INNER JOIN users u ON c.user_id = u.user_id
         LEFT JOIN comment_images i ON c.comment_id = i.comment_id
         WHERE c.parent_article_id = $2
