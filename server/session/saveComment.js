@@ -36,24 +36,37 @@ module.exports = async (req, res) => {
         return;
       }
     }
-    let context = page.title;
-    context += "\n" + page.body;
+
+    const messages = [];
+    messages.push({
+      role: "user",
+      name: "Admin",
+      content: [{ type: "text", text: page.title + "\n\n" + page.body }],
+    });
     const article_results = await req.client.query(
       `
-      SELECT title, body
-      FROM articles
-      WHERE parent_article_id = $1
-      ORDER BY create_date ASC
+      SELECT a.title, a.body, u.display_name
+      FROM articles a
+      INNER JOIN users u ON a.user_id = u.user_id
+      WHERE a.parent_article_id = $1
+      ORDER BY a.create_date ASC
       `,
       [article_id],
     );
     for (const article of article_results.rows) {
-      context += "\n" + article.title;
-      context += "\n" + article.body;
+      messages.push({
+        role: "user",
+        name: article.display_name || "Anonymous",
+        content: [{ type: "text", text: article.title + "\n\n" + article.body }],
+      });
     }
     const ancestor_ids = [];
     if (req.body.parent_comment_id) {
-      context += "\n\n" + "Comment thread:";
+      messages.push({
+        role: "user",
+        name: "Admin",
+        content: [{ type: "text", text: "Comments:" }],
+      });
       const comment_ancestors = await req.client.query(
         `
         SELECT
@@ -74,26 +87,43 @@ module.exports = async (req, res) => {
         [req.body.parent_comment_id],
       );
       for (const comment_ancestor of comment_ancestors.rows) {
-        context += "\n\n" + comment_ancestor.display_name + ":";
-        context += "\n" + comment_ancestor.body;
+        messages.push({
+          role: "user",
+          name: comment_ancestor.display_name,
+          content: [
+            {
+              type: "text",
+              text: comment_ancestor.display_name + ":\n" + comment_ancestor.body,
+            },
+          ],
+        });
         if (comment_ancestor.note) {
-          context += "\n\nChatGPT:";
-          context += "\n" + comment_ancestor.note;
+          messages.push({
+            role: "system",
+            content: [
+              { type: "text", text: comment_ancestor.note },
+            ],
+          });
         }
       }
       ancestor_ids.push(...comment_ancestors.rows.map((c) => c.comment_id));
     }
-    const ai_response_text = await ai.ask(
-      `"""CONTEXT
-${context}
-"""
-"""USER
-${req.body.display_name}:
-${req.body.body}
-"""`,
-      "common",
-      req.body.pngs,
-    );
+    messages.push({
+      role: "user",
+      name: req.body.display_name,
+      content: [
+        { type: "text", text: req.body.display_name + ":\n" + req.body.body },
+        ...req.body.pngs.map((png) => {
+          return {
+            image_url: {
+              url: png.url,
+            },
+            type: "image_url",
+          };
+        })
+      ],
+    });
+    const ai_response_text = await ai.ask(messages, "common");
     if (ai_response_text === "SPAM") {
       res.end(
         JSON.stringify({

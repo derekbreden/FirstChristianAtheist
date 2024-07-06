@@ -3,7 +3,12 @@ const ai = require("../ai");
 module.exports = async (req, res) => {
   if (!req.writeableEnded && req.session.user_id && req.body.display_name) {
     const ai_response_text = await ai.ask(
-      req.body.display_name,
+      [
+        {
+          role: "user",
+          content: [{ type: "text", text: req.body.display_name }],
+        },
+      ],
       "display_name",
     );
     if (ai_response_text === "OK") {

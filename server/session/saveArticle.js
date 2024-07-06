@@ -33,18 +33,29 @@ module.exports = async (req, res) => {
 
     // Always moderate based on page context
     const page = pages[req.body.path];
-    const ai_response_text = await ai.ask(
-      `"""CONTEXT
-${page.title}
-${page.body}
-"""
-"""USER
-${req.body.title}
-${req.body.body}
-"""`,
-      "common",
-      req.body.pngs,
-    );
+    const messages = [];
+    messages.push({
+      role: "user",
+      name: "Admin",
+      content: [{ type: "text", text: page.title + "\n\n" + page.body }],
+    });
+
+    messages.push({
+      role: "user",
+      name: req.session.display_name || "Anonymous",
+      content: [
+        { type: "text", text: req.body.title + "\n\n" + req.body.body },
+        ...req.body.pngs.map((png) => {
+          return {
+            image_url: {
+              url: png.url,
+            },
+            type: "image_url",
+          };
+        }),
+      ],
+    });
+    const ai_response_text = await ai.ask(messages, "common");
     if (ai_response_text === "OK") {
       const slug = req.body.title
         .replace(/[^a-z0-9 ]/gi, "")
