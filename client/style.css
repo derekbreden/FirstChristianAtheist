@@ -69,6 +69,15 @@ p img {
   max-width: 100%;
   border-radius: 10px;
 }
+article[trimmed] p img {
+  max-height: 100px;
+}
+article[trimmed] p[img] {
+  display: inline-flex;
+}
+article[trimmed] p[img] + p[img] {
+  margin-left: 10px;
+}
 p[quote] {
   padding: 10px;
   border-left: 2px solid #999;

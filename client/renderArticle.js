@@ -55,7 +55,7 @@ const renderArticle = (article) => {
     for (const image_uuid of image_uuids) {
       const $image = $(
         `
-        p
+        p[img]
           img[src=$1]
         `,
         [ "/image/" + image_uuid]
@@ -64,6 +64,7 @@ const renderArticle = (article) => {
     }
   }
   if (state.path === "/topics" || state.path === "/recent") {
+    $article.setAttribute("trimmed", "");
     $article.on("click", ($event) => {
       $event.preventDefault();
       state.path = "/article/" + article.slug;

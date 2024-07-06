@@ -14,8 +14,18 @@ module.exports = async (req, res) => {
           a.user_id,
           NULL AS parent_comment_id,
           NULL AS parent_article_id,
+          STRING_AGG(i.image_uuid, ',') as image_uuids,
           'article' AS type
         FROM articles a
+        LEFT JOIN article_images i ON a.article_id = i.article_id
+        GROUP BY
+          a.article_id,
+          a.create_date,
+          a.title,
+          LEFT(a.body, 1000),
+          a.note,
+          a.slug,
+          a.user_id
         UNION ALL
         SELECT 
           c.comment_id AS id,
@@ -27,6 +37,7 @@ module.exports = async (req, res) => {
           c.user_id,
           c.parent_comment_id,
           c.parent_article_id,
+          NULL as image_uuids,
           'comment' AS type
         FROM comments c
       )
@@ -38,6 +49,7 @@ module.exports = async (req, res) => {
         combined.note,
         combined.slug,
         combined.type,
+        combined.image_uuids,
         u.display_name,
         u.display_name_index,
         pa.title AS parent_article_title,
