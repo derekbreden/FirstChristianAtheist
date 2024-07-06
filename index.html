@@ -9,7 +9,6 @@
   </head>
   <!--#include file="client/body.html" -->
   <script>
-
     // Global state
     const state = {
       path: "/",
@@ -17,6 +16,7 @@
       display_name: "",
       email: "",
       session_uuid: localStorage.getItem("session_uuid") || "",
+      expanded_comment_ids: localStorage.getItem("expanded_comment_ids") ? JSON.parse(localStorage.getItem("expanded_comment_ids")) : [],
       reset_token_uuid: "",
     };
 

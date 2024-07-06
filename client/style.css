@@ -490,7 +490,7 @@ comment {
   border-radius: 2px;
   padding: 10px;
 }
-comments comment {
+comments > comment {
   margin-bottom: 20px;
 }
 comments comment:last-child {
@@ -498,9 +498,6 @@ comments comment:last-child {
 }
 comment comment {
   margin-top: 10px;
-}
-comment comment + comment {
-  margin-top: -10px;
 }
 comment p {
   margin-top: 5px;
@@ -544,7 +541,12 @@ display-name-wrapper {
 expand-wrapper {
   display: flex;
   flex-direction: column;
-  margin: 10px 0 0 0;
+  padding: 10px 0;
+  margin-bottom: -10px;
+}
+expand-wrapper[collapse] {
+  flex-direction: row;
+  justify-content: center;
 }
 back-wrapper {
   display: flex;
@@ -559,6 +561,8 @@ expand-wrapper button {
   padding: 6px;
 }
 back-wrapper button::before,
+[expand-left]::before,
+[expand-right]::before,
 [expand-down]::before,
 [expand-up]::before {
   content: "";
@@ -577,6 +581,20 @@ back-wrapper button::before,
 [expand-down]::before {
   top: -10px;
   transform: rotate(-135deg);
+}
+[expand-left]::before {
+  transform: rotate(-45deg);
+  height: 10px;
+  width: 10px;
+  top: 5px;
+  left: calc(50% - 10px);
+}
+[expand-right]::before {
+  transform: rotate(135deg);
+  height: 10px;
+  width: 10px;
+  top: 5px;
+  left: calc(50% - 3px);
 }
 back-wrapper button::before {
   transform: rotate(-45deg);
