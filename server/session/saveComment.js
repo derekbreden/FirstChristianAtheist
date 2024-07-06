@@ -41,7 +41,7 @@ module.exports = async (req, res) => {
     messages.push({
       role: "user",
       name: "Admin",
-      content: [{ type: "text", text: page.title + "\n\n" + page.body }],
+      content: page.title + "\n\n" + page.body,
     });
     const article_results = await req.client.query(
       `
@@ -56,8 +56,12 @@ module.exports = async (req, res) => {
     for (const article of article_results.rows) {
       messages.push({
         role: "user",
-        name: article.display_name || "Anonymous",
-        content: [{ type: "text", text: article.title + "\n\n" + article.body }],
+        name: (article.display_name || "Anonymous").replace(/[^a-z0-9_\-]/g, ""),
+        content: article.title + "\n\n" + article.body,
+      });
+      messages.push({
+        role: "system",
+        content: "OK",
       });
     }
     const ancestor_ids = [];
@@ -89,20 +93,18 @@ module.exports = async (req, res) => {
       for (const comment_ancestor of comment_ancestors.rows) {
         messages.push({
           role: "user",
-          name: comment_ancestor.display_name,
-          content: [
-            {
-              type: "text",
-              text: comment_ancestor.display_name + ":\n" + comment_ancestor.body,
-            },
-          ],
+          name: comment_ancestor.display_name.replace(/[^a-z0-9_\-]/g, ""),
+          content: comment_ancestor.display_name + ":\n" + comment_ancestor.body,
         });
         if (comment_ancestor.note) {
           messages.push({
             role: "system",
-            content: [
-              { type: "text", text: comment_ancestor.note },
-            ],
+            content: comment_ancestor.note,
+          });
+        } else {
+          messages.push({
+            role: "system",
+            content: "OK",
           });
         }
       }
@@ -110,7 +112,7 @@ module.exports = async (req, res) => {
     }
     messages.push({
       role: "user",
-      name: req.body.display_name,
+      name: req.body.display_name.replace(/[^a-z0-9_\-]/g, ""),
       content: [
         { type: "text", text: req.body.display_name + ":\n" + req.body.body },
         ...req.body.pngs.map((png) => {

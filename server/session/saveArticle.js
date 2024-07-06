@@ -37,12 +37,12 @@ module.exports = async (req, res) => {
     messages.push({
       role: "user",
       name: "Admin",
-      content: [{ type: "text", text: page.title + "\n\n" + page.body }],
+      content: page.title + "\n\n" + page.body,
     });
 
     messages.push({
       role: "user",
-      name: req.session.display_name || "Anonymous",
+      name: (req.session.display_name || "Anonymous").replace(/[^a-z0-9_\-]/g, ""),
       content: [
         { type: "text", text: req.body.title + "\n\n" + req.body.body },
         ...req.body.pngs.map((png) => {

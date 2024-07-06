@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
       [
         {
           role: "user",
-          content: [{ type: "text", text: req.body.display_name }],
+          content: req.body.display_name,
         },
       ],
       "display_name",
