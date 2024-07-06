@@ -365,14 +365,12 @@ add-new button {
 main-content add-new:first-child {
   margin-top: 20px;
 }
+title-wrapper {
+  display: flex;
+  align-items: center;
+}
 [img-icon] input {
   display: none;
-}
-image-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
 }
 [img-icon] {
   display: flex;
@@ -380,6 +378,7 @@ image-wrapper {
   border-radius: 4px;
   height: 25px;
   width: 30px;
+  margin-left: 5px;
   position: relative;
   overflow: hidden;
 }
@@ -409,22 +408,26 @@ image-wrapper {
   top: 2px;
   right: 2px;
 }
-image-wrapper previews {
+image-previews {
   display: flex;
-  width: calc(100% - 30px);
-  justify-content: flex-end;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
 }
-image-wrapper previews preview {
+image-previews preview {
   border: 1px solid #26323e;
   border-radius: 2px;
-  margin-left: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-  width: calc(25% - 5px);
+  width: calc(25% - (15px / 4) );
+  margin-right: 5px;
 }
-image-wrapper previews preview remove-icon {
+image-previews preview:last-child {
+  margin-right: 0;
+}
+image-previews preview remove-icon {
   position: absolute;
   top: 1px;
   right: 1px;
@@ -435,8 +438,8 @@ image-wrapper previews preview remove-icon {
   height: 25px;
   width: 25px;
 }
-image-wrapper previews preview remove-icon::before,
-image-wrapper previews preview remove-icon::after {
+image-previews preview remove-icon::before,
+image-previews preview remove-icon::after {
   content: "";
   position: absolute;
   width: 15px;
@@ -446,10 +449,10 @@ image-wrapper previews preview remove-icon::after {
   top: 11px;
   left: 4px;
 }
-image-wrapper previews preview remove-icon::after {
+image-previews preview remove-icon::after {
   transform: rotate(-45deg);
 }
-image-wrapper previews preview img {
+image-previews preview img {
   max-height: 200px;
   max-width: 100%;
 }

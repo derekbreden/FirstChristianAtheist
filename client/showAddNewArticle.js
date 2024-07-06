@@ -2,12 +2,11 @@ const showAddNewArticle = (article, $article) => {
   const $add_new = $(
     `
     add-new[article]
-      input[title][placeholder=Title][maxlength=140][value=$1]
-      textarea[body][placeholder=Content][rows=10][maxlength=4000] $2
-      image-wrapper
+      title-wrapper
+        input[title][placeholder=Title][maxlength=140][value=$1]
         label[img-icon]
           input[img][type=file][multiple]
-        previews
+      textarea[body][placeholder=Content][rows=10][maxlength=4000] $2
       button[submit] $3
       button[alt][cancel] Cancel
     `,
@@ -29,6 +28,38 @@ const showAddNewArticle = (article, $article) => {
   };
 
   const pngs = [];
+
+  if (article?.image_uuids) {
+    const image_uuids = article.image_uuids.split(",");
+    for (const image_uuid of image_uuids) {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(
+          img,
+          0,
+          0,
+          img.width,
+          img.height,
+          0,
+          0,
+          canvas.width,
+          canvas.height,
+        );
+        const data_url = canvas.toDataURL("image/png");
+        pngs.push({
+          url: data_url,
+          width: canvas.width,
+          height: canvas.height,
+        });
+        previewPngs();
+      };
+      img.src = "image/" + image_uuid;
+    }
+  }
 
   $add_new.$("[img]").on("change", () => {
     Array.from($add_new.$("[img]").files).forEach((file) => {
@@ -74,8 +105,8 @@ const showAddNewArticle = (article, $article) => {
   });
 
   const previewPngs = () => {
-    $add_new.$("image-wrapper previews")?.remove();
-    $add_new.$("image-wrapper").appendChild(document.createElement("previews"));
+    $add_new.$("image-previews")?.remove();
+    $add_new.$("title-wrapper").after(document.createElement("image-previews"));
     pngs.forEach((png, i) => {
       const $preview = $(
         `
@@ -89,7 +120,7 @@ const showAddNewArticle = (article, $article) => {
         pngs.splice(i, 1);
         previewPngs();
       });
-      $add_new.$("image-wrapper previews").appendChild($preview);
+      $add_new.$("image-previews").appendChild($preview);
     });
   };
 
