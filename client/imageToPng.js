@@ -4,9 +4,9 @@ const imageToPng = (src, callback) => {
   const img = new Image();
   img.onload = () => {
     const ratio =
-      1024 / (img.width > img.height ? img.width : img.height);
-    canvas.width = img.width * ratio;
-    canvas.height = img.height * ratio;
+      1024 / Math.max(img.width, img.height);
+    canvas.width = Math.min(1024, img.width * ratio);
+    canvas.height = Math.min(1024, img.height * ratio);
     ctx.drawImage(
       img,
       0,
