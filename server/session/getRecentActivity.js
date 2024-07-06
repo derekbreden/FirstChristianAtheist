@@ -37,9 +37,18 @@ module.exports = async (req, res) => {
           c.user_id,
           c.parent_comment_id,
           c.parent_article_id,
-          NULL as image_uuids,
+          STRING_AGG(i.image_uuid, ',') as image_uuids,
           'comment' AS type
         FROM comments c
+        LEFT JOIN comment_images i ON c.comment_id = i.comment_id
+        GROUP BY
+          c.comment_id,
+          c.create_date,
+          c.body,
+          c.note,
+          c.user_id,
+          c.parent_comment_id,
+          c.parent_article_id
       )
       SELECT 
         combined.id,

@@ -56,6 +56,38 @@ const renderComment = (comment) => {
   $comment.$("[edit]")?.on("click", () => {
     showAddNewComment(comment, $comment);
   });
+
+  if (comment.image_uuids) {
+    const image_uuids = comment.image_uuids.split(",").reverse();
+    for (const image_uuid of image_uuids) {
+      const $image = $(
+        `
+        p[img]
+          img[src=$1]
+        `,
+        [ "/image/" + image_uuid]
+      );
+      $image.on("click", () => {
+        const $modal = $(
+          `
+          modal[image]
+            p[img]
+              img[src=$1]
+            button[close] Done
+          modal-bg
+          `,
+          [ "/image/" + image_uuid ]
+        );
+        const modalCancel = () => {
+          $modal.remove();
+        };
+        $modal.$("[close]").on("click", modalCancel);
+        $modal.$("modal-bg").on("click", modalCancel);
+        $("body").appendChild($modal);
+      });
+      $comment.$("h3").after($image);
+    }
+  }
   comment.$comment = $comment;
   return $comment;
 };

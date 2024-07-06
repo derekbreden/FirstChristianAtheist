@@ -21,7 +21,10 @@ const showAddNewComment = (
   const $add_new = $(
     `
     add-new[comment]
-      input[display-name][placeholder=Your name][maxlength=50][value=$1]
+      title-wrapper
+        input[display-name][placeholder=Your name][maxlength=50][value=$1]
+        label[img-icon]
+          input[img][type=file]
       textarea[body][placeholder=Comment][rows=5][maxlength=1000] $2
       button[submit] $3
       button[alt][cancel] Cancel
@@ -57,6 +60,53 @@ const showAddNewComment = (
       ),
     );
   };
+
+  const pngs = [];
+
+  if (comment?.image_uuids) {
+    const image_uuids = comment.image_uuids.split(",");
+    for (const image_uuid of image_uuids) {
+      imageToPng("/image/" + image_uuid, (png) => {
+        pngs.push(png);
+        previewPngs();
+      });
+    }
+  }
+  
+  $add_new.$("[img]").on("change", () => {
+    Array.from($add_new.$("[img]").files).forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = ($event) => {
+        imageToPng($event.target.result, (png) => {
+          pngs.pop();
+          pngs.push(png);
+          previewPngs();
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  const previewPngs = () => {
+    $add_new.$("image-previews")?.remove();
+    $add_new.$("title-wrapper").after(document.createElement("image-previews"));
+    pngs.forEach((png, i) => {
+      const $preview = $(
+        `
+        preview
+          remove-icon
+          img[src=$1]
+        `,
+        [png.url],
+      );
+      $preview.$("remove-icon").on("click", () => {
+        pngs.splice(i, 1);
+        previewPngs();
+      });
+      $add_new.$("image-previews").appendChild($preview);
+    });
+  };
+  
   $add_new.$("[display-name]").on("focus", () => {
     $add_new.$("error")?.remove();
   });
@@ -155,6 +205,7 @@ const showAddNewComment = (
         path: state.path,
         display_name: state.display_name,
         body,
+        pngs,
         comment_id: comment ? comment.comment_id : undefined,
         parent_comment_id: parent_comment
           ? parent_comment.comment_id

@@ -92,25 +92,28 @@ ${req.body.body}
       }
 
       // Remove existing images
-      const existing_images = await req.client.query(
-        `
-        DELETE FROM article_images
-        WHERE article_id = $1
-        RETURNING image_uuid
-        `,
-        [article_id],
-      );
-      for (const existing_image of existing_images.rows) {
-        const { ok, error } = await object_client.delete(
-          `${existing_image.image_uuid}.png`,
+      if (req.body.article_id) {
+        const existing_images = await req.client.query(
+          `
+          DELETE FROM article_images
+          WHERE article_id = $1
+          RETURNING image_uuid
+          `,
+          [article_id],
         );
-        if (!ok) {
-          console.error(error);
+        for (const existing_image of existing_images.rows) {
+          const { ok, error } = await object_client.delete(
+            `${existing_image.image_uuid}.png`,
+          );
+          if (!ok) {
+            console.error(error);
+          }
         }
       }
+
+      // Add new images
       for (const png of req.body.pngs) {
         const image_uuid = crypto.randomUUID();
-        const image_name = image_uuid + ".png";
         const { ok, error } = await object_client.uploadFromBytes(
           `${image_uuid}.png`,
           png.url,

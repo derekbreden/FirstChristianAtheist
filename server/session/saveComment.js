@@ -1,5 +1,8 @@
 const ai = require("../ai");
 const pages = require("../pages");
+const crypto = require("node:crypto");
+const { Client } = require("@replit/object-storage");
+const object_client = new Client();
 
 module.exports = async (req, res) => {
   if (
@@ -7,7 +10,8 @@ module.exports = async (req, res) => {
     req.session.user_id &&
     req.body.display_name &&
     req.body.body &&
-    req.body.path
+    req.body.path &&
+    req.body.pngs
   ) {
     const page = pages[req.body.path] || pages["/"];
     let article_id = page.article_id;
@@ -79,13 +83,17 @@ module.exports = async (req, res) => {
       }
       ancestor_ids.push(...comment_ancestors.rows.map((c) => c.comment_id));
     }
-    const ai_response_text = await ai.ask(`"""CONTEXT
+    const ai_response_text = await ai.ask(
+      `"""CONTEXT
 ${context}
 """
 """USER
 ${req.body.display_name}:
 ${req.body.body}
-"""`);
+"""`,
+      "common",
+      req.body.pngs,
+    );
     if (ai_response_text === "SPAM") {
       res.end(
         JSON.stringify({
@@ -162,7 +170,10 @@ ${req.body.body}
         comment_id = comment_inserted.rows[0].comment_id;
       }
     }
+
+    // Update the display name
     await require("./updateDisplayName")(req, res);
+
     // Insert all of the ancestors
     if (ancestor_ids.length > 0 && !req.body.comment_id) {
       // Create a values string for the bulk insert
@@ -178,6 +189,48 @@ ${req.body.body}
         `,
         [comment_id, ...ancestor_ids],
       );
+    }
+
+    // Remove existing images
+    if (req.body.comment_id) {
+      const existing_images = await req.client.query(
+        `
+        DELETE FROM comment_images
+        WHERE comment_id = $1
+        RETURNING image_uuid
+        `,
+        [comment_id],
+      );
+      for (const existing_image of existing_images.rows) {
+        const { ok, error } = await object_client.delete(
+          `${existing_image.image_uuid}.png`,
+        );
+        if (!ok) {
+          console.error(error);
+        }
+      }
+    }
+
+    // Add new images
+    for (const png of req.body.pngs) {
+      const image_uuid = crypto.randomUUID();
+      const { ok, error } = await object_client.uploadFromBytes(
+        `${image_uuid}.png`,
+        png.url,
+      );
+      if (!ok) {
+        console.error(error);
+      } else {
+        await req.client.query(
+          `
+          INSERT INTO comment_images
+            (comment_id, image_uuid)
+          VALUES
+            ($1, $2)
+          `,
+          [comment_id, image_uuid],
+        );
+      }
     }
 
     // Respond with success so the client reloads

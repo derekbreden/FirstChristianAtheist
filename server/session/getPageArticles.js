@@ -28,18 +28,28 @@ module.exports = async (req, res) => {
     req.results.articles.push(...article_results.rows);
     const comment_results = await req.client.query(
       `
-      SELECT
-        comments.comment_id,
-        comments.body,
-        comments.note,
-        comments.parent_comment_id,
-        users.display_name,
-        users.display_name_index,
-        CASE WHEN comments.user_id = $1 THEN true ELSE false END AS edit
-      FROM comments
-      INNER JOIN users ON comments.user_id = users.user_id
-      WHERE comments.parent_article_id = $2
-      ORDER BY comments.create_date ASC
+        SELECT
+          c.comment_id,
+          c.body,
+          c.note,
+          c.parent_comment_id,
+          u.display_name,
+          u.display_name_index,
+          CASE WHEN c.user_id = $1 THEN true ELSE false END AS edit,
+          STRING_AGG(i.image_uuid, ',') AS image_uuids
+        FROM comments c
+        INNER JOIN users u ON c.user_id = u.user_id
+        LEFT JOIN comment_images i ON c.comment_id = i.comment_id
+        WHERE c.parent_article_id = $2
+        GROUP BY
+          c.comment_id,
+          c.body,
+          c.note,
+          c.parent_comment_id,
+          u.display_name,
+          u.display_name_index,
+          CASE WHEN c.user_id = $1 THEN true ELSE false END
+        ORDER BY c.create_date ASC
       `,
       [req.session.user_id || 0, page.article_id],
     );

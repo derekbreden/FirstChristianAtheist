@@ -32,32 +32,10 @@ const showAddNewArticle = (article, $article) => {
   if (article?.image_uuids) {
     const image_uuids = article.image_uuids.split(",");
     for (const image_uuid of image_uuids) {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      const img = new Image();
-      img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(
-          img,
-          0,
-          0,
-          img.width,
-          img.height,
-          0,
-          0,
-          canvas.width,
-          canvas.height,
-        );
-        const data_url = canvas.toDataURL("image/png");
-        pngs.push({
-          url: data_url,
-          width: canvas.width,
-          height: canvas.height,
-        });
+      imageToPng("/image/" + image_uuid, (png) => {
+        pngs.push(png);
         previewPngs();
-      };
-      img.src = "image/" + image_uuid;
+      });
     }
   }
 
@@ -65,31 +43,8 @@ const showAddNewArticle = (article, $article) => {
     Array.from($add_new.$("[img]").files).forEach((file) => {
       const reader = new FileReader();
       reader.onload = ($event) => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        const img = new Image();
-        img.onload = () => {
-          const ratio =
-            1024 / (img.width > img.height ? img.width : img.height);
-          canvas.width = img.width * ratio;
-          canvas.height = img.height * ratio;
-          ctx.drawImage(
-            img,
-            0,
-            0,
-            img.width,
-            img.height,
-            0,
-            0,
-            canvas.width,
-            canvas.height,
-          );
-          const data_url = canvas.toDataURL("image/png");
-          pngs.push({
-            url: data_url,
-            width: canvas.width,
-            height: canvas.height,
-          });
+        imageToPng($event.target.result, (png) => {
+          pngs.push(png);
           if (pngs.length > 4) {
             pngs.splice(4, pngs.length - 4);
             if (!$("modal[error]")) {
@@ -97,8 +52,7 @@ const showAddNewArticle = (article, $article) => {
             }
           }
           previewPngs();
-        };
-        img.src = $event.target.result;
+        });
       };
       reader.readAsDataURL(file);
     });
