@@ -12,4 +12,11 @@ const renderArticles = (articles) => {
   if (state.path === "/topics") {
     showAddNewArticle();
   }
+
+  // Restore previous scroll position if tracked and returning to /topcs
+  if (state.topics_scroll_top && state.path === "/topics") {
+    const body = document.scrollingElement || document.documentElement;
+    body.scrollTop = state.topics_scroll_top;
+    delete state.topics_scroll_top;
+  }
 };
