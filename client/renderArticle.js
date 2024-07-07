@@ -17,9 +17,14 @@ const renderArticle = (article) => {
       $(
         `
         expand-wrapper
+          p[comments] $1
           p Read more
           button[expand-down]
         `,
+        [
+          article.comments +
+            (article.comments === "1" ? " comment" : " comments"),
+        ],
       ),
     );
   }
@@ -58,7 +63,7 @@ const renderArticle = (article) => {
         p[img]
           img[src=$1]
         `,
-        [ "/image/" + image_uuid]
+        ["/image/" + image_uuid],
       );
       $article.$("h2").after($image);
     }

@@ -11,9 +11,11 @@ module.exports = async (req, res) => {
         a.slug,
         LEFT(a.body, 1000) as body,
         CASE WHEN a.user_id = $1 THEN true ELSE false END AS edit,
-        STRING_AGG(i.image_uuid, ',') as image_uuids
+        STRING_AGG(DISTINCT i.image_uuid, ',') as image_uuids,
+        COUNT(DISTINCT c.comment_id) as comments
       FROM articles a
       LEFT JOIN article_images i ON a.article_id = i.article_id
+      LEFT JOIN comments c ON a.article_id = c.parent_article_id
       WHERE a.parent_article_id = $2
       GROUP BY
         a.article_id,

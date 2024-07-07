@@ -14,10 +14,12 @@ module.exports = async (req, res) => {
           a.user_id,
           NULL AS parent_comment_id,
           NULL AS parent_article_id,
-          STRING_AGG(i.image_uuid, ',') as image_uuids,
+          STRING_AGG(DISTINCT i.image_uuid, ',') as image_uuids,
+          COUNT(DISTINCT c.comment_id) as comments,
           'article' AS type
         FROM articles a
         LEFT JOIN article_images i ON a.article_id = i.article_id
+        LEFT JOIN comments c ON a.article_id = c.parent_article_id
         GROUP BY
           a.article_id,
           a.create_date,
@@ -38,6 +40,7 @@ module.exports = async (req, res) => {
           c.parent_comment_id,
           c.parent_article_id,
           STRING_AGG(i.image_uuid, ',') as image_uuids,
+          NULL as comments,
           'comment' AS type
         FROM comments c
         LEFT JOIN comment_images i ON c.comment_id = i.comment_id
@@ -59,6 +62,7 @@ module.exports = async (req, res) => {
         combined.slug,
         combined.type,
         combined.image_uuids,
+        combined.comments,
         u.display_name,
         u.display_name_index,
         pa.title AS parent_article_title,

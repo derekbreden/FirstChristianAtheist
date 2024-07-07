@@ -474,7 +474,7 @@ image-previews preview img {
   max-width: 100%;
 }
 [add-new-comment] {
-  padding: 10px 0 20px 0;
+  padding: 10px 0;
 }
 [add-new-comment] button {
   width: 100%;
@@ -515,7 +515,7 @@ comment info b {
 comments > add-new:first-child {
   padding: 10px;
   border: 1px solid #ddd;
-  margin: 20px 0;
+  margin: 20px 0 10px 0;
 }
 comments > add-new:not(:first-child) {
   margin: 0 0 20px 0;
@@ -545,7 +545,11 @@ expand-wrapper {
   display: flex;
   flex-direction: column;
   padding: 10px 0;
-  margin-bottom: -10px;
+  margin: 0 0 -10px 0;
+  position: relative;
+}
+expand-wrapper[above-comments] {
+  margin: 0 0 10px 0;
 }
 expand-wrapper[collapse] {
   flex-direction: row;
@@ -555,6 +559,7 @@ back-forward-wrapper {
   display: flex;
   justify-content: space-between;
   margin: 20px 0 0 0;
+  min-height: 18px;
 }
 forward-wrapper,
 back-wrapper {
@@ -628,12 +633,21 @@ expand-wrapper p {
   opacity: .5;
   text-align: center;
 }
+expand-wrapper p[comments] {
+  position: absolute;
+  right: 0;
+  top: 10px;
+}
+expand-wrapper[above-comments] p {
+  text-align: left;
+  margin: 0;
+}
 expand-wrapper button + p {
   margin-top: 5px;
 }
 forward-wrapper p,
 back-wrapper p {
-  margin: 3px 5px 3px 5px;
+  margin: 0 5px;
   text-align: left;
 }
 forward-wrapper p {
@@ -643,20 +657,20 @@ articles {
   display: flex;
   flex-direction: column;
 }
-activities activity + activity,
-articles article + article {
-  margin-top: 21px;
+activities activity,
+articles article {
+  padding-bottom: 21px;
   position: relative;
 }
-activities activity + activity::before,
-articles article + article::before {
+activities activity::before,
+articles article::before {
   content: "";
-  display: block;
+  display: flex;
   position: absolute;
-  top: 0px;
-  left: 20px;
-  right: 20px;
-  border-top: 1px solid #ddd;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-bottom: 1px solid #ddd;
 }
 articles-loading {
   display: none;

@@ -169,15 +169,34 @@ const renderComments = (comments) => {
     }, 2500);
   }
 
-  // Show add new comment button
+  // Anywhere we can add comments
   if (
     state.path.substr(0, 8) !== "/comment" &&
     state.path !== "/recent" &&
     state.path !== "/image"
   ) {
-    $("comments").removeAttribute("thread");
+
+    // Show the comment count
+    $("comments").prepend(
+      $(
+        `
+        expand-wrapper[above-comments]
+          p $1
+        `,
+        [comments.length + (comments.length === 1 ? " comment" : " comments")],
+      ),
+    );
+
+    // Show the add new comment button
     showAddNewCommentButton();
-  } else {
+  }
+
+  // Only render a single comment thread as a thread
+  if (
+    state.path.substr(0, 8) === "/comment"
+  ) {
     $("comments").setAttribute("thread", "");
+  } else {
+    $("comments").removeAttribute("thread");
   }
 };
