@@ -67,7 +67,8 @@ const renderComment = (comment) => {
         `,
         [ "/image/" + image_uuid]
       );
-      $image.on("click", () => {
+      $image.$("img").on("click", ($event) => {
+        $event.stopPropagation();
         const $modal = $(
           `
           modal[image]

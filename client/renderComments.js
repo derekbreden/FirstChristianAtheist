@@ -86,6 +86,7 @@ const renderComments = (comments) => {
         // Show intermediates
         $child_comments.forEach(($child_comment) => {
           $child_comment.style.display = "none";
+          $child_comment.$expand_button = $expand_button;
         });
       });
 
@@ -101,7 +102,6 @@ const renderComments = (comments) => {
       );
       $expand_button.on("click", ($event) => {
         // Track what is expanded
-
         const index = state.expanded_comment_ids.indexOf(
           $root_comment.comment_id,
         );
@@ -123,7 +123,9 @@ const renderComments = (comments) => {
         // Bring all the collapsed nodes back and flash them
         $child_comments.forEach(($child_comment) => {
           $child_comment.style.display = "flex";
-          $child_comment.setAttribute("flash-focus", "");
+          if (!$event.detail?.skip_flash) {
+            $child_comment.setAttribute("flash-focus", "");
+          }
         });
 
         // Slightly shift the last element horizontally after that flash finishes
@@ -132,14 +134,16 @@ const renderComments = (comments) => {
         }, 500);
 
         // When they click down, keep scroll on the last comment
-        if ($event.target.hasAttribute("expand-down")) {
+        if ($event.target?.hasAttribute("expand-down")) {
           const final_rect = $last_comment.getBoundingClientRect();
           const body = document.scrollingElement || document.documentElement;
           body.scrollTop = body.scrollTop + (final_rect.y - original_rect.y);
         }
       });
       if (state.expanded_comment_ids.includes($root_comment.comment_id)) {
-        $expand_button.click();
+        $expand_button.dispatchEvent(
+          new CustomEvent("click", { detail: { skip_flash: true } }),
+        );
       } else {
         $collapse_button.click();
       }
@@ -148,6 +152,22 @@ const renderComments = (comments) => {
 
   // Add each thread to the DOM
   $("comments").replaceChildren(...$root_comments);
+
+  // Highlight a comment in a thread we've navigated to specifically
+  if (state.path.substr(0, 8) === "/comment") {
+    const comment_id = state.path.substr(9);
+    const comment = comments.find((c) => c.comment_id === comment_id);
+    if (comment.$comment.style.display === "none") {
+      comment.$comment.$expand_button.dispatchEvent(
+        new CustomEvent("click", { detail: { skip_flash: true } }),
+      );
+    }
+    comment.$comment.setAttribute("flash-long-focus", "");
+    comment.$comment.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    setTimeout(() => {
+      comment.$comment.removeAttribute("flash-long-focus");
+    }, 2500);
+  }
 
   // Show add new comment button
   if (

@@ -718,9 +718,23 @@ activity > [parent-comment] comment {
 [flash-focus] {
   animation: flash-focus .5s ease-in 1;
 }
+[flash-long-focus] {
+  animation: flash-long-focus 2s ease-in 1;
+}
 
 @keyframes flash-focus {
   0% {
+    box-shadow: 0 0 5px #0061fe;
+  }
+  100% {
+    box-shadow: none;
+  }
+}
+@keyframes flash-long-focus {
+  0% {
+    box-shadow: 0 0 5px #0061fe;
+  }
+  75% {
     box-shadow: 0 0 5px #0061fe;
   }
   100% {
