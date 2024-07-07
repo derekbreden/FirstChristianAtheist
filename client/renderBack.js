@@ -21,7 +21,7 @@ const renderBack = () => {
           ? "Back to topics"
           : previous_path === "/recent"
             ? "Back to recent"
-            : previous_path.substr(0, 8) === "/comment"
+            : previous_path?.substr(0, 8) === "/comment"
               ? "Back to comment thread"
               : "Back to topics",
       ],

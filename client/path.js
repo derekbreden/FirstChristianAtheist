@@ -4,6 +4,8 @@ if (paths[0] === "reset") {
   state.reset_token_uuid = paths[1] || "";
 } else if (paths[0] === "article" && paths[1]) {
   state.path = "/" + paths[0] + "/" + paths[1];
+} else if (paths[0] === "comment" && paths[1]) {
+  state.path = "/" + paths[0] + "/" + paths[1];
 } else if (paths[0]) {
   state.path = "/" + paths[0];
 }
