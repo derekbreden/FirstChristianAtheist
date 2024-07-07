@@ -21,7 +21,8 @@ const showMenu = () => {
       const new_path = $el.getAttribute("href");
       if (state.path !== new_path) {
         state.path = new_path;
-        history.pushState({}, "", state.path);
+        state.path_index++;
+        history.pushState({path_index: state.path_index}, "", state.path);
         loadingPage();
       }
       startSession();
@@ -166,7 +167,8 @@ $("[href]").forEach(($el) => {
     const new_path = $el.getAttribute("href");
     if (state.path !== new_path) {
       state.path = new_path;
-      history.pushState({}, "", state.path);
+      state.path_index++;
+      history.pushState({path_index: state.path_index}, "", state.path);
       loadingPage();
     }
     startSession();

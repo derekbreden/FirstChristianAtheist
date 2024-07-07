@@ -19,7 +19,8 @@ const renderForward = (parent_article) => {
       } else {
         state.path = "/article/" + parent_article.slug;
       }
-      history.pushState({}, "", state.path);
+      state.path_index++;
+      history.pushState({path_index: state.path_index}, "", state.path);
       loadingPage();
       startSession();
     });

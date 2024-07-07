@@ -3,7 +3,7 @@ const renderPage = (data) => {
   // Update global state
   if (state.path !== data.path) {
     state.path = data.path;
-    history.replaceState({}, "", data.path);
+    history.replaceState({path_index: state.path_index}, "", data.path);
   }
   state.path_history.push(state.path);
 

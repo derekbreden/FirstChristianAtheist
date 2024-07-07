@@ -30,7 +30,8 @@ const renderBack = () => {
     $back_forward.$("back-wrapper").on("click", () => {
       state.path_history = state.path_history.slice(0, -2);
       state.path = previous_path || "/topics";
-      history.pushState({}, "", state.path);
+      state.path_index--;
+      history.pushState({path_index: state.path_index}, "", state.path);
       loadingPage();
       startSession();
     });

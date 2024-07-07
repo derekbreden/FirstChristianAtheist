@@ -51,7 +51,8 @@ $("body").on("page-rendered", () => {
 });
 
 const testCleanup = () => {
-  history.pushState({}, "", "/test");
+  state.path_index++;
+  history.pushState({ path_index: state.path_index }, "", "/test");
   if (test_mode !== "playback") {
     originalFetch("/test_cleanup", {
       method: "POST",

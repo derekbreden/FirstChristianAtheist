@@ -7,7 +7,8 @@ const renderArticles = (articles) => {
         $event.preventDefault();
         if (state.path !== new_path) {
           state.path = new_path;
-          history.pushState({}, "", state.path);
+          state.path_index++;
+          history.pushState({path_index: state.path_index}, "", state.path);
           loadingPage();
         }
         startSession();

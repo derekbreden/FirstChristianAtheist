@@ -68,7 +68,8 @@ const renderArticle = (article) => {
     $article.on("click", ($event) => {
       $event.preventDefault();
       state.path = "/article/" + article.slug;
-      history.pushState({}, "", state.path);
+      state.path_index++;
+      history.pushState({path_index: state.path_index}, "", state.path);
       loadingPage();
       startSession();
     });
