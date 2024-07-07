@@ -21,6 +21,7 @@ module.exports = async (req, res) => {
           )
       )
       SELECT
+        c.create_date,
         c.comment_id,
         c.body,
         c.note,
@@ -43,6 +44,7 @@ module.exports = async (req, res) => {
           )
         )
       GROUP BY
+        c.create_date,
         c.comment_id,
         c.body,
         c.note,

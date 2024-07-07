@@ -6,6 +6,7 @@ module.exports = async (req, res) => {
     const article_results = await req.client.query(
       `
       SELECT
+        a.create_date,
         a.article_id,
         a.title,
         a.slug,
@@ -18,12 +19,13 @@ module.exports = async (req, res) => {
       LEFT JOIN comments c ON a.article_id = c.parent_article_id
       WHERE a.parent_article_id = $2
       GROUP BY
+        a.create_date,
         a.article_id,
         a.title,
         a.slug,
         LEFT(a.body, 1000),
         CASE WHEN a.user_id = $1 THEN true ELSE false END
-      ORDER BY a.create_date ASC
+      ORDER BY a.create_date DESC
       `,
       [req.session.user_id || 0, page.article_id],
     );
@@ -31,6 +33,7 @@ module.exports = async (req, res) => {
     const comment_results = await req.client.query(
       `
         SELECT
+          c.create_date,
           c.comment_id,
           c.body,
           c.note,
@@ -44,6 +47,7 @@ module.exports = async (req, res) => {
         LEFT JOIN comment_images i ON c.comment_id = i.comment_id
         WHERE c.parent_article_id = $2
         GROUP BY
+          c.create_date,
           c.comment_id,
           c.body,
           c.note,

@@ -66,7 +66,11 @@ module.exports = async (req, res) => {
         await req.client.query(
           `
           UPDATE articles
-          SET title = $1, slug = $2, body = $3
+          SET
+            title = $1,
+            slug = $2,
+            body = $3,
+            create_date = NOW()
           WHERE
             article_id = $4
             AND user_id = $5

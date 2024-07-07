@@ -32,6 +32,7 @@ module.exports = async (req, res) => {
       const comment_results = await req.client.query(
         `
         SELECT
+          c.create_date,
           c.comment_id,
           c.body,
           c.note,
@@ -45,6 +46,7 @@ module.exports = async (req, res) => {
         LEFT JOIN comment_images i ON c.comment_id = i.comment_id
         WHERE c.parent_article_id = $2
         GROUP BY
+          c.create_date,
           c.comment_id,
           c.body,
           c.note,
