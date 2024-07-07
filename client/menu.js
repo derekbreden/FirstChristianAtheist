@@ -35,11 +35,26 @@ const showMenu = () => {
       `,
     );
     $signed_in.$("[sign-out]").on("click", () => {
-      menuCancel();
+      $signed_in.$("[sign-out]").setAttribute("disabled", "");
       state.email = "";
-      state.session_uuid = "";
       state.reset_token_uuid = "";
-      startSession();
+
+      // Workaround for replit Webview not supporting Set-Cookie
+      localStorage.removeItem("session_uuid");
+      // END Workaround
+
+      // Tell server to clear the cookie and set a new one
+      fetch("/session", {
+        method: "POST",
+        body: JSON.stringify({
+          logout: true,
+        }),
+      })
+        .then((response) => response.json())
+        .then(function (data) {
+          startSession();
+          menuCancel();
+        });
     });
     $menu.$("menu").appendChild($signed_in);
   } else {
@@ -112,7 +127,6 @@ const showMenu = () => {
       fetch("/session", {
         method: "POST",
         body: JSON.stringify({
-          session_uuid: state.session_uuid,
           email,
           password,
         }),

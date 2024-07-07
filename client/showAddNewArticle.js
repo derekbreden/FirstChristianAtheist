@@ -121,7 +121,6 @@ const showAddNewArticle = (article, $article) => {
     fetch("/session", {
       method: "POST",
       body: JSON.stringify({
-        session_uuid: state.session_uuid,
         path: state.path,
         title,
         body,

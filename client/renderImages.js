@@ -19,7 +19,6 @@ const renderImages = () => {
       fetch("/session", {
         method: "POST",
         body: JSON.stringify({
-          session_uuid: state.session_uuid,
           path: state.path,
           prompt: $image_prompt.$("textarea").value,
         }),

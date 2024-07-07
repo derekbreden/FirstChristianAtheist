@@ -1,5 +1,22 @@
 module.exports = async (req, res) => {
-  if (req.body.session_uuid) {
+
+  // Get the session_uuid from the cookie like a sane person
+  const cookie_header = req.headers.cookie || "";
+  const cookie_parts = cookie_header.split("; ");
+  const cookies = cookie_parts.reduce((acc, cookie) => {
+    const [key, value] = cookie.split("=");
+    acc[key] = value;
+    return acc;
+  }, {});
+
+  // Workaround for replit Webview not supporting Set-Cookie
+  const authorization_header = req.headers.authorization || "";
+  if (authorization_header.startsWith("Bearer ")) {
+    cookies.session_uuid = authorization_header.substr(7);
+  }
+  // END Workaround
+  
+  if (cookies.session_uuid) {
     const session_results = await req.client.query(
       `
       SELECT
@@ -14,7 +31,7 @@ module.exports = async (req, res) => {
       LEFT JOIN users ON user_sessions.user_id = users.user_id
       WHERE sessions.session_uuid = $1
       `,
-      [req.body.session_uuid],
+      [cookies.session_uuid],
     );
     if (session_results.rows.length > 0) {
       req.session.session_uuid = session_results.rows[0].session_uuid;

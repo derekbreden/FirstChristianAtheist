@@ -151,7 +151,6 @@ const showAddNewComment = (
     fetch("/session", {
       method: "POST",
       body: JSON.stringify({
-        session_uuid: state.session_uuid,
         display_name: state.display_name,
       }),
     })
@@ -201,7 +200,6 @@ const showAddNewComment = (
     fetch("/session", {
       method: "POST",
       body: JSON.stringify({
-        session_uuid: state.session_uuid,
         path: state.path,
         display_name: state.display_name,
         body,

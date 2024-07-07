@@ -1,7 +1,17 @@
+// Workaround for replit Webview not supporting Set-Cookie
+const original_fetch_2 = fetch;
+fetch = function (url, options) {
+  const session_uuid = localStorage.getItem("session_uuid");
+  if (session_uuid) {
+    options.headers = options.headers || {};
+    options.headers["Authorization"] = `Bearer ${session_uuid}`;
+  }
+  return original_fetch_2(url, options);
+};
+// END Workaround
 
 const startSession = () => {
   const postBody = {
-    session_uuid: state.session_uuid,
     path: state.path,
   };
   if (state.reset_token_uuid) {
@@ -13,8 +23,13 @@ const startSession = () => {
   })
     .then((response) => response.json())
     .then(function (data) {
-      state.session_uuid = data.session_uuid;
-      localStorage.setItem("session_uuid", state.session_uuid);
+
+      // Workaround for replit Webview not supporting Set-Cookie
+      if (data.session_uuid) {
+        localStorage.setItem("session_uuid", data.session_uuid);
+      }
+      // END Workaround
+      
       if (data.email) {
         state.email = data.email;
         if (state.reset_token_uuid) {

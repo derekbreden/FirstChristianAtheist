@@ -1,4 +1,3 @@
-state.session_uuid = "";
 const test_mode = "playback"; // "record"; // "end2end"; // "playback";
 const tests = [];
 const delay = 50;

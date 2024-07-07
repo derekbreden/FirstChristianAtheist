@@ -43,7 +43,6 @@ module.exports = async (req, res) => {
 
     // Default response if nothing else responded sooner
     if (!req.writableEnded) {
-      req.results.session_uuid = req.session.session_uuid;
       req.results.email = req.session.email;
       req.results.display_name = req.session.display_name;
       req.results.display_name_index = req.session.display_name_index;

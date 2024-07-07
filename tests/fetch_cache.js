@@ -1,33 +1,37 @@
 const fetch_cache = {
-  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"session_uuid\\\":\\\"\\\",\\\"path\\\":\\\"/test\\\"}\"}]": {
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/test\\\"}\"}]": {
     "articles": [
       {
         "article_id": "3",
         "title": "What can be done to demonstrate unconditional love for all?",
         "slug": "What_can_be_done_to_demonstrate_unconditional_love_for_all",
         "body": "Exploring answers to this question together without judgement or authority is the only goal here.\n\n![A line drawing depicts Jesus with four chat bubbles: a heart around the Earth, a storm cloud, a person kneeling, and a trio of a fire and cross and clouds. Three of the chat bubbles and Jesus are animated out of the frame, only the heart around the earth remains, and is zoomed in on.](/love.gif)\n\n[Join the discussion](/topics)",
-        "edit": false
+        "edit": false,
+        "image_uuids": null
       },
       {
         "article_id": "5",
         "title": "The Bible",
         "slug": "The_Bible",
         "body": "> Everything we know about God's Word is summed up in a single sentence: Love others as you love yourself.\n\n> — Galatians 5:14 [The Message Bible by Eugene Peterson]",
-        "edit": false
+        "edit": false,
+        "image_uuids": null
       },
       {
         "article_id": "6",
         "title": "Bishop John Shelby Spong",
         "slug": "Bishop_John_Shelby_Spong",
         "body": "> The church is still caught in pre-Darwinian pre-Copernican categories. The idea that we were born in sin is a very strange idea when you’re past Darwin. You know the idea that there was an original perfection from which you fell and had to be redeemed doesn’t make a lot of sense if you see life as emerging over 13.8 billion years from the beginning of this universe. And so we’ve got to begin to lift what I think is the Christ experience out of the explanations of antiquity, and then find a new way to make that experience live, and I think we do this in other areas of life all the time, but we don’t know how to do this in religion.\n\n> — [https://youtu.be/LnDOsdDI9Vs?t=95](https://youtu.be/LnDOsdDI9Vs?t=95)",
-        "edit": false
+        "edit": false,
+        "image_uuids": null
       },
       {
         "article_id": "7",
         "title": "Acceptance",
         "slug": "Acceptance",
         "body": "Christianity as it is today does not accept unrepentant atheists, with the exception of Unitarian Universalism, which prioritizes worship and reverence. This leaves little room for the type of pragmatic and deep discussion that can be had here.\n\nPerhaps here we can have a sanctuary, for those few of us who have something we wish to salvage from the wreckage that is Christianity's encounter with the modern age, some value that we seek to carry forward without the theistic baggage.",
-        "edit": false
+        "edit": false,
+        "image_uuids": null
       }
     ],
     "comments": [
@@ -39,17 +43,17 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "2",
         "body": "Has anyone else seen the anime Trigun? With Vash the Stampede?",
-        "note": "OFFTOPIC This post appears to disregard the current discussion about demonstrating unconditional love and understanding of others.",
+        "note": "OFFTOPIC This post appears to deviate entirely from the theme and focus of previous discussions regarding Christianity and atheism.",
         "parent_comment_id": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "3",
@@ -59,7 +63,7 @@ const fetch_cache = {
         "display_name": "John Doe",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "5",
@@ -69,7 +73,7 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "6",
@@ -79,7 +83,7 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "7",
@@ -89,7 +93,7 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "8",
@@ -99,7 +103,7 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "9",
@@ -109,7 +113,7 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "11",
@@ -119,7 +123,7 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": "e2de6604-a453-4f52-93e2-95f3b5347cb2"
       },
       {
         "comment_id": "12",
@@ -129,7 +133,7 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "13",
@@ -139,7 +143,7 @@ const fetch_cache = {
         "display_name": "John Doe",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "14",
@@ -149,7 +153,7 @@ const fetch_cache = {
         "display_name": "John Doe",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "15",
@@ -159,47 +163,50 @@ const fetch_cache = {
         "display_name": "John Doe",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       }
     ],
     "activities": [],
     "path": "/",
-    "session_uuid": "8e392aa4-2dbd-4d51-859f-e039da73c962",
-    "email": "",
-    "display_name": ""
+    "email": null,
+    "display_name": null
   },
-  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"session_uuid\\\":\\\"8e392aa4-2dbd-4d51-859f-e039da73c962\\\",\\\"email\\\":\\\"testemail@testemail.com\\\",\\\"password\\\":\\\"1234\\\"}\"}]": {
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"email\\\":\\\"testemail@testemail.com\\\",\\\"password\\\":\\\"1234\\\"}\"}]": {
     "success": true
   },
-  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"session_uuid\\\":\\\"8e392aa4-2dbd-4d51-859f-e039da73c962\\\",\\\"path\\\":\\\"/\\\"}\"}]": {
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/\\\"}\"}]": {
     "articles": [
       {
         "article_id": "3",
         "title": "What can be done to demonstrate unconditional love for all?",
         "slug": "What_can_be_done_to_demonstrate_unconditional_love_for_all",
         "body": "Exploring answers to this question together without judgement or authority is the only goal here.\n\n![A line drawing depicts Jesus with four chat bubbles: a heart around the Earth, a storm cloud, a person kneeling, and a trio of a fire and cross and clouds. Three of the chat bubbles and Jesus are animated out of the frame, only the heart around the earth remains, and is zoomed in on.](/love.gif)\n\n[Join the discussion](/topics)",
-        "edit": false
+        "edit": false,
+        "image_uuids": null
       },
       {
         "article_id": "5",
         "title": "The Bible",
         "slug": "The_Bible",
         "body": "> Everything we know about God's Word is summed up in a single sentence: Love others as you love yourself.\n\n> — Galatians 5:14 [The Message Bible by Eugene Peterson]",
-        "edit": false
+        "edit": false,
+        "image_uuids": null
       },
       {
         "article_id": "6",
         "title": "Bishop John Shelby Spong",
         "slug": "Bishop_John_Shelby_Spong",
         "body": "> The church is still caught in pre-Darwinian pre-Copernican categories. The idea that we were born in sin is a very strange idea when you’re past Darwin. You know the idea that there was an original perfection from which you fell and had to be redeemed doesn’t make a lot of sense if you see life as emerging over 13.8 billion years from the beginning of this universe. And so we’ve got to begin to lift what I think is the Christ experience out of the explanations of antiquity, and then find a new way to make that experience live, and I think we do this in other areas of life all the time, but we don’t know how to do this in religion.\n\n> — [https://youtu.be/LnDOsdDI9Vs?t=95](https://youtu.be/LnDOsdDI9Vs?t=95)",
-        "edit": false
+        "edit": false,
+        "image_uuids": null
       },
       {
         "article_id": "7",
         "title": "Acceptance",
         "slug": "Acceptance",
         "body": "Christianity as it is today does not accept unrepentant atheists, with the exception of Unitarian Universalism, which prioritizes worship and reverence. This leaves little room for the type of pragmatic and deep discussion that can be had here.\n\nPerhaps here we can have a sanctuary, for those few of us who have something we wish to salvage from the wreckage that is Christianity's encounter with the modern age, some value that we seek to carry forward without the theistic baggage.",
-        "edit": false
+        "edit": false,
+        "image_uuids": null
       }
     ],
     "comments": [
@@ -211,17 +218,17 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "2",
         "body": "Has anyone else seen the anime Trigun? With Vash the Stampede?",
-        "note": "OFFTOPIC This post appears to disregard the current discussion about demonstrating unconditional love and understanding of others.",
+        "note": "OFFTOPIC This post appears to deviate entirely from the theme and focus of previous discussions regarding Christianity and atheism.",
         "parent_comment_id": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "3",
@@ -231,7 +238,7 @@ const fetch_cache = {
         "display_name": "John Doe",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "5",
@@ -241,7 +248,7 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "6",
@@ -251,7 +258,7 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "7",
@@ -261,7 +268,7 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "8",
@@ -271,7 +278,7 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "9",
@@ -281,7 +288,7 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "11",
@@ -291,7 +298,7 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": "e2de6604-a453-4f52-93e2-95f3b5347cb2"
       },
       {
         "comment_id": "12",
@@ -301,7 +308,7 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "13",
@@ -311,7 +318,7 @@ const fetch_cache = {
         "display_name": "John Doe",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "14",
@@ -321,7 +328,7 @@ const fetch_cache = {
         "display_name": "John Doe",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       },
       {
         "comment_id": "15",
@@ -331,37 +338,39 @@ const fetch_cache = {
         "display_name": "John Doe",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       }
     ],
     "activities": [],
     "path": "/",
-    "session_uuid": "8e392aa4-2dbd-4d51-859f-e039da73c962",
     "email": "testemail@testemail.com",
     "display_name": ""
   },
-  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"session_uuid\\\":\\\"8e392aa4-2dbd-4d51-859f-e039da73c962\\\",\\\"path\\\":\\\"/topics\\\"}\"}]": {
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/topics\\\"}\"}]": {
     "articles": [
       {
         "article_id": "9",
         "title": "Bishop John Shelby Spong — 12 Theses",
         "slug": "Bishop_John_Shelby_Spong_12_Theses",
         "body": "# 1. God\n\n Understanding God in theistic categories as “a being, supernatural in power, dwelling somewhere external to the world and capable of invading the world with miraculous power” is no longer believable. Most God talk in liturgy and conversation has thus become meaningless.\n\n# 2. Jesus – the Christ\n\n If God can no longer be thought of in theistic terms, then conceiving of Jesus as “the incarnation of the theistic deity” has also become a bankrupt concept.\n\n# 3. Original Sin – The Myth of the Fall \n\nThe biblical story of the perfect and finished creation from which we human beings have fallen into “Original Sin” is pre-Darwinian mythology and post-Darwinian nonsense.\n\n# 4. The Virgin Birth \n\nThe virgin birth understood as literal biology is impossible. Far from being a bulwark in defense of the divinity of Christ, the virgin birth actually destroys that divinity.\n\n# 5. Jesus as the Worker of Miracles \n\nIn a post-Newtonian world supernatural invasions of the natural order, perform",
-        "edit": false
+        "edit": false,
+        "image_uuids": "fcd75706-4408-4e2c-9414-b634bd01d806,e6296015-d46b-40f8-a4ff-5295171d9ee4"
       },
       {
         "article_id": "10",
         "title": "10 Principles",
         "slug": "10_Principles",
         "body": "1. Never escalate\n2. Never judge\n3. Be impeccable\n4. Seek understanding\n5. Consider everyone’s needs\n6. Love wastefully\n7. Verify truth with falsifiable predictions\n8. Everyone is their own final authority\n9. The map is not the territory\n10. Everything is connected\n\n# 1. Never escalate to prevent violence \n\nThe cycle of violence is only broken when someone decides to de-escalate. For further reading, see “Break the Cycle” at sfhelp.org by Pete Gerlach.\n\n# 2. Never judge to see clearly \n\nWhen you see things as right and wrong, as too much or too little, your narrative no longer reflects reality. For further reading, see “Nonviolent Communication” by Marshall Rosenberg.\n\n# 3. Be impeccable with your word to earn trust\n\n Be impeccable with your word, lest any lie (of omission or otherwise) make you an unreliable narrator to others or even yourself. For further reading, see “The Four Agreements” by Don Miguel Ruiz.\n\n# 4. Seek understanding to be understood \n\nIf you do not understand them, ",
-        "edit": false
+        "edit": false,
+        "image_uuids": "e5ec5a71-ad01-428b-ab57-03a8b8feb453"
       },
       {
         "article_id": "11",
-        "title": "Pete Gerlach - Do you love yourself?",
+        "title": "Pete Gerlach — Do you love yourself?",
         "slug": "Pete_Gerlach_Do_you_love_yourself",
         "body": "Pete Gerlach, a professional family systems therapist of 32 years, discusses love:\n\n> The purpose of this video is to provide some perspectives, some questions and thoughts that I hope you’ll find useful in thinking about “Do you Love yourself? Do you really love yourself?”\n\n> “What does that mean? And how can you tell?”\n\n> Because another companion wound is  reality distortion, many people think they love themselves, but in fact they don’t. Could that be you?\n\n[Watch video](https://youtu.be/Pi2VsspnN94)",
-        "edit": false
+        "edit": false,
+        "image_uuids": "31af33ac-fd56-48d8-9bbb-60cf384a69eb"
       }
     ],
     "comments": [
@@ -373,16 +382,15 @@ const fetch_cache = {
         "display_name": "Derek",
         "display_name_index": "0",
         "edit": false,
-        "$comment": {}
+        "image_uuids": null
       }
     ],
     "activities": [],
     "path": "/topics",
-    "session_uuid": "8e392aa4-2dbd-4d51-859f-e039da73c962",
     "email": "testemail@testemail.com",
     "display_name": ""
   },
-  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"session_uuid\\\":\\\"8e392aa4-2dbd-4d51-859f-e039da73c962\\\",\\\"path\\\":\\\"/recent\\\"}\"}]": {
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/recent\\\"}\"}]": {
     "articles": [],
     "comments": [],
     "activities": [
@@ -394,9 +402,10 @@ const fetch_cache = {
         "note": null,
         "slug": null,
         "type": "comment",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
-        "parent_article_title": "Pete Gerlach - Do you love yourself?",
+        "parent_article_title": "Pete Gerlach — Do you love yourself?",
         "parent_article_slug": "Pete_Gerlach_Do_you_love_yourself",
         "parent_comment_body": null,
         "parent_comment_note": null,
@@ -411,6 +420,7 @@ const fetch_cache = {
         "note": null,
         "slug": null,
         "type": "comment",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": "10 Principles",
@@ -423,11 +433,12 @@ const fetch_cache = {
       {
         "id": "11",
         "create_date": "2024-06-29T07:13:26.583Z",
-        "title": "Pete Gerlach - Do you love yourself?",
+        "title": "Pete Gerlach — Do you love yourself?",
         "body": "Pete Gerlach, a professional family systems therapist of 32 years, discusses love:\n\n> The purpose of this video is to provide some perspectives, some questions and thoughts that I hope you’ll find useful in thinking about “Do you Love yourself? Do you really love yourself?”\n\n> “What does that mean? And how can you tell?”\n\n> Because another companion wound is  reality distortion, many people think they love themselves, but in fact they don’t. Could that be you?\n\n[Watch video](https://youtu.be/Pi2VsspnN94)",
         "note": null,
         "slug": "Pete_Gerlach_Do_you_love_yourself",
         "type": "article",
+        "image_uuids": "31af33ac-fd56-48d8-9bbb-60cf384a69eb",
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": null,
@@ -445,6 +456,7 @@ const fetch_cache = {
         "note": null,
         "slug": null,
         "type": "comment",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": "Bishop John Shelby Spong — 12 Theses",
@@ -462,6 +474,7 @@ const fetch_cache = {
         "note": null,
         "slug": "10_Principles",
         "type": "article",
+        "image_uuids": "e5ec5a71-ad01-428b-ab57-03a8b8feb453",
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": null,
@@ -479,6 +492,7 @@ const fetch_cache = {
         "note": "JUDGMENTAL Stating that God will judge someone is still a judgmental assertion.",
         "slug": null,
         "type": "comment",
+        "image_uuids": null,
         "display_name": "John Doe",
         "display_name_index": "0",
         "parent_article_title": "Home",
@@ -496,6 +510,7 @@ const fetch_cache = {
         "note": "JUDGMENTAL Stating that someone will regret their actions is a judgmental assertion.",
         "slug": null,
         "type": "comment",
+        "image_uuids": null,
         "display_name": "John Doe",
         "display_name_index": "0",
         "parent_article_title": "Home",
@@ -513,6 +528,7 @@ const fetch_cache = {
         "note": "ESCALATING The statement is aggressive and condemning, which does not foster peaceful and constructive dialogue.",
         "slug": null,
         "type": "comment",
+        "image_uuids": null,
         "display_name": "John Doe",
         "display_name_index": "0",
         "parent_article_title": "Home",
@@ -530,6 +546,7 @@ const fetch_cache = {
         "note": null,
         "slug": null,
         "type": "comment",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": "Home",
@@ -547,6 +564,7 @@ const fetch_cache = {
         "note": null,
         "slug": null,
         "type": "comment",
+        "image_uuids": "e2de6604-a453-4f52-93e2-95f3b5347cb2",
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": "Home",
@@ -564,6 +582,7 @@ const fetch_cache = {
         "note": null,
         "slug": null,
         "type": "comment",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": "Home",
@@ -581,6 +600,7 @@ const fetch_cache = {
         "note": null,
         "slug": null,
         "type": "comment",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": "Home",
@@ -598,6 +618,7 @@ const fetch_cache = {
         "note": null,
         "slug": null,
         "type": "comment",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": "Home",
@@ -615,6 +636,7 @@ const fetch_cache = {
         "note": null,
         "slug": null,
         "type": "comment",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": "Home",
@@ -632,12 +654,13 @@ const fetch_cache = {
         "note": null,
         "slug": null,
         "type": "comment",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": "Home",
         "parent_article_slug": "Home",
         "parent_comment_body": "Has anyone else seen the anime Trigun? With Vash the Stampede?",
-        "parent_comment_note": "OFFTOPIC This post appears to disregard the current discussion about demonstrating unconditional love and understanding of others.",
+        "parent_comment_note": "OFFTOPIC This post appears to deviate entirely from the theme and focus of previous discussions regarding Christianity and atheism.",
         "parent_comment_display_name": "Derek",
         "parent_comment_display_name_index": "0"
       },
@@ -649,6 +672,7 @@ const fetch_cache = {
         "note": null,
         "slug": null,
         "type": "comment",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": "Topics",
@@ -666,6 +690,7 @@ const fetch_cache = {
         "note": "MISUNDERSTANDING There are individuals who find value in the teachings of Jesus and Christian traditions without believing in the divine aspects. The term 'Christian atheist' reflects this nuanced perspective.",
         "slug": null,
         "type": "comment",
+        "image_uuids": null,
         "display_name": "John Doe",
         "display_name_index": "0",
         "parent_article_title": "Home",
@@ -680,9 +705,10 @@ const fetch_cache = {
         "create_date": "2024-06-23T19:07:18.673Z",
         "title": null,
         "body": "Has anyone else seen the anime Trigun? With Vash the Stampede?",
-        "note": "OFFTOPIC This post appears to disregard the current discussion about demonstrating unconditional love and understanding of others.",
+        "note": "OFFTOPIC This post appears to deviate entirely from the theme and focus of previous discussions regarding Christianity and atheism.",
         "slug": null,
         "type": "comment",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": "Home",
@@ -700,6 +726,7 @@ const fetch_cache = {
         "note": null,
         "slug": null,
         "type": "comment",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": "Home",
@@ -717,6 +744,7 @@ const fetch_cache = {
         "note": null,
         "slug": "Bishop_John_Shelby_Spong_12_Theses",
         "type": "article",
+        "image_uuids": "fcd75706-4408-4e2c-9414-b634bd01d806,e6296015-d46b-40f8-a4ff-5295171d9ee4",
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": null,
@@ -734,6 +762,7 @@ const fetch_cache = {
         "note": null,
         "slug": "Acceptance",
         "type": "article",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": null,
@@ -751,6 +780,7 @@ const fetch_cache = {
         "note": null,
         "slug": "Bishop_John_Shelby_Spong",
         "type": "article",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": null,
@@ -768,6 +798,7 @@ const fetch_cache = {
         "note": null,
         "slug": "The_Bible",
         "type": "article",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": null,
@@ -785,6 +816,7 @@ const fetch_cache = {
         "note": null,
         "slug": "What_can_be_done_to_demonstrate_unconditional_love_for_all",
         "type": "article",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": null,
@@ -798,10 +830,11 @@ const fetch_cache = {
         "id": "2",
         "create_date": "2024-06-23T02:40:29.958Z",
         "title": "Topics",
-        "body": "A list of topics related to answering the question:\n\n\"What can be done to demonstrate unconditional love for all?\"\n\nAnd exploring answers to that question together without judgement or authority or theistic baggage.",
+        "body": "A list of topics related to answering the question:\n\n\"What can be done to demonstrate unconditional love for all?\"\n\nAnd exploring answers to that question together without judgement or authority or theistic baggage.\n\nAnything that deals with love in any way whatsoever is appropriate here.\n\nAnything that talks about Christianity in any way whatsoever is appropriate here.\n\nAnything that talks about atheism in any way whatsoever is appropriate here.\n",
         "note": null,
         "slug": "Topics",
         "type": "article",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": null,
@@ -819,6 +852,7 @@ const fetch_cache = {
         "note": null,
         "slug": "Home",
         "type": "article",
+        "image_uuids": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_article_title": null,
@@ -830,7 +864,6 @@ const fetch_cache = {
       }
     ],
     "path": "/recent",
-    "session_uuid": "8e392aa4-2dbd-4d51-859f-e039da73c962",
     "email": "testemail@testemail.com",
     "display_name": ""
   }

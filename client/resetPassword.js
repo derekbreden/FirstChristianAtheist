@@ -52,7 +52,6 @@ const showForgotPassword = () => {
     fetch("/session", {
       method: "POST",
       body: JSON.stringify({
-        session_uuid: state.session_uuid,
         email,
       }),
     })
@@ -132,7 +131,6 @@ const showResetPassword = () => {
     fetch("/session", {
       method: "POST",
       body: JSON.stringify({
-        session_uuid: state.session_uuid,
         reset_token_uuid: state.reset_token_uuid,
         password,
       }),

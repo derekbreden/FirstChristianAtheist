@@ -36,7 +36,6 @@ module.exports = async (req, res) => {
     } else {
       res.end(
         JSON.stringify({
-          session_uuid: req.session.session_uuid,
           error: "Reset link expired",
         }),
       );
