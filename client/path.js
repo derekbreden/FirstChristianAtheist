@@ -31,8 +31,6 @@ window.addEventListener("popstate", () => {
     }
 
     // Load the page
-    state.path = new_path;
-    loadingPage();
-    startSession();
+    goToPath(new_path, true);
   }
 });

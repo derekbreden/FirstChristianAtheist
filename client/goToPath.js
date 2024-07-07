@@ -1,4 +1,4 @@
-const goToPath = (new_path) => {
+const goToPath = (new_path, skip_state) => {
   if (state.path !== new_path) {
     // If navigating away from /recent and towards /comment or /article
     if (
@@ -21,8 +21,10 @@ const goToPath = (new_path) => {
 
     // Set the new path
     state.path = new_path;
-    state.path_index++;
-    history.pushState({ path_index: state.path_index }, "", state.path);
+    if (!skip_state) {
+      state.path_index++;
+      history.pushState({ path_index: state.path_index }, "", state.path);
+    }
     loadingPage();
   }
 
