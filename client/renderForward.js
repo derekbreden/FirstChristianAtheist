@@ -12,7 +12,7 @@ const renderForward = (parent_article) => {
     );
     $("back-forward-wrapper").appendChild($forward);
     $forward.on("click", () => {
-      const new_path = `/article/${parent_article.slug}`;
+      let new_path = `/article/${parent_article.slug}`;
       if (parent_article.slug === "Home") {
         new_path = "/";
       } else if (parent_article.slug === "Topics") {
