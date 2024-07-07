@@ -43,7 +43,7 @@ tests.push(() => {
 
 // Submitted article
 tests.push(() => {
-  expect("article:last-child h2", "Go to your local food pantry")
+  expect("article:first-child h2", "Go to your local food pantry")
   setTimeout(() => {
     $("header hamburger").click();
     setTimeout(() => {
