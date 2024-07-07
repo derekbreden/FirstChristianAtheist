@@ -168,8 +168,9 @@ const fetch_cache = {
     ],
     "activities": [],
     "path": "/",
-    "email": null,
-    "display_name": null
+    "session_uuid": "6d813e6e-32f5-4623-8589-d72a6107b0ab",
+    "email": "",
+    "display_name": ""
   },
   "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"email\\\":\\\"testemail@testemail.com\\\",\\\"password\\\":\\\"1234\\\"}\"}]": {
     "success": true
@@ -371,6 +372,14 @@ const fetch_cache = {
         "body": "Pete Gerlach, a professional family systems therapist of 32 years, discusses love:\n\n> The purpose of this video is to provide some perspectives, some questions and thoughts that I hope you’ll find useful in thinking about “Do you Love yourself? Do you really love yourself?”\n\n> “What does that mean? And how can you tell?”\n\n> Because another companion wound is  reality distortion, many people think they love themselves, but in fact they don’t. Could that be you?\n\n[Watch video](https://youtu.be/Pi2VsspnN94)",
         "edit": false,
         "image_uuids": "31af33ac-fd56-48d8-9bbb-60cf384a69eb"
+      },
+      {
+        "article_id": "24",
+        "title": "Go to your local food pantry",
+        "slug": "Go_to_your_local_food_pantry",
+        "body": "Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.",
+        "edit": true,
+        "image_uuids": null
       }
     ],
     "comments": [
@@ -390,10 +399,31 @@ const fetch_cache = {
     "email": "testemail@testemail.com",
     "display_name": ""
   },
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/topics\\\",\\\"title\\\":\\\"Go to your local food pantry\\\",\\\"body\\\":\\\"Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.\\\",\\\"pngs\\\":[]}\"}]": {
+    "success": true
+  },
   "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/recent\\\"}\"}]": {
     "articles": [],
     "comments": [],
     "activities": [
+      {
+        "id": "24",
+        "create_date": "2024-07-07T05:56:23.817Z",
+        "title": "Go to your local food pantry",
+        "body": "Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.",
+        "note": null,
+        "slug": "Go_to_your_local_food_pantry",
+        "type": "article",
+        "image_uuids": null,
+        "display_name": "",
+        "display_name_index": "0",
+        "parent_article_title": null,
+        "parent_article_slug": null,
+        "parent_comment_body": null,
+        "parent_comment_note": null,
+        "parent_comment_display_name": null,
+        "parent_comment_display_name_index": null
+      },
       {
         "id": "20",
         "create_date": "2024-06-30T03:56:23.975Z",

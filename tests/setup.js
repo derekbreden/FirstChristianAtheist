@@ -1,6 +1,11 @@
 const test_mode = "playback"; // "record"; // "end2end"; // "playback";
 const tests = [];
 const delay = 50;
+const original_session_uuid = localStorage.getItem("session_uuid");
+if (test_mode === "record") {
+  localStorage.removeItem("session_uuid");
+}
+
 
 // Sign up
 tests.push(() => {
@@ -26,12 +31,25 @@ tests.push(() => {
 
 // Clicked /topics
 tests.push(() => {
-  expect("add-new [submit]", "Add topic");
   expect("[add-new-comment] button", "Add comment");
-  $("header hamburger").click();
+  expect("add-new [submit]", "Add topic");
+  $("add-new [title]").value = "Go to your local food pantry";
+  $("add-new [body]").value = "Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.";
   setTimeout(() => {
     $("test-wrapper")?.remove();
-    $('menu [href="/recent"]').click();
+    $("add-new [submit]").click();
+  }, delay);
+});
+
+// Submitted article
+tests.push(() => {
+  expect("article:last-child h2", "Go to your local food pantry")
+  setTimeout(() => {
+    $("header hamburger").click();
+    setTimeout(() => {
+      $("test-wrapper")?.remove();
+      $('menu [href="/recent"]').click();
+    }, delay);
   }, delay);
 });
 
@@ -45,14 +63,16 @@ tests.push(() => {
 $("body").on("page-rendered", () => {
   const this_test = tests.shift();
   expect("body");
-  setTimeout(() => {
-    this_test();
-  }, delay);
+  if (this_test) {
+    setTimeout(() => {
+      this_test();
+    }, delay);
+  }
 });
 
 const testCleanup = () => {
-  state.path_index++;
-  history.pushState({ path_index: state.path_index }, "", "/test");
+  localStorage.setItem("session_uuid", original_session_uuid);
+  history.replaceState({ path_index: state.path_index }, "", "/test");
   if (test_mode !== "playback") {
     originalFetch("/test_cleanup", {
       method: "POST",

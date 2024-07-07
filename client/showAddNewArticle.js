@@ -180,7 +180,8 @@ const showAddNewArticle = (article, $article) => {
   if ($article) {
     $article.replaceWith($add_new);
     $add_new.$("[title]").focus();
-  } else if (!$("main-content add-new:first-child")) {
+  } else {
+    $("main-content add-new[article]")?.remove();
     $("main-content").prepend($add_new);
   }
 };

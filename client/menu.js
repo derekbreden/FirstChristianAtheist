@@ -18,14 +18,7 @@ const showMenu = () => {
     $el.on("click", ($event) => {
       $event.preventDefault();
       menuCancel();
-      const new_path = $el.getAttribute("href");
-      if (state.path !== new_path) {
-        state.path = new_path;
-        state.path_index++;
-        history.pushState({path_index: state.path_index}, "", state.path);
-        loadingPage();
-      }
-      startSession();
+      goToPath($el.getAttribute("href"));
     });
   });
   if (state.email) {
@@ -164,13 +157,6 @@ $("hamburger").forEach(($el) => {
 $("[href]").forEach(($el) => {
   $el.on("click", ($event) => {
     $event.preventDefault();
-    const new_path = $el.getAttribute("href");
-    if (state.path !== new_path) {
-      state.path = new_path;
-      state.path_index++;
-      history.pushState({path_index: state.path_index}, "", state.path);
-      loadingPage();
-    }
-    startSession();
+    goToPath($el.getAttribute("href"));
   });
 });

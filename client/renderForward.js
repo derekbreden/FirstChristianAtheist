@@ -12,17 +12,13 @@ const renderForward = (parent_article) => {
     );
     $("back-forward-wrapper").appendChild($forward);
     $forward.on("click", () => {
+      const new_path = `/article/${parent_article.slug}`;
       if (parent_article.slug === "Home") {
-        state.path = "/";
+        new_path = "/";
       } else if (parent_article.slug === "Topics") {
-        state.path = "/topics";
-      } else {
-        state.path = "/article/" + parent_article.slug;
+        new_path = "/topics";
       }
-      state.path_index++;
-      history.pushState({path_index: state.path_index}, "", state.path);
-      loadingPage();
-      startSession();
+      goToPath(new_path);
     });
   }
 };

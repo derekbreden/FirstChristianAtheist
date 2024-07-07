@@ -28,12 +28,10 @@ const renderBack = () => {
     );
     $("main-content").prepend($back_forward);
     $back_forward.$("back-wrapper").on("click", () => {
-      state.path_history = state.path_history.slice(0, -2);
-      state.path = previous_path || "/topics";
       state.path_index--;
-      history.pushState({path_index: state.path_index}, "", state.path);
-      loadingPage();
-      startSession();
+      state.path_index--;
+      state.path_history = state.path_history.slice(0, -2);
+      goToPath(previous_path || "/topics");
     });
   }
 };

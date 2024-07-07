@@ -1,4 +1,4 @@
-const originalFetch = fetch;
+const originalFetch = original_fetch_2;
 
 // Do nothing for end2end
 if (test_mode === "end2end") {
@@ -39,25 +39,8 @@ if (test_mode === "end2end") {
       });
       return cached_result;
     } else {
-      const original_fetch = originalFetch(url, options);
-      original_fetch
-        .then((response) => response.clone().json())
-        .then((data) => {
-          fetch_cache[JSON.stringify([url, options])] = data;
-
-          const $fetch_cache_output = $(`
-            textarea[fetch-cache][rows=20]
-          `);
-          $fetch_cache_output.style.position = "absolute";
-          $fetch_cache_output.style.top = "0";
-          $fetch_cache_output.style.left = "0";
-          $("fetch-cache")?.remove();
-          $("body").appendChild($fetch_cache_output);
-          
-          $fetch_cache_output.value =
-            "const fetch_cache = " + JSON.stringify(fetch_cache, null, 2) + ";";
-        });
-      return original_fetch;
+      debug("Not Found", url, options, localStorage.getItem("session_uuid"));
+      return originalFetch(url, options);
     }
   };
 }
