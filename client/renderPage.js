@@ -25,6 +25,9 @@ const renderPage = (data) => {
   // Render Images
   renderImages();
 
+  // Render Forward Button on comment thread
+  renderForward(data.parent_article);
+
   // Emit rendered event
   $("body").dispatchEvent(new CustomEvent("page-rendered"));
 };

@@ -31,13 +31,7 @@ const renderActivities = (activities) => {
         );
         $activity.on("click", ($event) => {
           $event.preventDefault();
-          state.path = "/article/" + activity.parent_article_slug;
-          if (activity.parent_article_slug === "Home") {
-            state.path = "/";
-          }
-          if (activity.parent_article_slug === "Topics") {
-            state.path = "/topics";
-          }
+          state.path = "/comment/" + activity.id;
           history.pushState({}, "", state.path);
           loadingPage();
           startSession();

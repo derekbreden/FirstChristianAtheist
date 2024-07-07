@@ -150,7 +150,14 @@ const renderComments = (comments) => {
   $("comments").replaceChildren(...$root_comments);
 
   // Show add new comment button
-  if (state.path !== "/recent" && state.path !== "/image") {
+  if (
+    state.path.substr(0, 8) !== "/comment" &&
+    state.path !== "/recent" &&
+    state.path !== "/image"
+  ) {
+    $("comments").removeAttribute("thread");
     showAddNewCommentButton();
+  } else {
+    $("comments").setAttribute("thread", "");
   }
 };

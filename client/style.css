@@ -483,6 +483,9 @@ comments {
   display: flex;
   flex-direction: column;
 }
+comments[thread] {
+  margin-top: 20px;
+}
 comment {
   display: flex;
   flex-direction: column;
@@ -548,11 +551,18 @@ expand-wrapper[collapse] {
   flex-direction: row;
   justify-content: center;
 }
+back-forward-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0 0 0;
+}
+forward-wrapper,
 back-wrapper {
   display: flex;
   flex-direction: row;
-  margin: 20px 0 0 0;
+  align-items: center;
 }
+forward-wrapper button,
 back-wrapper button,
 expand-wrapper button {
   background: #fff;
@@ -560,6 +570,7 @@ expand-wrapper button {
   position: relative;
   padding: 6px;
 }
+forward-wrapper button::before,
 back-wrapper button::before,
 [expand-left]::before,
 [expand-right]::before,
@@ -596,13 +607,19 @@ back-wrapper button::before,
   top: 5px;
   left: calc(50% - 3px);
 }
+forward-wrapper [expand-right]::before,
 back-wrapper [expand-left]::before {
   transform: rotate(-45deg);
-  top: -0.5px;
+  top: 0;
   left: 2px;
   height: 10px;
   width: 10px;
 }
+forward-wrapper [expand-right]::before {
+  transform: rotate(135deg);
+  left: -4px;
+}
+forward-wrapper p,
 back-wrapper p,
 expand-wrapper p {
   font-size: 11px;
@@ -614,9 +631,13 @@ expand-wrapper p {
 expand-wrapper button + p {
   margin-top: 5px;
 }
+forward-wrapper p,
 back-wrapper p {
-  margin: 0 0 0 5px;
+  margin: 3px 5px 3px 5px;
   text-align: left;
+}
+forward-wrapper p {
+  text-align: right;
 }
 articles {
   display: flex;

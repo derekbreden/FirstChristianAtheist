@@ -37,6 +37,7 @@ module.exports = async (req, res) => {
     await require("./session/getAdminImage")(req, res);
     await require("./session/createSessionIfNotExists")(req, res);
     await require("./session/getSingleArticle")(req, res);
+    await require("./session/getSingleThread")(req, res);
     await require("./session/getRecentActivity")(req, res);
     await require("./session/getPageArticles")(req, res);
     await require("./session/promptToUsePasswordReset")(req, res);
