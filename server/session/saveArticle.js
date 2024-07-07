@@ -32,7 +32,7 @@ module.exports = async (req, res) => {
     }
 
     // Always moderate based on page context
-    const page = pages[req.body.path];
+    const page = pages[req.body.path] || pages["/"];
     const messages = [];
     messages.push({
       role: "user",
