@@ -11,6 +11,21 @@ fetch = function (url, options) {
 // END Workaround
 
 const startSession = () => {
+
+  // If cache available, render from that first
+  if (state.cache[state.path]) {
+    renderPage(state.cache[state.path]);
+
+    // Restore scroll position if found
+    if (state.cache[state.path].scroll_top) {
+      const body = document.scrollingElement || document.documentElement;
+      body.scrollTop = state.cache[state.path].scroll_top;
+      delete state.cache[state.path].scroll_top;
+    }
+    return;
+  }
+
+  // Otherwise, make a network call for the entire path results
   const postBody = {
     path: state.path,
   };
@@ -43,6 +58,7 @@ const startSession = () => {
         modalError(data.error);
       }
       if (data.path) {
+        state.cache[data.path] = data;
         renderPage(data);
       }
     })

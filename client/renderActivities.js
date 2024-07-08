@@ -49,11 +49,4 @@ const renderActivities = (activities) => {
       }
     }),
   );
-
-  // Restore previous scroll position if tracked and returning to /recent
-  if (state.recent_scroll_top && state.path === "/recent") {
-    const body = document.scrollingElement || document.documentElement;
-    body.scrollTop = state.recent_scroll_top;
-    delete state.recent_scroll_top;
-  }
 };

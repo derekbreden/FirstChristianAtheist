@@ -46,6 +46,7 @@ const showMenu = () => {
       })
         .then((response) => response.json())
         .then(function (data) {
+          state.cache = {};
           startSession();
           menuCancel();
         });
@@ -137,6 +138,7 @@ const showMenu = () => {
             return;
           }
           state.email = email;
+          state.cache = {};
           startSession();
           menuCancel();
         })

@@ -81,7 +81,7 @@ module.exports = async (req, res) => {
       ORDER BY combined.create_date DESC
       LIMIT $2;
       `,
-      [null, 50],
+      [req.body.max_create_date || null, 10],
     );
     req.results.activities.push(...activity_results.rows);
   }

@@ -18,18 +18,21 @@
       email: "",
       expanded_comment_ids: localStorage.getItem("expanded_comment_ids") ? JSON.parse(localStorage.getItem("expanded_comment_ids")) : [],
       reset_token_uuid: "",
+      cache: {},
     };
 
     // Libraries
     // <!--#include file="client/flint.js" -->
     // <!--#include file="client/debug.js" -->
     // <!--#include file="client/markdownToElements.js" -->
+    // <!--#include file="client/imageToPng.js" -->
 
     // Navigation
     // <!--#include file="client/menu.js" -->
     // <!--#include file="client/resetPassword.js" -->
     // <!--#include file="client/modals.js" -->
     // <!--#include file="client/path.js" -->
+    // <!--#include file="client/goToPath.js" -->
 
     // Render
     // <!--#include file="client/loadingPage.js" -->
@@ -43,8 +46,6 @@
     // <!--#include file="client/renderImages.js" -->
     // <!--#include file="client/renderBack.js" -->
     // <!--#include file="client/renderForward.js" -->
-    // <!--#include file="client/goToPath.js" -->
-    // <!--#include file="client/imageToPng.js" -->
 
     // Add new
     // <!--#include file="client/showAddNewComment.js" -->
