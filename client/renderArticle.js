@@ -75,5 +75,6 @@ const renderArticle = (article) => {
       goToPath("/article/" + article.slug);
     });
   }
+  article.$article = $article;
   return $article;
 };

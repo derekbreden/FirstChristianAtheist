@@ -141,6 +141,11 @@ const getMoreRecent = () => {
         );
         current_cache.comments.push(...data.comments);
         renderComments(current_cache.comments);
+
+        // Flash any newly added items
+        data.comments.forEach((comment) => {
+          comment.$comment.setAttribute("flash-long-focus", "");
+        });
       }
 
       // Render articles if appropriate
@@ -151,6 +156,11 @@ const getMoreRecent = () => {
         );
         current_cache.articles.unshift(...data.articles);
         renderArticles(current_cache.articles);
+
+        // Flash any newly added items
+        data.articles.forEach((article) => {
+          article.$article.setAttribute("flash-long-focus", "");
+        });
       }
 
       // Restore scroll position if we re-rendered anything
@@ -159,7 +169,20 @@ const getMoreRecent = () => {
         data.comments.length ||
         data.articles.length
       ) {
-        $body.scrollTop = $body.scrollTop + ($body.scrollHeight - scroll_height);
+
+        // Set a min threshold of scroll to do anything
+        let min_threshold = 0;
+
+        // For /topics specifically we have the add-new element that won't be shifted so we want to be (mostly) past it (~200px of it still showing means shift it away?)
+        if (current_path === "/topics") {
+          const $add_new = $("main-content > add-new:first-child");
+          min_threshold = $add_new.offsetTop + $add_new.offsetHeight - 200;
+        }
+
+        // If we are past the threshold, then maintain our position
+        if ($body.scrollTop > min_threshold) {
+          $body.scrollTop = $body.scrollTop + ($body.scrollHeight - scroll_height);
+        }
       }
 
       // Acknowledge we finished loading
