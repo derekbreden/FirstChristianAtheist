@@ -77,11 +77,13 @@ module.exports = async (req, res) => {
       LEFT JOIN users pu ON pa.user_id = pu.user_id
       LEFT JOIN comments pc ON combined.parent_comment_id = pc.comment_id
       LEFT JOIN users pcu ON pc.user_id = pcu.user_id
-      WHERE (combined.create_date < $1 OR $1 IS NULL)
+      WHERE
+        (combined.create_date < $1 OR $1 IS NULL)
+        AND (combined.create_date > $2 OR $2 IS NULL)
       ORDER BY combined.create_date DESC
-      LIMIT $2;
+      LIMIT $3;
       `,
-      [req.body.max_create_date || null, 10],
+      [req.body.max_create_date || null, req.body.min_create_date || null, 10],
     );
     req.results.activities.push(...activity_results.rows);
   }

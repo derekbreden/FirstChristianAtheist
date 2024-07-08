@@ -16,7 +16,9 @@ module.exports = async (req, res) => {
         STRING_AGG(i.image_uuid, ',') AS image_uuids
       FROM articles a
       LEFT JOIN article_images i ON a.article_id = i.article_id
-      WHERE a.slug = $2
+      WHERE
+        a.slug = $2
+        AND (a.create_date > $3 OR $3 IS NULL)
       GROUP BY
         a.article_id,
         a.title,
@@ -24,7 +26,11 @@ module.exports = async (req, res) => {
         a.body,
         CASE WHEN a.user_id = $1 THEN true ELSE false END
       `,
-      [req.session.user_id || 0, slug],
+      [
+        req.session.user_id || 0,
+        slug,
+        req.body.min_article_create_date || null,
+      ],
     );
     if (article_results.rows.length) {
       req.results.path = `/article/${slug}`;
@@ -44,7 +50,9 @@ module.exports = async (req, res) => {
         FROM comments c
         INNER JOIN users u ON c.user_id = u.user_id
         LEFT JOIN comment_images i ON c.comment_id = i.comment_id
-        WHERE c.parent_article_id = $2
+        WHERE
+          c.parent_article_id = $2
+          AND (c.create_date > $3 OR $3 IS NULL)
         GROUP BY
           c.create_date,
           c.comment_id,
@@ -56,7 +64,11 @@ module.exports = async (req, res) => {
           CASE WHEN c.user_id = $1 THEN true ELSE false END
         ORDER BY c.create_date ASC
         `,
-        [req.session.user_id || 0, article_results.rows[0].article_id],
+        [
+          req.session.user_id || 0,
+          article_results.rows[0].article_id,
+          req.body.min_comment_create_date || null,
+        ],
       );
       req.results.comments.push(...comment_results.rows);
     }
