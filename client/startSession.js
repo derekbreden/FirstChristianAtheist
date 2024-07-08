@@ -31,6 +31,7 @@ const startSession = () => {
   if (state.reset_token_uuid) {
     postBody.reset_token_uuid = state.reset_token_uuid;
   }
+  state.loading_path = true;
   fetch("/session", {
     method: "POST",
     body: JSON.stringify(postBody),
@@ -60,8 +61,10 @@ const startSession = () => {
         state.cache[data.path] = data;
         renderPage(data);
       }
+      state.loading_path = false;
     })
     .catch(function (error) {
+      state.loading_path = false;
       debug(error);
     });
 };

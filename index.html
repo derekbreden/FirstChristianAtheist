@@ -19,6 +19,7 @@
       expanded_comment_ids: localStorage.getItem("expanded_comment_ids") ? JSON.parse(localStorage.getItem("expanded_comment_ids")) : [],
       reset_token_uuid: "",
       cache: {},
+      loading_path: false,
     };
 
     // Global elements
@@ -53,6 +54,9 @@
     // Add new
     // <!--#include file="client/showAddNewComment.js" -->
     // <!--#include file="client/showAddNewArticle.js" -->
+
+    // Global events
+    // <!--#include file="client/onScroll.js" -->
 
     // Init
     // <!--#include file="client/startSession.js" -->
