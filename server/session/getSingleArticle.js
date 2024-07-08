@@ -34,6 +34,8 @@ module.exports = async (req, res) => {
         req.body.min_article_create_date || null,
       ],
     );
+
+    // We set path here to ensure the path goes to a default if there are no results
     if (article_results.rows.length) {
       req.results.path = `/article/${slug}`;
       req.results.articles.push(...article_results.rows);
@@ -73,6 +75,11 @@ module.exports = async (req, res) => {
         ],
       );
       req.results.comments.push(...comment_results.rows);
+    }
+
+    // But, now that we are checking for most recent, the path is also good if a min_article_create_date was passed
+    if (req.body.min_article_create_date) {
+      req.results.path = `/article/${slug}`;
     }
   }
 };

@@ -84,5 +84,11 @@ module.exports = async (req, res) => {
       req.results.path = `/comment/${comment_id}`;
       req.results.comments.push(...comment_results.rows);
     }
+
+    // We set path there to ensure the path goes to a default if there are no results
+    // But, now that we are checking for most recent, the path is also good if a min_comment_create_date was passed
+    if (req.body.min_comment_create_date) {
+      req.results.path = `/comment/${comment_id}`;
+    }
   }
 };
