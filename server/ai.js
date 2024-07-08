@@ -33,13 +33,21 @@ module.exports = {
       ai_response.choices[0].message.content
     );
   },
-  async generateImage(prompt){
+  async generateImage(prompt, model){
     const ai_response = await this.openai.images.generate({
-      model: "dall-e-3",
+      model: model,
       quality: "hd",
       style: "vivid",
       prompt: prompt,
     });
     return ai_response.data[0].url;
   },
+  async generateSpeech(prompt, model){
+    const mp3 = await this.openai.audio.speech.create({
+      model: model,
+      voice: "onyx",
+      input: prompt,
+    });
+    return Buffer.from(await mp3.arrayBuffer());
+  }
 };

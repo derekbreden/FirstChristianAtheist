@@ -25,6 +25,12 @@ module.exports = {
           return;
         }
 
+        // Path mp3
+        if (req.path.substr(0, 3) === "mp3" && req.path.length > 20) {
+          await require("./handleMp3")(req, res);
+          return;
+        }
+
         // PATH test
         if (req.path === "test_cleanup") {
           await require("./handleTest")(req, res);
