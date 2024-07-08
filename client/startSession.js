@@ -18,8 +18,7 @@ const startSession = () => {
 
     // Restore scroll position if found
     if (state.cache[state.path].scroll_top) {
-      const body = document.scrollingElement || document.documentElement;
-      body.scrollTop = state.cache[state.path].scroll_top;
+      $body.scrollTop = state.cache[state.path].scroll_top;
       delete state.cache[state.path].scroll_top;
     }
     return;

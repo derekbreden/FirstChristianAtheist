@@ -3,8 +3,7 @@ const goToPath = (new_path, skip_state) => {
 
     // Always track scroll position on cached paths
     if (state.cache[state.path]) {
-      const body = document.scrollingElement || document.documentElement;
-      state.cache[state.path].scroll_top = body.scrollTop;
+      state.cache[state.path].scroll_top = $body.scrollTop;
     }
 
     // Set the new path
