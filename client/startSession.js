@@ -19,6 +19,8 @@ const startSession = () => {
     if (state.cache[state.path].scroll_top) {
       $body.scrollTop = state.cache[state.path].scroll_top;
       delete state.cache[state.path].scroll_top;
+    } else {
+      $body.scrollTop = 0;
     }
 
     // Get more recent if available
