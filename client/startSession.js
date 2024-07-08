@@ -82,7 +82,7 @@ const getMoreRecent = () => {
   if (state.loading_path) {
     return;
   }
-  
+
   // Track what path and cache we started with
   const current_path = state.path;
   const current_cache = state.cache[current_path];
@@ -171,7 +171,6 @@ const getMoreRecent = () => {
         data.comments.length ||
         data.articles.length
       ) {
-
         // Set a min threshold of scroll to do anything
         let min_threshold = 0;
 
@@ -183,7 +182,8 @@ const getMoreRecent = () => {
 
         // If we are past the threshold, then maintain our position
         if ($body.scrollTop > min_threshold) {
-          $body.scrollTop = $body.scrollTop + ($body.scrollHeight - scroll_height);
+          $body.scrollTop =
+            $body.scrollTop + ($body.scrollHeight - scroll_height);
         }
       }
 

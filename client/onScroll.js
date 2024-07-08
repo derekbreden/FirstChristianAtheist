@@ -10,13 +10,11 @@ document.addEventListener("scroll", () => {
     state.cache["/recent"] &&
     !state.cache["/recent"].finished
   ) {
-
     // A threshold based on how much is left to scroll
     const threshold = $body.scrollHeight - $body.clientHeight * 3;
 
     // When we pass the threshold
     if ($body.scrollTop > threshold) {
-
       // Find the oldest (min) create_date of what we have so far
       const max_create_date = state.cache["/recent"].activities.reduce(
         (min, activity) => {
@@ -36,7 +34,6 @@ document.addEventListener("scroll", () => {
       })
         .then((response) => response.json())
         .then(function (data) {
-
           // Stop when we reach the end (no more results returned)
           if (data.activities && !data.activities.length) {
             state.cache["/recent"].finished = true;

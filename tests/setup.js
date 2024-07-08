@@ -6,7 +6,6 @@ if (test_mode === "record") {
   localStorage.removeItem("session_uuid");
 }
 
-
 // Sign up
 tests.push(() => {
   $("header hamburger").click();
@@ -34,7 +33,8 @@ tests.push(() => {
   expect("[add-new-comment] button", "Add comment");
   expect("add-new [submit]", "Add topic");
   $("add-new [title]").value = "Go to your local food pantry";
-  $("add-new [body]").value = "Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.";
+  $("add-new [body]").value =
+    "Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.";
   setTimeout(() => {
     $("test-wrapper")?.remove();
     $("add-new [submit]").click();
@@ -43,7 +43,7 @@ tests.push(() => {
 
 // Submitted article
 tests.push(() => {
-  expect("article:first-child h2", "Go to your local food pantry")
+  expect("article:first-child h2", "Go to your local food pantry");
   setTimeout(() => {
     $("header hamburger").click();
     setTimeout(() => {

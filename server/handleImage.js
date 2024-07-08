@@ -3,7 +3,9 @@ const object_client = new Client();
 
 module.exports = async (req, res) => {
   const image_uuid = req.path.substr(5);
-  const { ok, value, error } = await object_client.downloadAsBytes(`${image_uuid}.png`);
+  const { ok, value, error } = await object_client.downloadAsBytes(
+    `${image_uuid}.png`,
+  );
   if (!ok) {
     console.error(error);
     res.end("Error reading file\n");

@@ -33,7 +33,7 @@ module.exports = {
       ai_response.choices[0].message.content
     );
   },
-  async generateImage(prompt, model){
+  async generateImage(prompt, model) {
     const ai_response = await this.openai.images.generate({
       model: model,
       quality: "hd",
@@ -42,12 +42,12 @@ module.exports = {
     });
     return ai_response.data[0].url;
   },
-  async generateSpeech(prompt, model){
+  async generateSpeech(prompt, model) {
     const mp3 = await this.openai.audio.speech.create({
       model: model,
       voice: "onyx",
       input: prompt,
     });
     return Buffer.from(await mp3.arrayBuffer());
-  }
+  },
 };

@@ -51,9 +51,8 @@ const renderImages = () => {
                 audio[controls][src=$1][autoplay]
                 `,
                 [data.mp3],
-              )
+              ),
             );
-
           } else {
             debug(data);
           }

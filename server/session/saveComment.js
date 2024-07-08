@@ -56,7 +56,10 @@ module.exports = async (req, res) => {
     for (const article of article_results.rows) {
       messages.push({
         role: "user",
-        name: (article.display_name || "Anonymous").replace(/[^a-z0-9_\-]/g, ""),
+        name: (article.display_name || "Anonymous").replace(
+          /[^a-z0-9_\-]/g,
+          "",
+        ),
         content: article.title + "\n\n" + article.body,
       });
       messages.push({
@@ -94,7 +97,8 @@ module.exports = async (req, res) => {
         messages.push({
           role: "user",
           name: comment_ancestor.display_name.replace(/[^a-z0-9_\-]/g, ""),
-          content: comment_ancestor.display_name + ":\n" + comment_ancestor.body,
+          content:
+            comment_ancestor.display_name + ":\n" + comment_ancestor.body,
         });
         if (comment_ancestor.note) {
           messages.push({
@@ -122,7 +126,7 @@ module.exports = async (req, res) => {
             },
             type: "image_url",
           };
-        })
+        }),
       ],
     });
     const ai_response_text = await ai.ask(messages, "common");
