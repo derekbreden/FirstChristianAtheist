@@ -8,6 +8,7 @@ module.exports = async (req, res) => {
     const article_results = await req.client.query(
       `
       SELECT
+        a.create_date,
         a.article_id,
         a.title,
         a.slug,
@@ -20,6 +21,7 @@ module.exports = async (req, res) => {
         a.slug = $2
         AND (a.create_date > $3 OR $3 IS NULL)
       GROUP BY
+        a.create_date,
         a.article_id,
         a.title,
         a.slug,
