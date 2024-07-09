@@ -127,7 +127,7 @@ const getMoreRecent = () => {
       const scroll_top = $body.scrollTop;
 
       // Render activities if appropriate
-      if (data.activities.length) {
+      if (data.activities?.length) {
         const new_ids = data.activities.map((activity) => activity.id);
         current_cache.activities = current_cache.activities.filter(
           (a) => new_ids.indexOf(a.id) === -1,
@@ -137,7 +137,7 @@ const getMoreRecent = () => {
       }
 
       // Render comments if appropriate
-      if (data.comments.length) {
+      if (data.comments?.length) {
         const new_ids = data.comments.map((comment) => comment.comment_id);
         current_cache.comments = current_cache.comments.filter(
           (c) => new_ids.indexOf(c.comment_id) === -1,
@@ -152,7 +152,7 @@ const getMoreRecent = () => {
       }
 
       // Render articles if appropriate
-      if (data.articles.length) {
+      if (data.articles?.length) {
         const new_ids = data.articles.map((article) => article.article_id);
         current_cache.articles = current_cache.articles.filter(
           (a) => new_ids.indexOf(a.article_id) === -1,
@@ -168,9 +168,9 @@ const getMoreRecent = () => {
 
       // Restore scroll position if we re-rendered anything
       if (
-        data.activities.length ||
-        data.comments.length ||
-        data.articles.length
+        data.activities?.length ||
+        data.comments?.length ||
+        data.articles?.length
       ) {
         // Set a min threshold of scroll to do anything
         let min_threshold = 0;
@@ -190,6 +190,9 @@ const getMoreRecent = () => {
 
       // Acknowledge we finished loading
       state.loading_path = false;
+
+      // Emit rendered event
+      $("body").dispatchEvent(new CustomEvent("page-updated"));
     })
     .catch(function (error) {
       state.loading_path = false;

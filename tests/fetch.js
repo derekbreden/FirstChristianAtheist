@@ -28,19 +28,14 @@ if (test_mode === "end2end") {
   // Otherwise attempt to use cache, but record if cache not found
 } else {
   fetch = (url, options) => {
-    if (fetch_cache[JSON.stringify([url, options])]) {
-      const cached_result = new Promise((resolve) => {
-        const cached_response = {};
-        cached_response.json = () =>
-          new Promise((resolve) => {
-            resolve(fetch_cache[JSON.stringify([url, options])]);
-          });
-        resolve(cached_response);
-      });
-      return cached_result;
-    } else {
-      debug("Not Found", url, options, localStorage.getItem("session_uuid"));
-      return originalFetch(url, options);
-    }
+    const cached_result = new Promise((resolve) => {
+      const cached_response = {};
+      cached_response.json = () =>
+        new Promise((resolve) => {
+          resolve(fetch_cache[JSON.stringify([url, options])] || {});
+        });
+      resolve(cached_response);
+    });
+    return cached_result;
   };
 }

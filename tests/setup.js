@@ -37,6 +37,15 @@ tests.push(() => {
     "Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.";
   setTimeout(() => {
     $("test-wrapper")?.remove();
+    $("body").on("page-updated", () => {
+      const this_test = tests.shift();
+      expect("body");
+      if (this_test) {
+        setTimeout(() => {
+          this_test();
+        }, delay);
+      }
+    }, {once: true});
     $("add-new [submit]").click();
   }, delay);
 });

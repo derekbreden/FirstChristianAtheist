@@ -185,13 +185,31 @@ const fetch_cache = {
         "display_name_index": "0",
         "edit": false,
         "image_uuids": null
+      },
+      {
+        "create_date": "2024-07-09T05:47:37.213Z",
+        "comment_id": "29",
+        "body": "I like your ideas and would like to subscribe to your newsletter.",
+        "note": null,
+        "parent_comment_id": "15",
+        "display_name": "Pete Peterson",
+        "display_name_index": "0",
+        "edit": false,
+        "image_uuids": null
       }
     ],
     "activities": [],
     "path": "/",
-    "session_uuid": "0051fd08-aacd-40ad-9a0e-58c8349d2f8a",
-    "email": "",
-    "display_name": ""
+    "email": null,
+    "display_name": null
+  },
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/\\\",\\\"min_create_date\\\":\\\"\\\",\\\"min_comment_create_date\\\":\\\"2024-07-09T05:47:37.213Z\\\",\\\"min_article_create_date\\\":\\\"2024-07-07T22:24:35.556Z\\\"}\"}]": {
+    "articles": [],
+    "comments": [],
+    "activities": [],
+    "path": "/",
+    "email": null,
+    "display_name": null
   },
   "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"email\\\":\\\"testemail@testemail.com\\\",\\\"password\\\":\\\"1234\\\"}\"}]": {
     "success": true
@@ -382,6 +400,17 @@ const fetch_cache = {
         "display_name_index": "0",
         "edit": false,
         "image_uuids": null
+      },
+      {
+        "create_date": "2024-07-09T05:47:37.213Z",
+        "comment_id": "29",
+        "body": "I like your ideas and would like to subscribe to your newsletter.",
+        "note": null,
+        "parent_comment_id": "15",
+        "display_name": "Pete Peterson",
+        "display_name_index": "0",
+        "edit": false,
+        "image_uuids": null
       }
     ],
     "activities": [],
@@ -392,23 +421,23 @@ const fetch_cache = {
   "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/topics\\\"}\"}]": {
     "articles": [
       {
-        "create_date": "2024-07-07T22:26:53.872Z",
+        "create_date": "2024-07-09T03:56:39.125Z",
         "article_id": "9",
         "title": "Bishop John Shelby Spong — 12 Theses",
         "slug": "Bishop_John_Shelby_Spong_12_Theses",
         "body": "# 1. God\n\n Understanding God in theistic categories as “a being, supernatural in power, dwelling somewhere external to the world and capable of invading the world with miraculous power” is no longer believable. Most God talk in liturgy and conversation has thus become meaningless.\n\n# 2. Jesus – the Christ\n\n If God can no longer be thought of in theistic terms, then conceiving of Jesus as “the incarnation of the theistic deity” has also become a bankrupt concept.\n\n# 3. Original Sin – The Myth of the Fall \n\nThe biblical story of the perfect and finished creation from which we human beings have fallen into “Original Sin” is pre-Darwinian mythology and post-Darwinian nonsense.\n\n# 4. The Virgin Birth \n\nThe virgin birth understood as literal biology is impossible. Far from being a bulwark in defense of the divinity of Christ, the virgin birth actually destroys that divinity.\n\n# 5. Jesus as the Worker of Miracles \n\nIn a post-Newtonian world supernatural invasions of the natural order, perform",
         "edit": false,
-        "image_uuids": "f3a8162e-73a7-4dc2-a415-56f7ab633335,370c6075-6d3a-449f-8195-0f27d1002d22",
+        "image_uuids": "14a1802d-1269-45f3-8efa-66986a669d82,2daafe14-6dde-4ac1-aee5-238f872712ae",
         "comments": "1"
       },
       {
-        "create_date": "2024-07-07T22:25:50.085Z",
+        "create_date": "2024-07-09T03:42:45.116Z",
         "article_id": "10",
         "title": "10 Principles",
         "slug": "10_Principles",
-        "body": "1. Never escalate\n2. Never judge\n3. Be impeccable\n4. Seek understanding\n5. Consider everyone’s needs\n6. Love wastefully\n7. Verify truth with falsifiable predictions\n8. Everyone is their own final authority\n9. The map is not the territory\n10. Everything is connected\n\n# 1. Never escalate to prevent violence \n\nThe cycle of violence is only broken when someone decides to de-escalate. For further reading, see “Break the Cycle” at sfhelp.org by Pete Gerlach.\n\n# 2. Never judge to see clearly \n\nWhen you see things as right and wrong, as too much or too little, your narrative no longer reflects reality. For further reading, see “Nonviolent Communication” by Marshall Rosenberg.\n\n# 3. Be impeccable with your word to earn trust\n\n Be impeccable with your word, lest any lie (of omission or otherwise) make you an unreliable narrator to others or even yourself. For further reading, see “The Four Agreements” by Don Miguel Ruiz.\n\n# 4. Seek understanding to be understood \n\nIf you do not understand them, ",
+        "body": "/mp3/21542190-bc1b-4440-a8ee-5fd164cfcb74\n\n1. Never escalate\n2. Never judge\n3. Be impeccable\n4. Seek understanding\n5. Consider everyone’s needs\n6. Love wastefully\n7. Verify truth with falsifiable predictions\n8. Everyone is their own final authority\n9. The map is not the territory\n10. Everything is connected\n\n# 1. Never escalate to prevent violence \n\nThe cycle of violence is only broken when someone decides to de-escalate. For further reading, see “Break the Cycle” at sfhelp.org by Pete Gerlach.\n\n# 2. Never judge to see clearly \n\nWhen you see things as right and wrong, as too much or too little, your narrative no longer reflects reality. For further reading, see “Nonviolent Communication” by Marshall Rosenberg.\n\n# 3. Be impeccable with your word to earn trust\n\n Be impeccable with your word, lest any lie (of omission or otherwise) make you an unreliable narrator to others or even yourself. For further reading, see “The Four Agreements” by Don Miguel Ruiz.\n\n# 4. Seek understanding to be u",
         "edit": false,
-        "image_uuids": "0f8844a9-fbfd-4bdd-999e-d629d5584d58",
+        "image_uuids": "4ce7080a-21f5-4600-8686-15c394a43b1f",
         "comments": "1"
       },
       {
@@ -443,11 +472,11 @@ const fetch_cache = {
   "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/topics\\\",\\\"title\\\":\\\"Go to your local food pantry\\\",\\\"body\\\":\\\"Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.\\\",\\\"pngs\\\":[]}\"}]": {
     "success": true
   },
-  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/topics\\\",\\\"min_create_date\\\":\\\"\\\",\\\"min_comment_create_date\\\":\\\"2024-06-25T03:47:16.781Z\\\",\\\"min_article_create_date\\\":\\\"2024-07-07T22:26:53.872Z\\\"}\"}]": {
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/topics\\\",\\\"min_create_date\\\":\\\"\\\",\\\"min_comment_create_date\\\":\\\"2024-06-25T03:47:16.781Z\\\",\\\"min_article_create_date\\\":\\\"2024-07-09T03:56:39.125Z\\\"}\"}]": {
     "articles": [
       {
-        "create_date": "2024-07-08T05:12:50.860Z",
-        "article_id": "28",
+        "create_date": "2024-07-09T05:54:45.134Z",
+        "article_id": "30",
         "title": "Go to your local food pantry",
         "slug": "Go_to_your_local_food_pantry",
         "body": "Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.",
@@ -467,8 +496,8 @@ const fetch_cache = {
     "comments": [],
     "activities": [
       {
-        "id": "28",
-        "create_date": "2024-07-08T05:12:50.860Z",
+        "id": "30",
+        "create_date": "2024-07-09T05:54:45.134Z",
         "title": "Go to your local food pantry",
         "body": "Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.",
         "note": null,
@@ -486,14 +515,33 @@ const fetch_cache = {
         "parent_comment_display_name_index": null
       },
       {
+        "id": "29",
+        "create_date": "2024-07-09T05:47:37.213Z",
+        "title": null,
+        "body": "I like your ideas and would like to subscribe to your newsletter.",
+        "note": null,
+        "slug": null,
+        "type": "comment",
+        "image_uuids": null,
+        "comments": null,
+        "display_name": "Pete Peterson",
+        "display_name_index": "0",
+        "parent_article_title": "Home",
+        "parent_article_slug": "Home",
+        "parent_comment_body": "I’m not being judgmental, I’m saying God will judge you.",
+        "parent_comment_note": "JUDGMENTAL Stating that God will judge someone is still a judgmental assertion.",
+        "parent_comment_display_name": "John Doe",
+        "parent_comment_display_name_index": "0"
+      },
+      {
         "id": "9",
-        "create_date": "2024-07-07T22:26:53.872Z",
+        "create_date": "2024-07-09T03:56:39.125Z",
         "title": "Bishop John Shelby Spong — 12 Theses",
         "body": "# 1. God\n\n Understanding God in theistic categories as “a being, supernatural in power, dwelling somewhere external to the world and capable of invading the world with miraculous power” is no longer believable. Most God talk in liturgy and conversation has thus become meaningless.\n\n# 2. Jesus – the Christ\n\n If God can no longer be thought of in theistic terms, then conceiving of Jesus as “the incarnation of the theistic deity” has also become a bankrupt concept.\n\n# 3. Original Sin – The Myth of the Fall \n\nThe biblical story of the perfect and finished creation from which we human beings have fallen into “Original Sin” is pre-Darwinian mythology and post-Darwinian nonsense.\n\n# 4. The Virgin Birth \n\nThe virgin birth understood as literal biology is impossible. Far from being a bulwark in defense of the divinity of Christ, the virgin birth actually destroys that divinity.\n\n# 5. Jesus as the Worker of Miracles \n\nIn a post-Newtonian world supernatural invasions of the natural order, perform",
         "note": null,
         "slug": "Bishop_John_Shelby_Spong_12_Theses",
         "type": "article",
-        "image_uuids": "f3a8162e-73a7-4dc2-a415-56f7ab633335,370c6075-6d3a-449f-8195-0f27d1002d22",
+        "image_uuids": "14a1802d-1269-45f3-8efa-66986a669d82,2daafe14-6dde-4ac1-aee5-238f872712ae",
         "comments": "1",
         "display_name": "Derek",
         "display_name_index": "0",
@@ -506,13 +554,13 @@ const fetch_cache = {
       },
       {
         "id": "10",
-        "create_date": "2024-07-07T22:25:50.085Z",
+        "create_date": "2024-07-09T03:42:45.116Z",
         "title": "10 Principles",
-        "body": "1. Never escalate\n2. Never judge\n3. Be impeccable\n4. Seek understanding\n5. Consider everyone’s needs\n6. Love wastefully\n7. Verify truth with falsifiable predictions\n8. Everyone is their own final authority\n9. The map is not the territory\n10. Everything is connected\n\n# 1. Never escalate to prevent violence \n\nThe cycle of violence is only broken when someone decides to de-escalate. For further reading, see “Break the Cycle” at sfhelp.org by Pete Gerlach.\n\n# 2. Never judge to see clearly \n\nWhen you see things as right and wrong, as too much or too little, your narrative no longer reflects reality. For further reading, see “Nonviolent Communication” by Marshall Rosenberg.\n\n# 3. Be impeccable with your word to earn trust\n\n Be impeccable with your word, lest any lie (of omission or otherwise) make you an unreliable narrator to others or even yourself. For further reading, see “The Four Agreements” by Don Miguel Ruiz.\n\n# 4. Seek understanding to be understood \n\nIf you do not understand them, ",
+        "body": "/mp3/21542190-bc1b-4440-a8ee-5fd164cfcb74\n\n1. Never escalate\n2. Never judge\n3. Be impeccable\n4. Seek understanding\n5. Consider everyone’s needs\n6. Love wastefully\n7. Verify truth with falsifiable predictions\n8. Everyone is their own final authority\n9. The map is not the territory\n10. Everything is connected\n\n# 1. Never escalate to prevent violence \n\nThe cycle of violence is only broken when someone decides to de-escalate. For further reading, see “Break the Cycle” at sfhelp.org by Pete Gerlach.\n\n# 2. Never judge to see clearly \n\nWhen you see things as right and wrong, as too much or too little, your narrative no longer reflects reality. For further reading, see “Nonviolent Communication” by Marshall Rosenberg.\n\n# 3. Be impeccable with your word to earn trust\n\n Be impeccable with your word, lest any lie (of omission or otherwise) make you an unreliable narrator to others or even yourself. For further reading, see “The Four Agreements” by Don Miguel Ruiz.\n\n# 4. Seek understanding to be u",
         "note": null,
         "slug": "10_Principles",
         "type": "article",
-        "image_uuids": "0f8844a9-fbfd-4bdd-999e-d629d5584d58",
+        "image_uuids": "4ce7080a-21f5-4600-8686-15c394a43b1f",
         "comments": "1",
         "display_name": "Derek",
         "display_name_index": "0",
@@ -632,25 +680,6 @@ const fetch_cache = {
         "display_name_index": "0",
         "parent_article_title": "10 Principles",
         "parent_article_slug": "10_Principles",
-        "parent_comment_body": null,
-        "parent_comment_note": null,
-        "parent_comment_display_name": null,
-        "parent_comment_display_name_index": null
-      },
-      {
-        "id": "11",
-        "create_date": "2024-06-29T07:13:26.583Z",
-        "title": "Pete Gerlach — Do you love yourself?",
-        "body": "Pete Gerlach, a professional family systems therapist of 32 years, discusses love:\n\n> The purpose of this video is to provide some perspectives, some questions and thoughts that I hope you’ll find useful in thinking about “Do you Love yourself? Do you really love yourself?”\n\n> “What does that mean? And how can you tell?”\n\n> Because another companion wound is  reality distortion, many people think they love themselves, but in fact they don’t. Could that be you?\n\n[Watch video](https://youtu.be/Pi2VsspnN94)",
-        "note": null,
-        "slug": "Pete_Gerlach_Do_you_love_yourself",
-        "type": "article",
-        "image_uuids": "31af33ac-fd56-48d8-9bbb-60cf384a69eb",
-        "comments": "2",
-        "display_name": "Derek",
-        "display_name_index": "0",
-        "parent_article_title": null,
-        "parent_article_slug": null,
         "parent_comment_body": null,
         "parent_comment_note": null,
         "parent_comment_display_name": null,
