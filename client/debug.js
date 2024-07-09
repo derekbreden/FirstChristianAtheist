@@ -11,6 +11,9 @@ const debug = function () {
     to_render = to_render[0];
   }
   $("debug").innerHTML = JSON.stringify(to_render, null, 2);
+  setTimeout(() => {
+    $("debug").innerHTML = "";
+  }, 5000);
 };
 
 window.addEventListener("error", ($error) => {

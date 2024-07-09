@@ -1,10 +1,15 @@
 const http = require("node:http");
 const fs = require("node:fs/promises");
+const crypto = require("node:crypto");
+const { WebSocketServer } = require("ws");
 
 module.exports = {
   handleRequest(req, res) {
     // Path is always useful
     req.path = req.url.split("/").join("").split("?")[0];
+
+    // Helper for sending a websocket message
+    req.sendWsMessage = this.sendWsMessage.bind(this);
 
     // Always get the body sent
     req.body = "";
@@ -110,12 +115,38 @@ module.exports = {
     this.resources = [];
     this.resources = await fs.readdir("resources");
 
+    // Our normal http server
     const server = http.createServer(this.handleRequest.bind(this));
+
+    // Our websocket server
+    const wss = new WebSocketServer({ server });
+    this.ws_active = {};
+    wss.on("connection", (ws) => {
+      const ws_uuid = crypto.randomUUID();
+      this.ws_active[ws_uuid] = ws;
+      ws.on("error", () => {
+        delete this.ws_active[ws_uuid];
+      });
+      ws.on("close", () => {
+        delete this.ws_active[ws_uuid];
+      });
+      ws.send("UPDATE");
+    });
+
+    // Start listening
     server.listen(port, hostname, () => {
       console.log(`Server running at http://${hostname}:${port}/`);
     });
     server.on("error", (err) => {
       console.error(err);
+    });
+  },
+  sendWsMessage(message) {
+    console.log(
+      `Sending message to ${Object.keys(this.ws_active).length} clients`,
+    );
+    Object.keys(this.ws_active).forEach((ws_uuid) => {
+      this.ws_active[ws_uuid].send(message);
     });
   },
 };

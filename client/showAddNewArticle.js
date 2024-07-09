@@ -170,7 +170,11 @@ const showAddNewArticle = (article, $article) => {
           $add_new.$("[submit]").removeAttribute("disabled");
           $add_new.$("[cancel]")?.removeAttribute("disabled");
         }
-        startSession();
+        if (article) {
+          startSession();
+        } else {
+          getMoreRecent();
+        }
       })
       .catch(function (error) {
         $add_new.$("info")?.remove();

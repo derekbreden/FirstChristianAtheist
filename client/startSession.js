@@ -124,6 +124,7 @@ const getMoreRecent = () => {
 
       // Track current scrollHeight
       const scroll_height = $body.scrollHeight;
+      const scroll_top = $body.scrollTop;
 
       // Render activities if appropriate
       if (data.activities.length) {
@@ -181,9 +182,9 @@ const getMoreRecent = () => {
         }
 
         // If we are past the threshold, then maintain our position
-        if ($body.scrollTop > min_threshold) {
+        if (scroll_top > min_threshold) {
           $body.scrollTop =
-            $body.scrollTop + ($body.scrollHeight - scroll_height);
+            scroll_top + ($body.scrollHeight - scroll_height);
         }
       }
 
