@@ -173,8 +173,10 @@ const showAddNewArticle = (article, $article) => {
         // Handle case where title changes slug when updating an article
         if (article && data.slug) {
           state.path = `/article/${data.slug}`;
+          startSession();
+        } else {
+          getMoreRecent();
         }
-        getMoreRecent();
       })
       .catch(function (error) {
         $add_new.$("info")?.remove();
