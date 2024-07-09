@@ -170,16 +170,11 @@ const showAddNewArticle = (article, $article) => {
           $add_new.$("[submit]").removeAttribute("disabled");
           $add_new.$("[cancel]")?.removeAttribute("disabled");
         }
-        if (article) {
-          // Handle case where title changes slug when updating an article
-          if (data.slug) {
-            state.path = `/article/${data.slug}`;
-          }
-
-          startSession();
-        } else {
-          getMoreRecent();
+        // Handle case where title changes slug when updating an article
+        if (article && data.slug) {
+          state.path = `/article/${data.slug}`;
         }
+        getMoreRecent();
       })
       .catch(function (error) {
         $add_new.$("info")?.remove();

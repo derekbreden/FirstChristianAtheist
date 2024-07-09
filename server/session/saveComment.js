@@ -144,7 +144,7 @@ module.exports = async (req, res) => {
         await req.client.query(
           `
           UPDATE comments
-          SET body = $1, note = NULL
+          SET body = $1, note = NULL, create_date = NOW()
           WHERE
             comment_id = $2
             AND user_id = $3
@@ -174,7 +174,7 @@ module.exports = async (req, res) => {
         await req.client.query(
           `
           UPDATE comments
-          SET body = $1, note = $2
+          SET body = $1, note = $2, create_date = NOW()
           WHERE
             comment_id = $3
             AND user_id = $4

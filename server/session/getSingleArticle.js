@@ -35,9 +35,32 @@ module.exports = async (req, res) => {
       ],
     );
 
+    let article_id = "";
+
     // We set path here to ensure the path goes to a default if there are no results
     if (article_results.rows.length) {
       req.results.path = `/article/${slug}`;
+      article_id = article_results.rows[0].article_id;
+    }
+
+    // Also get the article_id if the article was not updated
+    if (!article_id) {
+      const article_id_result = await req.client.query(
+        `
+        SELECT article_id
+        FROM articles
+        WHERE slug = $1
+        `,
+        [slug],
+      );
+      if (article_id_result.rows.length) {
+        req.results.path = `/article/${slug}`;
+        article_id = article_id_result.rows[0].article_id;
+      }
+    }
+
+    // Get the comments
+    if (article_id) {
       req.results.articles.push(...article_results.rows);
       const comment_results = await req.client.query(
         `
@@ -70,16 +93,11 @@ module.exports = async (req, res) => {
         `,
         [
           req.session.user_id || 0,
-          article_results.rows[0].article_id,
+          article_id,
           req.body.min_comment_create_date || null,
         ],
       );
       req.results.comments.push(...comment_results.rows);
-    }
-
-    // But, now that we are checking for most recent, the path is also good if a min_article_create_date was passed
-    if (req.body.min_article_create_date) {
-      req.results.path = `/article/${slug}`;
     }
   }
 };

@@ -231,11 +231,7 @@ const showAddNewComment = (
           $add_new.$("[submit]").removeAttribute("disabled");
           $add_new.$("[cancel]").removeAttribute("disabled");
         }
-        if (comment) {
-          startSession();
-        } else {
-          getMoreRecent();
-        }
+        getMoreRecent();
       })
       .catch(function (error) {
         $add_new.$("info")?.remove();
