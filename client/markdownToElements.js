@@ -45,6 +45,16 @@ const markdownToElements = (text) => {
       }
     }
 
+    // Support for /mp3/
+    if (p_content.substr(0, 5) === "/mp3/") {
+      return $(
+        `
+        audio[controls][src=$1]
+        `,
+        [ p_content ]
+      )
+    }
+
     let inserts = [];
     let imgs;
     let links;

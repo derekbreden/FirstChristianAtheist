@@ -7,7 +7,11 @@ const renderArticle = (article) => {
     $article_body = $article_body.reduce((acc, child) => {
       characters_used += child.textContent.length;
       if (characters_used < 280) {
-        acc.push(child);
+
+        // Exclude audio from summaries
+        if (child.tagName !== "AUDIO") {
+          acc.push(child);
+        }
       } else {
         trimmed = true;
       }

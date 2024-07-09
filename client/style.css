@@ -62,6 +62,7 @@ h3 {
   justify-content: space-between;
   align-items: center;
 }
+audio,
 p {
   margin-top: 10px;
 }
@@ -94,6 +95,9 @@ p[bold] {
 }
 p[ellipsis] + button {
   margin-top: 10px;
+}
+audio {
+  width: 100%;
 }
 ul {
   margin: 10px 0 0 17px;
