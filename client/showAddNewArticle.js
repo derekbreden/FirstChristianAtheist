@@ -171,6 +171,11 @@ const showAddNewArticle = (article, $article) => {
           $add_new.$("[cancel]")?.removeAttribute("disabled");
         }
         if (article) {
+          // Handle case where title changes slug when updating an article
+          if (data.slug) {
+            state.path = `/article/${data.slug}`;
+          }
+
           startSession();
         } else {
           getMoreRecent();
@@ -178,6 +183,10 @@ const showAddNewArticle = (article, $article) => {
       })
       .catch(function (error) {
         $add_new.$("info")?.remove();
+        $add_new.$("[title]").removeAttribute("disabled");
+        $add_new.$("[body]").removeAttribute("disabled");
+        $add_new.$("[submit]").removeAttribute("disabled");
+        $add_new.$("[cancel]")?.removeAttribute("disabled");
         addArticleError("Network error");
       });
   });
