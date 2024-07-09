@@ -5,6 +5,7 @@ const renderArticles = (articles) => {
     if (new_path.substr(0, 1) === "/") {
       $a.on("click", ($event) => {
         $event.preventDefault();
+        $event.stopPropagation();
         goToPath(new_path);
       });
     }
