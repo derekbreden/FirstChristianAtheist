@@ -78,11 +78,6 @@ const getMoreRecent = () => {
     return;
   }
 
-  // Stop if already loading
-  if (state.loading_path) {
-    return;
-  }
-
   // Track what path and cache we started with
   const current_path = state.path;
   const current_cache = state.cache[current_path];
