@@ -1,5 +1,4 @@
 const renderBack = () => {
-
   // Always remove previous wrapper
   $("main-content back-forward-wrapper")?.remove();
 
@@ -23,7 +22,9 @@ const renderBack = () => {
             ? "Back to recent"
             : previous_path?.substr(0, 8) === "/comment"
               ? "Back to comment thread"
-              : "Back to topics",
+              : previous_path?.substr(0, 8) === "/article"
+                ? "Back to article"
+                : "Back to topics",
       ],
     );
     $("main-content").prepend($back_forward);
