@@ -173,7 +173,9 @@ const getMoreRecent = () => {
         // For /topics specifically we have the add-new element that won't be shifted so we want to be (mostly) past it (~200px of it still showing means shift it away?)
         if (current_path === "/topics") {
           const $add_new = $("main-content > add-new:first-child");
-          min_threshold = $add_new.offsetTop + $add_new.offsetHeight - 200;
+          if ($add_new) {
+            min_threshold = $add_new?.offsetTop + $add_new?.offsetHeight - 200;
+          }
         }
 
         // If we are past the threshold, then maintain our position
