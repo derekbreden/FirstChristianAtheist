@@ -159,6 +159,9 @@ const renderComments = (comments) => {
     ...[
       ...(showCommentList
         ? [
+            state.active_add_new_comment?.is_root
+              ? state.active_add_new_comment
+              : showAddNewCommentButton(),
             $(
               `
               expand-wrapper[above-comments]
@@ -169,9 +172,6 @@ const renderComments = (comments) => {
                   (comments.length === 1 ? " comment" : " comments"),
               ],
             ),
-            state.active_add_new_comment?.is_root
-              ? state.active_add_new_comment
-              : showAddNewCommentButton(),
           ]
         : []),
       ...$root_comments,
