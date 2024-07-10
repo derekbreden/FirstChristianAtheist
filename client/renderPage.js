@@ -28,6 +28,9 @@ const renderPage = (data) => {
   // Render Forward Button on comment thread
   renderForward(data.parent_article);
 
+  // Render Share Button on article
+  renderShare();
+
   // Emit rendered event
   $("body").dispatchEvent(new CustomEvent("page-rendered"));
 };

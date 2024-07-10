@@ -267,6 +267,10 @@ error {
   flex-direction: column;
   font-weight: 500;
 }
+info[small] {
+  padding: 5px 5px 5px 26px;
+  font-size: 11px;
+}
 pass::before,
 info::before,
 error::before {
@@ -284,6 +288,13 @@ error::before {
   font-weight: 700;
   height: 17px;
   width: 17px;
+}
+info[small]::before {
+  height: 14px;
+  width: 14px;
+  left: 5px;
+  top: 5px;
+  font-size: 11px;
 }
 info {
   border-color: #48c;
@@ -563,6 +574,7 @@ back-forward-wrapper {
   display: flex;
   justify-content: space-between;
 }
+share-wrapper,
 forward-wrapper,
 back-wrapper {
   display: flex;
@@ -570,11 +582,14 @@ back-wrapper {
   align-items: center;
   margin: 20px 0 0 0;
   min-height: 18px;
+  position: relative;
 }
+share-wrapper:only-child,
 forward-wrapper:only-child {
   justify-content: flex-end;
   flex: 1;
 }
+share-wrapper button,
 forward-wrapper button,
 back-wrapper button,
 expand-wrapper button {
@@ -582,6 +597,44 @@ expand-wrapper button {
   border-color: #fff;
   position: relative;
   padding: 6px;
+}
+share-wrapper button {
+  padding: 7px 9px;
+}
+share-wrapper button::before {
+  content: "";
+  border: 1.5px solid #26323e;
+  border-top: 1.5px solid transparent;
+  border-radius: 2px;
+  height: 4px;
+  width: 15px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  opacity: .5;
+}
+share-wrapper button::after {
+  content: "↑";
+  position: absolute;
+  color: #26323e;
+  opacity: .5;
+  font-size: 21px;
+  font-weight: 400;
+  top: -11px;
+  right: 1px;
+}
+share-wrapper info {
+  position: absolute;
+  top: 23px;
+  right: 0;
+  display: none;
+  max-width: unset;
+  white-space: nowrap;
+  z-index: 2;
+}
+share-wrapper info[show] {
+  display: flex;
+  animation: fade-out .5s ease-in-out 1 3.5s;
 }
 forward-wrapper button::before,
 back-wrapper button::before,
@@ -632,6 +685,7 @@ forward-wrapper [expand-right]::before {
   transform: rotate(135deg);
   left: -4px;
 }
+share-wrapper p,
 forward-wrapper p,
 back-wrapper p,
 expand-wrapper p {
@@ -653,11 +707,13 @@ expand-wrapper[above-comments] p {
 expand-wrapper button + p {
   margin-top: 5px;
 }
+share-wrapper p,
 forward-wrapper p,
 back-wrapper p {
   margin: 0 5px;
   text-align: left;
 }
+share-wrapper p,
 forward-wrapper p {
   text-align: right;
 }
@@ -761,5 +817,13 @@ activity > [parent-comment] comment {
   }
   100% {
     box-shadow: none;
+  }
+}
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
