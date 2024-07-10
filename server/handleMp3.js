@@ -13,6 +13,6 @@ module.exports = async (req, res) => {
   }
   res.statusCode = 200;
   res.setHeader("Content-Type", "audio/mpeg");
-  // res.setHeader("Cache-Control", "public, max-age=31536000");
+  res.setHeader("Cache-Control", "public, max-age=31536000");
   res.end(Buffer.from(value[0]), "binary");
 };

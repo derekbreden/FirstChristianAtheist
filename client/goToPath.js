@@ -1,6 +1,10 @@
 const goToPath = (new_path, skip_state) => {
   if (state.path !== new_path) {
 
+    // Cancel any open active comment or article
+    delete state.active_add_new_comment;
+    delete state.active_add_new_article;
+
     // Always track scroll position on cached paths
     if (state.cache[state.path]) {
       state.cache[state.path].scroll_top = $body.scrollTop;

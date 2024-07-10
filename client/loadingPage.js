@@ -5,7 +5,10 @@ const loadingPage = () => {
   $("comments").style.display = "none";
   $("activities").style.display = "none";
   if (state.path === "/topics") {
-    showAddNewArticle();
+    if (!state.active_add_new_article?.is_root) {
+      $("main-content > add-new:first-child")?.remove();
+      $("main-content").prepend(showAddNewArticle());
+    }
   } else {
     $("main-content > add-new:first-child")?.remove();
   }

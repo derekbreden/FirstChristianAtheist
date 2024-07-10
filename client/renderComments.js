@@ -129,9 +129,9 @@ const renderComments = (comments) => {
         });
 
         // Slightly shift the last element horizontally after that flash finishes
-        setTimeout(() => {
-          $original_parent.appendChild($last_comment);
-        }, 500);
+        // setTimeout(() => {
+        $original_parent.appendChild($last_comment);
+        // }, 500);
 
         // When they click down, keep scroll on the last comment
         if ($event.target?.hasAttribute("expand-down")) {
@@ -150,7 +150,49 @@ const renderComments = (comments) => {
   });
 
   // Add each thread to the DOM
-  $("comments").replaceChildren(...$root_comments);
+  beforeDomUpdate();
+  $("comments").replaceChildren(
+    ...[
+      state.active_add_new_comment?.is_root
+        ? state.active_add_new_comment
+        : showAddNewCommentButton(),
+      ...$root_comments,
+    ],
+  );
+  if (state.active_add_new_comment?.is_edit) {
+    const comment = comments.find(
+      (c) => c.comment_id === state.active_add_new_comment.is_edit,
+    );
+    comment.$comment.replaceWith(state.active_add_new_comment);
+  }
+  if (state.active_add_new_comment?.is_reply) {
+    const comment = comments.find(
+      (c) => c.comment_id === state.active_add_new_comment.is_reply,
+    );
+    comment.$comment.$(":scope > reply-wrapper").style.display = "none";
+    comment.$comment
+      .$(":scope > reply-wrapper")
+      .after(state.active_add_new_comment);
+  }
+  // Show the comment count
+  if (
+    state.path.substr(0, 8) !== "/comment" &&
+    state.path !== "/recent" &&
+    state.path !== "/image"
+  ) {
+    $("comments").prepend(
+      $(
+        `
+        expand-wrapper[above-comments]
+          p $1
+        `,
+        [comments.length + (comments.length === 1 ? " comment" : " comments")],
+      ),
+    );
+  } else {
+    $("comments").$("[add-new-comment]")?.remove();
+  }
+  afterDomUpdate();
 
   // Highlight a comment in a thread we've navigated to specifically
   if (state.path.substr(0, 8) === "/comment") {
@@ -168,32 +210,8 @@ const renderComments = (comments) => {
     }, 2500);
   }
 
-  // Anywhere we can add comments
-  if (
-    state.path.substr(0, 8) !== "/comment" &&
-    state.path !== "/recent" &&
-    state.path !== "/image"
-  ) {
-
-    // Show the comment count
-    $("comments").prepend(
-      $(
-        `
-        expand-wrapper[above-comments]
-          p $1
-        `,
-        [comments.length + (comments.length === 1 ? " comment" : " comments")],
-      ),
-    );
-
-    // Show the add new comment button
-    showAddNewCommentButton();
-  }
-
   // Only render a single comment thread as a thread
-  if (
-    state.path.substr(0, 8) === "/comment"
-  ) {
+  if (state.path.substr(0, 8) === "/comment") {
     $("comments").setAttribute("thread", "");
   } else {
     $("comments").removeAttribute("thread");

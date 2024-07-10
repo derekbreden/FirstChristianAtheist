@@ -51,10 +51,12 @@ const renderComment = (comment) => {
   );
   $comment.$("[reply]").on("click", () => {
     $comment.$(":scope > reply-wrapper").style.display = "none";
-    showAddNewComment(null, null, comment, $comment);
+    $comment.$(":scope > reply-wrapper").after(showAddNewComment(null, comment));
+    focusAddNewComment();
   });
   $comment.$("[edit]")?.on("click", () => {
-    showAddNewComment(comment, $comment);
+    $comment.replaceWith(showAddNewComment(comment));
+    focusAddNewComment();
   });
 
   if (comment.image_uuids) {

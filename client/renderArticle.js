@@ -56,7 +56,8 @@ const renderArticle = (article) => {
   if (article.edit) {
     $article.$("[edit]").on("click", ($event) => {
       $event.preventDefault();
-      showAddNewArticle(article, $article);
+      $article.replaceWith(showAddNewArticle(article));
+      focusAddNewArticle();
     });
   }
   if (article.image_uuids) {

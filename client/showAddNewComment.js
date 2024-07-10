@@ -7,16 +7,14 @@ const showAddNewCommentButton = () => {
   );
   $add_new_button.on("click", ($event) => {
     $event.preventDefault();
-    $add_new_button.remove();
-    showAddNewComment();
+    $add_new_button.replaceWith(showAddNewComment());
+    focusAddNewComment();
   });
-  $("comments").prepend($add_new_button);
+  return $add_new_button;
 };
 const showAddNewComment = (
   comment,
-  $comment,
   parent_comment,
-  $parent_comment,
 ) => {
   const $add_new = $(
     `
@@ -37,17 +35,19 @@ const showAddNewComment = (
   );
   if (comment) {
     $add_new.$("[cancel]").on("click", () => {
-      $add_new.replaceWith($comment);
+      $add_new.replaceWith(comment.$comment);
+      delete state.active_add_new_comment;
     });
-  } else if ($parent_comment) {
+  } else if (parent_comment) {
     $add_new.$("[cancel]").on("click", () => {
-      $parent_comment.$(":scope > reply-wrapper").style.display = "flex";
+      parent_comment.$comment.$(":scope > reply-wrapper").style.display = "flex";
       $add_new.remove();
+      delete state.active_add_new_comment;
     });
   } else {
     $add_new.$("[cancel]").on("click", () => {
-      $add_new.remove();
-      showAddNewCommentButton();
+      $add_new.replaceWith(showAddNewCommentButton());
+      delete state.active_add_new_comment;
     });
   }
   const addCommentError = (error) => {
@@ -223,14 +223,7 @@ const showAddNewComment = (
           addCommentError(data.error || "Server error");
           return;
         }
-        if (!comment && !parent_comment) {
-          $add_new.$("[body]").value = "";
-          $add_new.$("info")?.remove();
-          $add_new.$("[body]").removeAttribute("disabled");
-          $add_new.$("[display-name]")?.removeAttribute("disabled");
-          $add_new.$("[submit]").removeAttribute("disabled");
-          $add_new.$("[cancel]").removeAttribute("disabled");
-        }
+        delete state.active_add_new_comment;
         getMoreRecent();
       })
       .catch(function (error) {
@@ -242,16 +235,23 @@ const showAddNewComment = (
         addCommentError("Network error");
       });
   });
-  if ($comment) {
-    $comment.replaceWith($add_new);
-  } else if ($parent_comment) {
-    $parent_comment.$(":scope > reply-wrapper").after($add_new);
-  } else {
-    $("comments").prepend($add_new);
+  if (state.active_add_new_comment) {
+    state.active_add_new_comment.$("[cancel]").click();
   }
-  if (!state.display_name) {
-    $add_new.$("[display-name]").focus();
+  state.active_add_new_comment = $add_new;
+  if (comment) {
+    state.active_add_new_comment.is_edit = comment.comment_id;
+  } else if (parent_comment) {
+    state.active_add_new_comment.is_reply = parent_comment.comment_id;
   } else {
-    $add_new.$("[body]").focus();
+    state.active_add_new_comment.is_root = true;
+  }
+  return $add_new;
+};
+const focusAddNewComment = () => {
+  if (!state.display_name) {
+    state.active_add_new_comment.$("[display-name]").focus();
+  } else {
+    state.active_add_new_comment.$("[body]").focus();
   }
 };

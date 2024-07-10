@@ -16,7 +16,9 @@
       path_index: 0,
       display_name: "",
       email: "",
-      expanded_comment_ids: localStorage.getItem("expanded_comment_ids") ? JSON.parse(localStorage.getItem("expanded_comment_ids")) : [],
+      expanded_comment_ids: localStorage.getItem("expanded_comment_ids")
+        ? JSON.parse(localStorage.getItem("expanded_comment_ids"))
+        : [],
       reset_token_uuid: "",
       cache: {},
       loading_path: false,
@@ -57,6 +59,7 @@
 
     // Global events
     // <!--#include file="client/onScroll.js" -->
+    // <!--#include file="client/beforeAfterDomUpdate.js" -->
 
     // Init
     // <!--#include file="client/startSession.js" -->

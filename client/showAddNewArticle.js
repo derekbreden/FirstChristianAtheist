@@ -1,4 +1,4 @@
-const showAddNewArticle = (article, $article) => {
+const showAddNewArticle = (article) => {
   const $add_new = $(
     `
     add-new[article]
@@ -84,9 +84,10 @@ const showAddNewArticle = (article, $article) => {
   $add_new.$("[body]").on("focus", () => {
     $add_new.$("error")?.remove();
   });
-  if ($article) {
+  if (article) {
     $add_new.$("[cancel]").on("click", () => {
-      $add_new.replaceWith($article);
+      $add_new.replaceWith(article.$article);
+      delete state.active_add_new_article;
     });
   } else {
     $add_new.$("[cancel]").remove();
@@ -171,6 +172,7 @@ const showAddNewArticle = (article, $article) => {
           $add_new.$("[cancel]")?.removeAttribute("disabled");
         }
         // Handle case where title changes slug when updating an article
+        delete state.active_add_new_article;
         if (article && data.slug) {
           state.path = `/article/${data.slug}`;
           startSession();
@@ -187,11 +189,14 @@ const showAddNewArticle = (article, $article) => {
         addArticleError("Network error");
       });
   });
-  if ($article) {
-    $article.replaceWith($add_new);
-    $add_new.$("[title]").focus();
+  state.active_add_new_article = $add_new;
+  if (article) {
+    state.active_add_new_article.is_edit = article.article_id;
   } else {
-    $("main-content add-new[article]")?.remove();
-    $("main-content").prepend($add_new);
+    state.active_add_new_article.is_root = true;
   }
+  return $add_new;
 };
+const focusAddNewArticle = () => {
+  state.active_add_new_article.$("[title]").focus();
+}
