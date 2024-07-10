@@ -24,7 +24,7 @@ const renderBack = () => {
               ? "Back to comment thread"
               : previous_path?.substr(0, 8) === "/article"
                 ? "Back to article"
-                : "Back to topics",
+                : "Back",
       ],
     );
     $("main-content").prepend($back_forward);
@@ -32,7 +32,11 @@ const renderBack = () => {
       state.path_index--;
       state.path_index--;
       state.path_history = state.path_history.slice(0, -2);
-      goToPath(previous_path || "/topics");
+      goToPath(previous_path);
     });
+
+    if (!previous_path) {
+      $back_forward.$("back-wrapper")?.remove();
+    }
   }
 };

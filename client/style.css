@@ -562,14 +562,18 @@ expand-wrapper[collapse] {
 back-forward-wrapper {
   display: flex;
   justify-content: space-between;
-  margin: 20px 0 0 0;
-  min-height: 18px;
 }
 forward-wrapper,
 back-wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin: 20px 0 0 0;
+  min-height: 18px;
+}
+forward-wrapper:only-child {
+  justify-content: flex-end;
+  flex: 1;
 }
 forward-wrapper button,
 back-wrapper button,
