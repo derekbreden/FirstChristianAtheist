@@ -151,11 +151,29 @@ const renderComments = (comments) => {
 
   // Add each thread to the DOM
   beforeDomUpdate();
+  const showCommentList =
+    state.path.substr(0, 8) !== "/comment" &&
+    state.path !== "/recent" &&
+    state.path !== "/image";
   $("comments").replaceChildren(
     ...[
-      state.active_add_new_comment?.is_root
-        ? state.active_add_new_comment
-        : showAddNewCommentButton(),
+      ...(showCommentList
+        ? [
+            $(
+              `
+              expand-wrapper[above-comments]
+                p $1
+              `,
+              [
+                comments.length +
+                  (comments.length === 1 ? " comment" : " comments"),
+              ],
+            ),
+            state.active_add_new_comment?.is_root
+              ? state.active_add_new_comment
+              : showAddNewCommentButton(),
+          ]
+        : []),
       ...$root_comments,
     ],
   );
@@ -173,24 +191,6 @@ const renderComments = (comments) => {
     comment.$comment
       .$(":scope > reply-wrapper")
       .after(state.active_add_new_comment);
-  }
-  // Show the comment count
-  if (
-    state.path.substr(0, 8) !== "/comment" &&
-    state.path !== "/recent" &&
-    state.path !== "/image"
-  ) {
-    $("comments").prepend(
-      $(
-        `
-        expand-wrapper[above-comments]
-          p $1
-        `,
-        [comments.length + (comments.length === 1 ? " comment" : " comments")],
-      ),
-    );
-  } else {
-    $("comments").$("[add-new-comment]")?.remove();
   }
   afterDomUpdate();
 
