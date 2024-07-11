@@ -8,6 +8,7 @@ const renderShare = () => {
         info[small] Link copied to clipboard!
       `,
     );
+    $("back-forward-wrapper").$("share-wrapper")?.remove();
     $("back-forward-wrapper").appendChild($share);
     $share.on("click", () => {
       navigator.clipboard.writeText(window.location.href);

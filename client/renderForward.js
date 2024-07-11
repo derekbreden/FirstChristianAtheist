@@ -10,6 +10,7 @@ const renderForward = (parent_article) => {
         `Continue to ${parent_article.title}`,
       ],
     );
+    $("back-forward-wrapper").$("forward-wrapper")?.remove();
     $("back-forward-wrapper").appendChild($forward);
     $forward.on("click", () => {
       let new_path = `/article/${parent_article.slug}`;
