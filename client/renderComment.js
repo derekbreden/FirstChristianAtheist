@@ -13,7 +13,7 @@ const renderComment = (comment) => {
     `
     comment
       h3
-        $1
+        b $1
         $2
       $3
       $4

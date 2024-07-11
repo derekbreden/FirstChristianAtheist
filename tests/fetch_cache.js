@@ -40,6 +40,16 @@ const fetch_cache = {
         "edit": false,
         "image_uuids": null,
         "comments": "0"
+      },
+      {
+        "create_date": "2024-06-11T02:13:36.853Z",
+        "article_id": "39",
+        "title": "Moderation",
+        "slug": "Moderation",
+        "body": "> Everything in moderation\n\n> — Cleobulus\n\nThe comments section below serves as an example of the type of moderation and threading that you will find on the topics on this site.\n\nAn AI will label any post that escalates, judges, or misunderstands.\n\nThe comments are still allowed, but others can rest easy with the AI absorbing the brunt of such tragic expressions of unmet needs.\n",
+        "edit": false,
+        "image_uuids": null,
+        "comments": "0"
       }
     ],
     "comments": [
@@ -185,17 +195,6 @@ const fetch_cache = {
         "display_name_index": "0",
         "edit": false,
         "image_uuids": null
-      },
-      {
-        "create_date": "2024-07-09T05:47:37.213Z",
-        "comment_id": "29",
-        "body": "I like your ideas and would like to subscribe to your newsletter.",
-        "note": null,
-        "parent_comment_id": "15",
-        "display_name": "Pete Peterson",
-        "display_name_index": "0",
-        "edit": false,
-        "image_uuids": null
       }
     ],
     "activities": [],
@@ -203,16 +202,16 @@ const fetch_cache = {
     "email": null,
     "display_name": null
   },
-  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/\\\",\\\"min_create_date\\\":\\\"\\\",\\\"min_comment_create_date\\\":\\\"2024-07-09T05:47:37.213Z\\\",\\\"min_article_create_date\\\":\\\"2024-07-07T22:24:35.556Z\\\"}\"}]": {
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"email\\\":\\\"testemail@testemail.com\\\",\\\"password\\\":\\\"1234\\\"}\"}]": {
+    "success": true
+  },
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/\\\",\\\"min_create_date\\\":\\\"\\\",\\\"min_comment_create_date\\\":\\\"2024-06-28T06:02:12.940Z\\\",\\\"min_article_create_date\\\":\\\"2024-07-07T22:24:35.556Z\\\"}\"}]": {
     "articles": [],
     "comments": [],
     "activities": [],
     "path": "/",
-    "email": null,
-    "display_name": null
-  },
-  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"email\\\":\\\"testemail@testemail.com\\\",\\\"password\\\":\\\"1234\\\"}\"}]": {
-    "success": true
+    "email": "testemail@testemail.com",
+    "display_name": ""
   },
   "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/\\\"}\"}]": {
     "articles": [
@@ -255,6 +254,16 @@ const fetch_cache = {
         "edit": false,
         "image_uuids": null,
         "comments": "0"
+      },
+      {
+        "create_date": "2024-06-11T02:13:36.853Z",
+        "article_id": "39",
+        "title": "Moderation",
+        "slug": "Moderation",
+        "body": "> Everything in moderation\n\n> — Cleobulus\n\nThe comments section below serves as an example of the type of moderation and threading that you will find on the topics on this site.\n\nAn AI will label any post that escalates, judges, or misunderstands.\n\nThe comments are still allowed, but others can rest easy with the AI absorbing the brunt of such tragic expressions of unmet needs.\n",
+        "edit": false,
+        "image_uuids": null,
+        "comments": "0"
       }
     ],
     "comments": [
@@ -400,17 +409,6 @@ const fetch_cache = {
         "display_name_index": "0",
         "edit": false,
         "image_uuids": null
-      },
-      {
-        "create_date": "2024-07-09T05:47:37.213Z",
-        "comment_id": "29",
-        "body": "I like your ideas and would like to subscribe to your newsletter.",
-        "note": null,
-        "parent_comment_id": "15",
-        "display_name": "Pete Peterson",
-        "display_name_index": "0",
-        "edit": false,
-        "image_uuids": null
       }
     ],
     "activities": [],
@@ -420,6 +418,26 @@ const fetch_cache = {
   },
   "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/topics\\\"}\"}]": {
     "articles": [
+      {
+        "create_date": "2024-07-11T02:00:06.819Z",
+        "article_id": "38",
+        "title": "Emotional Root Cause Analysis",
+        "slug": "Emotional_Root_Cause_Analysis",
+        "body": "# 1. Identify Your Emotions\n\nThe map is not the territory. The labels we use cannot ever fully capture the experience of our feelings. Still, using some language to draw some lines and delineations can be the start of a coordinated and considered plan of action.\n\nFor myself, at the moment, I feel some anger.\n\n# 2. Investigate Their Root Causes\n\nThis is even more difficult than the first step and even more likely to fall short of uncovering the deepest levels of causes. But again, investigating and seeing what we can see now, as we can see it, can allow us to begin to formulate an approach to address the concerns that our emotions are raising.\n\nFor myself, at the moment, I say to myself the root cause of that anger I feel towards the complacency of others regarding global issues is my own ineffectiveness towards those same issues.\n\n# 3. Exercise Whatever Locus of Control You Have Over Those Root Causes, If Any\n\nAt times, this can be the easiest step, because simply recognizing the root ",
+        "edit": false,
+        "image_uuids": "bc6a6635-a532-4f32-b868-a871e8126596,a1458bca-488e-42ae-b1f0-4141e7c01c11,bbd3ab71-da44-473b-9ad4-7a667c09f0c7",
+        "comments": "1"
+      },
+      {
+        "create_date": "2024-07-11T01:56:14.673Z",
+        "article_id": "31",
+        "title": "Never escalate to prevent violence",
+        "slug": "Never_escalate_to_prevent_violence",
+        "body": "This is part of ongoing series [10 Principles](/article/10_Principles)\n\n/mp3/cd9a8fed-5af6-4e75-8467-d53b8524f83d\n\n# 1. Never escalate to prevent violence \n\nThe cycle of violence is only broken when someone decides to de-escalate.\n\nEvery act of massive violence grows from smaller conflicts. Each side feels justified in their retaliation, or even in their preemptive strikes.\n\nStill today, Truman deciding to use nuclear weapons on civilian targets in Japan is hailed as a prime example of escalating and inflicting some violence in order to prevent much greater violence.\n\nWhile this perspective has historical precedent, it is vital to question its wisdom and moral implications. Escalation often perpetuates a cycle of fear, anger, and retribution, ultimately causing more harm than good. By examining alternative approaches, we can explore the potential for dialogue, understanding, and peaceful resolution.\n\nNonviolent communication, patience, and empathy can be powerful tools in de-escalating",
+        "edit": false,
+        "image_uuids": "cab8278e-66d6-421b-a14d-583492996c85",
+        "comments": "1"
+      },
       {
         "create_date": "2024-07-09T03:56:39.125Z",
         "article_id": "9",
@@ -451,32 +469,21 @@ const fetch_cache = {
         "comments": "2"
       }
     ],
-    "comments": [
-      {
-        "create_date": "2024-06-25T03:47:16.781Z",
-        "comment_id": "4",
-        "body": "I hope to add more topics here soon.",
-        "note": null,
-        "parent_comment_id": null,
-        "display_name": "Derek",
-        "display_name_index": "0",
-        "edit": false,
-        "image_uuids": null
-      }
-    ],
+    "comments": [],
     "activities": [],
     "path": "/topics",
     "email": "testemail@testemail.com",
     "display_name": ""
   },
   "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/topics\\\",\\\"title\\\":\\\"Go to your local food pantry\\\",\\\"body\\\":\\\"Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.\\\",\\\"pngs\\\":[]}\"}]": {
-    "success": true
+    "success": true,
+    "slug": "Go_to_your_local_food_pantry"
   },
-  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/topics\\\",\\\"min_create_date\\\":\\\"\\\",\\\"min_comment_create_date\\\":\\\"2024-06-25T03:47:16.781Z\\\",\\\"min_article_create_date\\\":\\\"2024-07-09T03:56:39.125Z\\\"}\"}]": {
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/topics\\\",\\\"min_create_date\\\":\\\"\\\",\\\"min_comment_create_date\\\":\\\"\\\",\\\"min_article_create_date\\\":\\\"2024-07-11T02:00:06.819Z\\\"}\"}]": {
     "articles": [
       {
-        "create_date": "2024-07-09T05:54:45.134Z",
-        "article_id": "30",
+        "create_date": "2024-07-11T03:03:30.201Z",
+        "article_id": "63",
         "title": "Go to your local food pantry",
         "slug": "Go_to_your_local_food_pantry",
         "body": "Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.",
@@ -491,21 +498,81 @@ const fetch_cache = {
     "email": "testemail@testemail.com",
     "display_name": ""
   },
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/article/Go_to_your_local_food_pantry\\\"}\"}]": {
+    "articles": [
+      {
+        "create_date": "2024-07-11T03:03:30.201Z",
+        "article_id": "63",
+        "title": "Go to your local food pantry",
+        "slug": "Go_to_your_local_food_pantry",
+        "body": "Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.",
+        "edit": true,
+        "image_uuids": null
+      }
+    ],
+    "comments": [],
+    "activities": [],
+    "path": "/article/Go_to_your_local_food_pantry",
+    "email": "testemail@testemail.com",
+    "display_name": ""
+  },
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/article/Go_to_your_local_food_pantry\\\",\\\"display_name\\\":\\\"John Testerson Sr\\\",\\\"body\\\":\\\"Would you like to come visit my town and help?\\\",\\\"pngs\\\":[]}\"}]": {
+    "success": true
+  },
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/article/Go_to_your_local_food_pantry\\\",\\\"min_create_date\\\":\\\"\\\",\\\"min_comment_create_date\\\":\\\"\\\",\\\"min_article_create_date\\\":\\\"2024-07-11T03:03:30.201Z\\\"}\"}]": {
+    "articles": [],
+    "comments": [
+      {
+        "create_date": "2024-07-11T03:03:31.481Z",
+        "comment_id": "48",
+        "body": "Would you like to come visit my town and help?",
+        "note": "OFFTOPIC The comment appears to initiate a new conversation that disregards the current topic.",
+        "parent_comment_id": null,
+        "display_name": "John Testerson Sr",
+        "display_name_index": "0",
+        "edit": true,
+        "image_uuids": null
+      }
+    ],
+    "activities": [],
+    "path": "/article/Go_to_your_local_food_pantry",
+    "email": "testemail@testemail.com",
+    "display_name": "John Testerson Sr"
+  },
   "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/recent\\\"}\"}]": {
     "articles": [],
     "comments": [],
     "activities": [
       {
-        "id": "30",
-        "create_date": "2024-07-09T05:54:45.134Z",
+        "id": "48",
+        "create_date": "2024-07-11T03:03:31.481Z",
+        "title": null,
+        "body": "Would you like to come visit my town and help?",
+        "note": "OFFTOPIC The comment appears to initiate a new conversation that disregards the current topic.",
+        "slug": null,
+        "type": "comment",
+        "image_uuids": null,
+        "comments": null,
+        "display_name": "John Testerson Sr",
+        "display_name_index": "0",
+        "parent_article_title": "Go to your local food pantry",
+        "parent_article_slug": "Go_to_your_local_food_pantry",
+        "parent_comment_body": null,
+        "parent_comment_note": null,
+        "parent_comment_display_name": null,
+        "parent_comment_display_name_index": null
+      },
+      {
+        "id": "63",
+        "create_date": "2024-07-11T03:03:30.201Z",
         "title": "Go to your local food pantry",
         "body": "Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.",
         "note": null,
         "slug": "Go_to_your_local_food_pantry",
         "type": "article",
         "image_uuids": null,
-        "comments": "0",
-        "display_name": "",
+        "comments": "1",
+        "display_name": "John Testerson Sr",
         "display_name_index": "0",
         "parent_article_title": null,
         "parent_article_slug": null,
@@ -515,23 +582,80 @@ const fetch_cache = {
         "parent_comment_display_name_index": null
       },
       {
-        "id": "29",
-        "create_date": "2024-07-09T05:47:37.213Z",
+        "id": "38",
+        "create_date": "2024-07-11T02:00:06.819Z",
+        "title": "Emotional Root Cause Analysis",
+        "body": "# 1. Identify Your Emotions\n\nThe map is not the territory. The labels we use cannot ever fully capture the experience of our feelings. Still, using some language to draw some lines and delineations can be the start of a coordinated and considered plan of action.\n\nFor myself, at the moment, I feel some anger.\n\n# 2. Investigate Their Root Causes\n\nThis is even more difficult than the first step and even more likely to fall short of uncovering the deepest levels of causes. But again, investigating and seeing what we can see now, as we can see it, can allow us to begin to formulate an approach to address the concerns that our emotions are raising.\n\nFor myself, at the moment, I say to myself the root cause of that anger I feel towards the complacency of others regarding global issues is my own ineffectiveness towards those same issues.\n\n# 3. Exercise Whatever Locus of Control You Have Over Those Root Causes, If Any\n\nAt times, this can be the easiest step, because simply recognizing the root ",
+        "note": null,
+        "slug": "Emotional_Root_Cause_Analysis",
+        "type": "article",
+        "image_uuids": "bc6a6635-a532-4f32-b868-a871e8126596,a1458bca-488e-42ae-b1f0-4141e7c01c11,bbd3ab71-da44-473b-9ad4-7a667c09f0c7",
+        "comments": "1",
+        "display_name": "Derek",
+        "display_name_index": "0",
+        "parent_article_title": null,
+        "parent_article_slug": null,
+        "parent_comment_body": null,
+        "parent_comment_note": null,
+        "parent_comment_display_name": null,
+        "parent_comment_display_name_index": null
+      },
+      {
+        "id": "31",
+        "create_date": "2024-07-11T01:56:14.673Z",
+        "title": "Never escalate to prevent violence",
+        "body": "This is part of ongoing series [10 Principles](/article/10_Principles)\n\n/mp3/cd9a8fed-5af6-4e75-8467-d53b8524f83d\n\n# 1. Never escalate to prevent violence \n\nThe cycle of violence is only broken when someone decides to de-escalate.\n\nEvery act of massive violence grows from smaller conflicts. Each side feels justified in their retaliation, or even in their preemptive strikes.\n\nStill today, Truman deciding to use nuclear weapons on civilian targets in Japan is hailed as a prime example of escalating and inflicting some violence in order to prevent much greater violence.\n\nWhile this perspective has historical precedent, it is vital to question its wisdom and moral implications. Escalation often perpetuates a cycle of fear, anger, and retribution, ultimately causing more harm than good. By examining alternative approaches, we can explore the potential for dialogue, understanding, and peaceful resolution.\n\nNonviolent communication, patience, and empathy can be powerful tools in de-escalating",
+        "note": null,
+        "slug": "Never_escalate_to_prevent_violence",
+        "type": "article",
+        "image_uuids": "cab8278e-66d6-421b-a14d-583492996c85",
+        "comments": "1",
+        "display_name": "Derek",
+        "display_name_index": "0",
+        "parent_article_title": null,
+        "parent_article_slug": null,
+        "parent_comment_body": null,
+        "parent_comment_note": null,
+        "parent_comment_display_name": null,
+        "parent_comment_display_name_index": null
+      },
+      {
+        "id": "35",
+        "create_date": "2024-07-11T01:49:18.908Z",
         "title": null,
-        "body": "I like your ideas and would like to subscribe to your newsletter.",
+        "body": "I ran a promoted poll on this procedure last year.",
+        "note": null,
+        "slug": null,
+        "type": "comment",
+        "image_uuids": "7def9bb3-67fa-47cf-bdbb-cc760ecef6b6",
+        "comments": null,
+        "display_name": "Derek",
+        "display_name_index": "0",
+        "parent_article_title": "Emotional Root Cause Analysis",
+        "parent_article_slug": "Emotional_Root_Cause_Analysis",
+        "parent_comment_body": null,
+        "parent_comment_note": null,
+        "parent_comment_display_name": null,
+        "parent_comment_display_name_index": null
+      },
+      {
+        "id": "32",
+        "create_date": "2024-07-09T08:55:34.948Z",
+        "title": null,
+        "body": "There are some, like Howard Zinn, who question the narrative that the bombings of Hiroshima and Nagasaki saved lives.\n\nHe discusses this briefly here: [https://youtu.be/vSKLVseJ9Xo](https://youtu.be/vSKLVseJ9Xo)",
         "note": null,
         "slug": null,
         "type": "comment",
         "image_uuids": null,
         "comments": null,
-        "display_name": "Pete Peterson",
+        "display_name": "Derek",
         "display_name_index": "0",
-        "parent_article_title": "Home",
-        "parent_article_slug": "Home",
-        "parent_comment_body": "I’m not being judgmental, I’m saying God will judge you.",
-        "parent_comment_note": "JUDGMENTAL Stating that God will judge someone is still a judgmental assertion.",
-        "parent_comment_display_name": "John Doe",
-        "parent_comment_display_name_index": "0"
+        "parent_article_title": "Never escalate to prevent violence",
+        "parent_article_slug": "Never_escalate_to_prevent_violence",
+        "parent_comment_body": null,
+        "parent_comment_note": null,
+        "parent_comment_display_name": null,
+        "parent_comment_display_name_index": null
       },
       {
         "id": "9",
@@ -608,86 +732,10 @@ const fetch_cache = {
         "parent_comment_note": null,
         "parent_comment_display_name": null,
         "parent_comment_display_name_index": null
-      },
-      {
-        "id": "6",
-        "create_date": "2024-07-07T22:24:21.782Z",
-        "title": "Bishop John Shelby Spong",
-        "body": "> The church is still caught in pre-Darwinian pre-Copernican categories. The idea that we were born in sin is a very strange idea when you’re past Darwin. You know the idea that there was an original perfection from which you fell and had to be redeemed doesn’t make a lot of sense if you see life as emerging over 13.8 billion years from the beginning of this universe. And so we’ve got to begin to lift what I think is the Christ experience out of the explanations of antiquity, and then find a new way to make that experience live, and I think we do this in other areas of life all the time, but we don’t know how to do this in religion.\n\n> — [https://youtu.be/LnDOsdDI9Vs?t=95](https://youtu.be/LnDOsdDI9Vs?t=95)",
-        "note": null,
-        "slug": "Bishop_John_Shelby_Spong",
-        "type": "article",
-        "image_uuids": null,
-        "comments": "0",
-        "display_name": "Derek",
-        "display_name_index": "0",
-        "parent_article_title": null,
-        "parent_article_slug": null,
-        "parent_comment_body": null,
-        "parent_comment_note": null,
-        "parent_comment_display_name": null,
-        "parent_comment_display_name_index": null
-      },
-      {
-        "id": "25",
-        "create_date": "2024-07-07T07:03:51.506Z",
-        "title": null,
-        "body": "Pete’s legacy is a collection of 10 minute videos explaining key concepts from his family systems practice.\n\nIt is a particular way of looking at things, but it is a way that resonates with many people and their experiences with others and themselves.",
-        "note": null,
-        "slug": null,
-        "type": "comment",
-        "image_uuids": null,
-        "comments": null,
-        "display_name": "Derek",
-        "display_name_index": "0",
-        "parent_article_title": "Pete Gerlach — Do you love yourself?",
-        "parent_article_slug": "Pete_Gerlach_Do_you_love_yourself",
-        "parent_comment_body": null,
-        "parent_comment_note": null,
-        "parent_comment_display_name": null,
-        "parent_comment_display_name_index": null
-      },
-      {
-        "id": "20",
-        "create_date": "2024-06-30T03:56:23.975Z",
-        "title": null,
-        "body": "It may be that this sort of affirmation is unnecessary or confusing, or it may be that this sort of evaluation and further consideration is helpful for such wounded people.\n\nWhat are your thoughts?",
-        "note": null,
-        "slug": null,
-        "type": "comment",
-        "image_uuids": null,
-        "comments": null,
-        "display_name": "Derek",
-        "display_name_index": "0",
-        "parent_article_title": "Pete Gerlach — Do you love yourself?",
-        "parent_article_slug": "Pete_Gerlach_Do_you_love_yourself",
-        "parent_comment_body": null,
-        "parent_comment_note": null,
-        "parent_comment_display_name": null,
-        "parent_comment_display_name_index": null
-      },
-      {
-        "id": "17",
-        "create_date": "2024-06-29T07:27:11.986Z",
-        "title": null,
-        "body": "I hope this is received not as a prescription to follow, but instead as a set of principles that only make sense as far as the reasons or consequences of those principles also make sense, and as far as those reasons or consequences are also desirable and worth pursuing.\n\nThis is not meant to be a starting point, or an endpoint, but a middle point. As can be seen in the details, all of these ideas come from other people, and no one need be under an illusion that it could not be improved.\n\nI am curious for any and all feedback that anyone might have on my content, or my approach, or anything at all.",
-        "note": null,
-        "slug": null,
-        "type": "comment",
-        "image_uuids": null,
-        "comments": null,
-        "display_name": "Derek",
-        "display_name_index": "0",
-        "parent_article_title": "10 Principles",
-        "parent_article_slug": "10_Principles",
-        "parent_comment_body": null,
-        "parent_comment_note": null,
-        "parent_comment_display_name": null,
-        "parent_comment_display_name_index": null
       }
     ],
     "path": "/recent",
     "email": "testemail@testemail.com",
-    "display_name": ""
+    "display_name": "John Testerson Sr"
   }
 };
