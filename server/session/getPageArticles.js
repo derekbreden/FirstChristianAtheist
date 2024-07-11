@@ -20,6 +20,7 @@ module.exports = async (req, res) => {
       WHERE
         a.parent_article_id = $2
         AND (a.create_date > $3 OR $3 IS NULL)
+        AND (a.create_date < $4 OR $4 IS NULL)
       GROUP BY
         a.create_date,
         a.article_id,
@@ -28,49 +29,53 @@ module.exports = async (req, res) => {
         LEFT(a.body, 1000),
         CASE WHEN a.user_id = $1 THEN true ELSE false END
       ORDER BY a.create_date DESC
+      LIMIT 10
       `,
       [
         req.session.user_id || 0,
         page.article_id,
         req.body.min_article_create_date || null,
+        req.body.max_article_create_date || null,
       ],
     );
     req.results.articles.push(...article_results.rows);
-    const comment_results = await req.client.query(
-      `
-        SELECT
-          c.create_date,
-          c.comment_id,
-          c.body,
-          c.note,
-          c.parent_comment_id,
-          u.display_name,
-          u.display_name_index,
-          CASE WHEN c.user_id = $1 THEN true ELSE false END AS edit,
-          STRING_AGG(i.image_uuid, ',') AS image_uuids
-        FROM comments c
-        INNER JOIN users u ON c.user_id = u.user_id
-        LEFT JOIN comment_images i ON c.comment_id = i.comment_id
-        WHERE
-          c.parent_article_id = $2
-          AND (c.create_date > $3 OR $3 IS NULL)
-        GROUP BY
-          c.create_date,
-          c.comment_id,
-          c.body,
-          c.note,
-          c.parent_comment_id,
-          u.display_name,
-          u.display_name_index,
-          CASE WHEN c.user_id = $1 THEN true ELSE false END
-        ORDER BY c.create_date ASC
-      `,
-      [
-        req.session.user_id || 0,
-        page.article_id,
-        req.body.min_comment_create_date || null,
-      ],
-    );
-    req.results.comments.push(...comment_results.rows);
+    if (req.results.path === "/") {
+      const comment_results = await req.client.query(
+        `
+          SELECT
+            c.create_date,
+            c.comment_id,
+            c.body,
+            c.note,
+            c.parent_comment_id,
+            u.display_name,
+            u.display_name_index,
+            CASE WHEN c.user_id = $1 THEN true ELSE false END AS edit,
+            STRING_AGG(i.image_uuid, ',') AS image_uuids
+          FROM comments c
+          INNER JOIN users u ON c.user_id = u.user_id
+          LEFT JOIN comment_images i ON c.comment_id = i.comment_id
+          WHERE
+            c.parent_article_id = $2
+            AND (c.create_date > $3 OR $3 IS NULL)
+          GROUP BY
+            c.create_date,
+            c.comment_id,
+            c.body,
+            c.note,
+            c.parent_comment_id,
+            u.display_name,
+            u.display_name_index,
+            CASE WHEN c.user_id = $1 THEN true ELSE false END
+          ORDER BY c.create_date ASC
+        `,
+        [
+          req.session.user_id || 0,
+          page.article_id,
+          req.body.min_comment_create_date || null,
+        ],
+      );
+      req.results.comments.push(...comment_results.rows);
+    }
   }
 };
