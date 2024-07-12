@@ -3,6 +3,13 @@ const pages = require("../pages");
 const crypto = require("node:crypto");
 const { Client } = require("@replit/object-storage");
 const object_client = new Client();
+const webpush = require('web-push');
+webpush.setVapidDetails(
+  'mailto:derek@firstchristianatheiest.org',
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY
+);
+
 
 module.exports = async (req, res) => {
   if (
@@ -271,6 +278,41 @@ module.exports = async (req, res) => {
 
     // Send websocket update
     req.sendWsMessage("UPDATE");
+
+    const subscriptions = await req.client.query(
+      `
+      SELECT subscription_json
+      FROM subscriptions
+      WHERE user_id IN (
+        SELECT user_id
+        FROM articles
+        WHERE article_id = $1
+        UNION
+        SELECT user_id
+        FROM comments
+        WHERE comment_id IN (
+          SELECT comment_id
+          FROM comment_ancestors
+          WHERE comment_id = $2
+        )
+      )
+      `,
+      [ article_id, comment_id ]
+    );
+    subscriptions.rows.forEach((subscription) => {
+      const short_display_name = req.body.display_name.length > 20
+        ? req.body.display_name.substr(0, 20) + "..."
+        : req.body.display_name;
+      const short_body = req.body.body.length > 50
+        ? req.body.body.substr(0, 50) + "..."
+        : req.body.body;
+      webpush.sendNotification(JSON.parse(subscription.subscription_json), JSON.stringify({
+        title: `${short_display_name} replied`,
+        body: short_body,
+        tag: `article:${article_id}`
+      })).then(console.log).catch(console.error);
+    });
+
 
     // Respond with success so the client reloads
     res.end(

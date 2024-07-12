@@ -31,6 +31,7 @@ module.exports = async (req, res) => {
     await require("./session/signUpOrSignIn")(req, res);
     await require("./session/generateResetToken")(req, res);
     await require("./session/useResetToken")(req, res);
+    await require("./session/saveSubscription")(req, res);
     await require("./session/saveArticle")(req, res);
     await require("./session/saveComment")(req, res);
     await require("./session/saveDisplayName")(req, res);

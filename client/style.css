@@ -196,6 +196,40 @@ menu links a {
   padding: 10px 20px;
   border-bottom: 1px solid #999;
 }
+menu toggle-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+menu toggle-wrapper[disabled] {
+  opacity: .5;
+}
+menu toggle-wrapper toggle-button {
+  display: flex;
+  height: 30px;
+  width: 50px;
+  border-radius: 16px;
+  background: #ddd;
+  position: relative;
+  transition: background .2s ease-in-out;
+}
+menu toggle-wrapper toggle-button toggle-circle {
+  height: 28px;
+  width: 28px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  transition: left .2s ease-in-out;
+}
+menu toggle-wrapper[active] toggle-button {
+  background: #4a5;
+}
+menu toggle-wrapper[active] toggle-button toggle-circle {
+  left: 21px;
+}
 a[big] {
   display: flex;
   align-items: center;
@@ -377,6 +411,8 @@ modal {
   background: #fff;
   border-radius: 2px;
   box-shadow: 0px 0px 5px #26323e;
+  max-width: 480px;
+  width: calc(100% - 20px);
 }
 add-new {
   display: flex;

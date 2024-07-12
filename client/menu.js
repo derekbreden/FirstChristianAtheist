@@ -25,9 +25,111 @@ const showMenu = () => {
     const $signed_in = $(
       `
       signed-in
+        toggle-wrapper[disabled=$1][active=$2]
+          toggle-text Subscribe to replies
+          toggle-button
+            toggle-circle
         button[sign-out] Log out
       `,
+      [!state.push_available, state.push_active],
     );
+    $signed_in.$("toggle-wrapper").on("click", () => {
+      if (state.push_active) {
+        state.push_active = false;
+        $("toggle-wrapper").removeAttribute("active");
+        navigator.serviceWorker.ready
+          .then((registration) => {
+            return registration.pushManager.getSubscription();
+          })
+          .then((subscription) => {
+            subscription.unsubscribe();
+            fetch("/session", {
+              method: "POST",
+              body: JSON.stringify({
+                remove: true,
+                subscription,
+              }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (!data || !data.success) {
+                  modalError("Server error saving subscription");
+                }
+              })
+              .catch((error) => {
+                modalError("Network error saving subscription");
+              });
+          });
+        return;
+      }
+      if (state.push_available) {
+        state.push_active = true;
+        $("toggle-wrapper").setAttribute("active", "");
+        navigator.serviceWorker.ready
+          .then(async (registration) => {
+            registration.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: (function () {
+                const raw = window.atob(
+                  "BNu3qAqkBwD0A5AbY1XP/mPlbGXkI6qdL57O+tchgT3Wl4YWAQt5w+/eQTgGBctvoTmFGJlRQkRnYYiX+NyCH04=",
+                );
+                const array = new Uint8Array(new ArrayBuffer(raw.length));
+                for (let i = 0; i < raw.length; i++) {
+                  array[i] = raw.charCodeAt(i);
+                }
+                return array;
+              })(),
+            });
+            let retries = 0;
+            const check_for_success = () => {
+              registration.pushManager
+                .getSubscription()
+                .then((subscription) => {
+                  fetch("/session", {
+                    method: "POST",
+                    body: JSON.stringify({
+                      subscription,
+                    }),
+                  })
+                    .then((response) => response.json())
+                    .then((data) => {
+                      if (!data || !data.success) {
+                        if (retries < 20) {
+                          retries++;
+                          setTimeout(check_for_success, retries * 1000);
+                        } else {
+                          modalError("Server error saving subscription");
+                          state.push_active = false;
+                          $("toggle-wrapper").removeAttribute("active");
+                          subscription.unsubscribe();
+                        }
+                      }
+                    })
+                    .catch(() => {
+                      if (retries < 20) {
+                        retries++;
+                        setTimeout(check_for_success, retries * 1000);
+                      } else {
+                        modalError("Error enabling notifications");
+                        state.push_active = false;
+                        $("toggle-wrapper").removeAttribute("active");
+                        subscription.unsubscribe();
+                      }
+                    });
+                });
+            };
+            setTimeout(check_for_success, 1000);
+          })
+          .catch(() => {
+            modalError("Subscription error");
+            state.push_active = false;
+            $("toggle-wrapper").removeAttribute("active");
+          });
+      } else {
+        menuCancel();
+        modalError(`You must "Add to Home Screen" to enable notifications.`);
+      }
+    });
     $signed_in.$("[sign-out]").on("click", () => {
       $signed_in.$("[sign-out]").setAttribute("disabled", "");
       state.email = "";
@@ -149,6 +251,7 @@ const showMenu = () => {
     });
     $menu.$("menu").appendChild($sign_in);
   }
+  $("modal-bg")?.parentElement?.remove();
   $("body").appendChild($menu);
 };
 $("hamburger").forEach(($el) => {

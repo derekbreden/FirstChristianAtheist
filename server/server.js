@@ -49,7 +49,9 @@ module.exports = {
         let encoding = "utf-8";
         if (this.resources.indexOf(req.path) > -1) {
           filename = "resources/" + req.path;
-          res.setHeader("Cache-Control", "public, max-age=31536000");
+          if (!req.path.endsWith(".js")) {
+            res.setHeader("Cache-Control", "public, max-age=31536000");
+          }
         }
         const extension = filename.split(".").pop();
         const content_types = {
@@ -60,6 +62,7 @@ module.exports = {
           gif: "image/gif",
           webmanifest: "application/manifest+json",
           ttf: "font/ttf",
+          js: "text/javascript",
         };
         const encodings = {
           ico: "binary",
