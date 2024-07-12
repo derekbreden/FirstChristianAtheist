@@ -312,7 +312,7 @@ module.exports = async (req, res) => {
         SELECT user_id
         FROM comments
         WHERE comment_id IN (
-          SELECT comment_id
+          SELECT ancestor_id
           FROM comment_ancestors
           WHERE comment_id = $2
         )
