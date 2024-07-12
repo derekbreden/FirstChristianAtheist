@@ -3,13 +3,12 @@ const pages = require("../pages");
 const crypto = require("node:crypto");
 const { Client } = require("@replit/object-storage");
 const object_client = new Client();
-const webpush = require('web-push');
+const webpush = require("web-push");
 webpush.setVapidDetails(
-  'mailto:derek@firstchristianatheiest.org',
+  "mailto:derek@firstchristianatheiest.org",
   process.env.VAPID_PUBLIC_KEY,
-  process.env.VAPID_PRIVATE_KEY
+  process.env.VAPID_PRIVATE_KEY,
 );
-
 
 module.exports = async (req, res) => {
   if (
@@ -318,22 +317,44 @@ module.exports = async (req, res) => {
         )
       ) AND user_id <> $3
       `,
-      [ article_id, comment_id, req.session.user_id ]
+      [article_id, comment_id, req.session.user_id],
     );
     subscriptions.rows.forEach((subscription) => {
-      const short_display_name = req.body.display_name.length > 20
-        ? req.body.display_name.substr(0, 20) + "..."
-        : req.body.display_name;
-      const short_body = req.body.body.length > 50
-        ? req.body.body.substr(0, 50) + "..."
-        : req.body.body;
-      webpush.sendNotification(JSON.parse(subscription.subscription_json), JSON.stringify({
-        title: `${short_display_name} replied`,
-        body: short_body,
-        tag: `article:${article_id}`
-      })).then(console.log).catch(console.error);
-    });
+      const short_display_name =
+        req.body.display_name.length > 20
+          ? req.body.display_name.substr(0, 20) + "..."
+          : req.body.display_name;
+      const short_body =
+        req.body.body.length > 50
+          ? req.body.body.substr(0, 50) + "..."
+          : req.body.body;
+      webpush
+        .sendNotification(
+          JSON.parse(subscription.subscription_json),
+          JSON.stringify({
+            title: `${short_display_name} replied`,
+            body: short_body,
+            tag: `article:${article_id}`,
+          }),
+        )
+        .then(console.log)
+        .catch(async (error) => {
 
+          // 410 means unsubscribed and is expected from e.g. Chrome closing
+          if (error.statusCode === 410) {
+            console.log("Unsubscribing", subscription.subscription_json);
+            await req.client.query(
+              `
+              DELETE FROM subscriptions
+              WHERE subscription_json = $1
+              `,
+              [subscription.subscription_json],
+            );
+          } else {
+            console.error(error);
+          }
+        });
+    });
 
     // Respond with success so the client reloads
     res.end(
