@@ -316,9 +316,9 @@ module.exports = async (req, res) => {
           FROM comment_ancestors
           WHERE comment_id = $2
         )
-      )
+      ) AND user_id <> $3
       `,
-      [ article_id, comment_id ]
+      [ article_id, comment_id, req.session.user_id ]
     );
     subscriptions.rows.forEach((subscription) => {
       const short_display_name = req.body.display_name.length > 20
