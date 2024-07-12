@@ -43,6 +43,27 @@ module.exports = async (req, res) => {
         return;
       }
     }
+    if (req.body.path.substr(0, 8) === "/comment") {
+      const ancestor_comment_id = req.body.path.substr(9);
+      const ancestor_article_results = await req.client.query(
+        `
+        SELECT parent_article_id
+        FROM comments
+        WHERE comment_id = $1
+        `,
+        [ancestor_comment_id],
+      );
+      if (ancestor_article_results.rows.length) {
+        article_id = ancestor_article_results.rows[0].parent_article_id;
+      } else {
+        res.end(
+          JSON.stringify({
+            error: "Path not found",
+          }),
+        );
+        return;
+      }
+    }
 
     const messages = [];
     messages.push({

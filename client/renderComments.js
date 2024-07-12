@@ -11,6 +11,9 @@ const renderComments = (comments) => {
 
       // When all ancestors are an only child we act like a sibling instead of a child
       let ancestor = parent;
+      if (!ancestor) {
+        return;
+      }
       let found_siblings = false;
       while (!found_siblings && ancestor.parent_comment_id) {
         const siblings = comments.filter(
