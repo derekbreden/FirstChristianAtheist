@@ -328,13 +328,20 @@ module.exports = async (req, res) => {
         req.body.body.length > 50
           ? req.body.body.substr(0, 50) + "..."
           : req.body.body;
+      let tag = `article:${article_id}`;
+
+      // Chrome wants unique tags ¯\_(ツ)_/¯
+      if (subscription.subscription_json.match(/google/i)) {
+        tag = `comment:${comment_id}`;
+      }
+      
       webpush
         .sendNotification(
           JSON.parse(subscription.subscription_json),
           JSON.stringify({
             title: `${short_display_name} replied`,
             body: short_body,
-            tag: `article:${article_id}`,
+            tag: tag,
           }),
         )
         .then(console.log)
