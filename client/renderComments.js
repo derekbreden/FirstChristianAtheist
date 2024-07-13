@@ -158,7 +158,8 @@ const renderComments = (comments) => {
     state.path.substr(0, 8) !== "/comment" &&
     state.path !== "/topics" &&
     state.path !== "/recent" &&
-    state.path !== "/image";
+    state.path !== "/image" &&
+    state.path !== "/notifications";
   $("comments").replaceChildren(
     ...[
       ...(showCommentList

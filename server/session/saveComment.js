@@ -296,12 +296,17 @@ module.exports = async (req, res) => {
       }
     }
 
-    // Send websocket update
-    req.sendWsMessage("UPDATE");
+    // Respond with success so the client reloads
+    res.end(
+      JSON.stringify({
+        success: true,
+      }),
+    );
 
+    // Send push notifications
     const subscriptions = await req.client.query(
       `
-      SELECT subscription_json
+      SELECT subscription_json, user_id
       FROM subscriptions
       WHERE user_id IN (
         SELECT user_id
@@ -319,7 +324,32 @@ module.exports = async (req, res) => {
       `,
       [article_id, comment_id, req.session.user_id],
     );
+
+    // Track user_id of notifications inserted, as the same user may have multiple clients subscribed
+    const user_ids_notifications_inserted = [];
+
+    // Wait for all notifications to be inserted
+    for (const subscription of subscriptions.rows) {
+      // Insert notifications records for unread notifications
+      if (
+        user_ids_notifications_inserted.indexOf(subscription.user_id) === -1
+      ) {
+        await req.client.query(
+          `
+        INSERT INTO notifications
+          (user_id, comment_id)
+        VALUES
+          ($1, $2)
+        `,
+          [subscription.user_id, comment_id],
+        );
+        user_ids_notifications_inserted.push(subscription.user_id);
+      }
+    }
+
+    // Trigger all pushes
     subscriptions.rows.forEach((subscription) => {
+      // Create data for the push
       const short_display_name =
         req.body.display_name.length > 20
           ? req.body.display_name.substr(0, 20) + "..."
@@ -334,7 +364,8 @@ module.exports = async (req, res) => {
       if (subscription.subscription_json.match(/google/i)) {
         tag = `comment:${comment_id}`;
       }
-      
+
+      // Send the push
       webpush
         .sendNotification(
           JSON.parse(subscription.subscription_json),
@@ -346,15 +377,14 @@ module.exports = async (req, res) => {
         )
         .then(console.log)
         .catch(async (error) => {
-
-          // 410 means unsubscribed and is expected from e.g. Chrome closing
+          // 410 means unsubscribed and is expected, but means we need to stop sending to that subscription_json
           if (error.statusCode === 410) {
             console.log("Unsubscribing", subscription.subscription_json);
             await req.client.query(
               `
-              DELETE FROM subscriptions
-              WHERE subscription_json = $1
-              `,
+            DELETE FROM subscriptions
+            WHERE subscription_json = $1
+            `,
               [subscription.subscription_json],
             );
           } else {
@@ -363,11 +393,7 @@ module.exports = async (req, res) => {
         });
     });
 
-    // Respond with success so the client reloads
-    res.end(
-      JSON.stringify({
-        success: true,
-      }),
-    );
+    // Send websocket update after all notifications have been inserted
+    req.sendWsMessage("UPDATE");
   }
 };

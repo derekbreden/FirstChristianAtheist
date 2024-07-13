@@ -9,6 +9,19 @@ const showMenu = () => {
         a[href=/recent] Recent
     `,
   );
+  if (state.push_active) {
+    $menu.$("links").appendChild(
+      $(
+        `
+        a[href=/notifications][unread=$1] $2
+        `,
+        [ 
+          Boolean(state.unread_count),
+          state.unread_count ? `Notifications (${state.unread_count})` : "Notifications",
+        ]
+      )
+    );
+  }
   const menuCancel = () => {
     $menu.remove();
   };

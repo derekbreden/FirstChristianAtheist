@@ -610,6 +610,7 @@ back-forward-wrapper {
   display: flex;
   justify-content: space-between;
 }
+read-more-wrapper,
 share-wrapper,
 forward-wrapper,
 back-wrapper {
@@ -620,11 +621,16 @@ back-wrapper {
   min-height: 18px;
   position: relative;
 }
+read-more-wrapper {
+  margin: 0;
+  white-space: nowrap;
+}
 share-wrapper:only-child,
 forward-wrapper:only-child {
   justify-content: flex-end;
   flex: 1;
 }
+read-more-wrapper button,
 share-wrapper button,
 forward-wrapper button,
 back-wrapper button,
@@ -709,6 +715,7 @@ back-wrapper button::before,
   top: 5px;
   left: calc(50% - 3px);
 }
+read-more-wrapper [expand-right]::before,
 forward-wrapper [expand-right]::before,
 back-wrapper [expand-left]::before {
   transform: rotate(-45deg);
@@ -717,10 +724,13 @@ back-wrapper [expand-left]::before {
   height: 10px;
   width: 10px;
 }
+read-more-wrapper [expand-right]::before,
 forward-wrapper [expand-right]::before {
   transform: rotate(135deg);
   left: -4px;
 }
+all-clear-wrapper p,
+read-more-wrapper p,
 share-wrapper p,
 forward-wrapper p,
 back-wrapper p,
@@ -730,6 +740,13 @@ expand-wrapper p {
   margin: 0 0 5px 0;
   opacity: .5;
   text-align: center;
+}
+all-clear-wrapper p {
+  margin: 20px 0;
+  text-align: center;
+}
+read-more-wrapper p {
+  margin: 0;
 }
 expand-wrapper p[comments] {
   position: absolute;
@@ -743,15 +760,34 @@ expand-wrapper[above-comments] p {
 expand-wrapper button + p {
   margin-top: 5px;
 }
+read-more-wrapper p,
 share-wrapper p,
 forward-wrapper p,
 back-wrapper p {
   margin: 0 5px;
   text-align: left;
 }
+read-more-wrapper p,
 share-wrapper p,
 forward-wrapper p {
   text-align: right;
+}
+notifications {
+  display: flex;
+  flex-direction: column;
+}
+notifications notification {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+notifications notification summary {
+  font-size: 11px;
+}
+notifications h3 {
+  margin-top: 20px;
 }
 articles {
   display: flex;

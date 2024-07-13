@@ -22,11 +22,13 @@ module.exports = async (req, res) => {
       articles: [],
       comments: [],
       activities: [],
+      notifications: [],
       path: pages[req.body.path] ? req.body.path : "/",
     };
 
     // Call all middleware in a specific order
     await require("./session/validateSessionUuid")(req, res);
+    await require("./session/getNotifications")(req, res);
     await require("./session/createUserIfNotExists")(req, res);
     await require("./session/signUpOrSignIn")(req, res);
     await require("./session/generateResetToken")(req, res);

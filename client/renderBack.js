@@ -5,7 +5,8 @@ const renderBack = () => {
   // Sometimes add new wrapper
   if (
     state.path.substr(0, 8) === "/article" ||
-    state.path.substr(0, 8) === "/comment"
+    state.path.substr(0, 8) === "/comment" ||
+    state.path === "/notifications"
   ) {
     const previous_path = state.path_history[state.path_history.length - 1];
     const $back_forward = $(
@@ -23,8 +24,12 @@ const renderBack = () => {
             : previous_path?.substr(0, 8) === "/comment"
               ? "Back to comment thread"
               : previous_path?.substr(0, 8) === "/article"
-                ? "Back to article"
-                : "Back",
+                ? "Back to topic"
+                : previous_path === "/"
+                  ? "Back to home"
+                  : previous_path === "/notifications"
+                    ? "Back to notifications"
+                    : "Back",
       ],
     );
     $("main-content").prepend($back_forward);

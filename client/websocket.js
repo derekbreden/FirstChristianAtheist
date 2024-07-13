@@ -3,6 +3,9 @@ const reconnectWs = () => {
   ws.addEventListener("message", (event) => {
     if (event?.data === "UPDATE") {
       getMoreRecent();
+      if (state.push_active) {
+        getUnreadCount();
+      }
     }
   });
   ws.addEventListener("close", (event) => {

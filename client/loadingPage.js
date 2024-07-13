@@ -4,6 +4,7 @@ const loadingPage = () => {
   $("articles").style.display = "none";
   $("comments").style.display = "none";
   $("activities").style.display = "none";
+  $("notifications").style.display = "none";
   if (state.path === "/topics") {
     if (!state.active_add_new_article?.is_root) {
       $("main-content > add-new:first-child")?.remove();

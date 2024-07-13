@@ -12,6 +12,9 @@ const renderPage = (data) => {
   $("articles").style.display = "flex";
   $("comments").style.display = "flex";
   $("activities").style.display = "flex";
+  if (state.path === "/notifications") {
+    $("notifications").style.display = "flex";
+  }
 
   // Render Articles
   renderArticles(data.articles);
@@ -21,6 +24,9 @@ const renderPage = (data) => {
 
   // Render Activities
   renderActivities(data.activities);
+
+  // Render Notifications
+  renderNotifications(data.notifications);
 
   // Render Images
   renderImages();

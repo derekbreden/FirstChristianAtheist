@@ -98,6 +98,22 @@ const getMoreRecent = () => {
     },
     "",
   );
+  const min_notification_unread_create_date = current_cache.notifications.reduce(
+    (max, notification) => {
+      if (!notification.read) {
+        return max > notification.create_date ? max : notification.create_date;   
+      }
+    },
+    "",
+  );
+  const min_notification_read_create_date = current_cache.notifications.reduce(
+    (max, notification) => {
+      if (notification.read) {
+        return max > notification.create_date ? max : notification.create_date;   
+      }
+    },
+    "",
+  );
 
   // Use that to load anything newer than that (our max is the min of what we want returned)
   state.loading_path = true;
@@ -108,6 +124,8 @@ const getMoreRecent = () => {
       min_create_date,
       min_comment_create_date,
       min_article_create_date,
+      min_notification_unread_create_date,
+      min_notification_read_create_date,
     }),
   })
     .then((response) => response.json())
@@ -120,6 +138,16 @@ const getMoreRecent = () => {
       // Track current scrollHeight
       const scroll_height = $body.scrollHeight;
       const scroll_top = $body.scrollTop;
+
+      // Render notifications if appropriate
+      if (data.notifications?.length) {
+        const new_ids = data.notifications.map((n) => n.notification_id);
+        current_cache.notifications = current_cache.notifications.filter(
+          (n) => new_ids.indexOf(n.notification_id) === -1,
+        );
+        current_cache.notifications.unshift(...data.notifications);
+        renderNotifications(current_cache.notifications);
+      }
 
       // Render activities if appropriate
       if (data.activities?.length) {
@@ -165,7 +193,8 @@ const getMoreRecent = () => {
       if (
         data.activities?.length ||
         data.comments?.length ||
-        data.articles?.length
+        data.articles?.length ||
+        data.notifications?.length
       ) {
         // Set a min threshold of scroll to do anything
         let min_threshold = 0;
