@@ -4,7 +4,7 @@ const reconnectWs = () => {
     if (event?.data === "UPDATE") {
       getMoreRecent();
       if (state.push_active) {
-        getUnreadCount();
+        getUnreadCountUnseenCount();
       }
     }
   });

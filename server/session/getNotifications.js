@@ -5,7 +5,7 @@ module.exports = async (req, res) => {
       await req.client.query(
         `
         UPDATE notifications
-        SET read = TRUE, seen = TRUE
+        SET read = TRUE, seen = TRUE, create_date = NOW()
         WHERE notification_id = ANY($1::int[]) AND user_id = $2;
         `,
         [req.body.mark_as_read, req.session.user_id],
@@ -18,38 +18,71 @@ module.exports = async (req, res) => {
       await req.client.query(
         `
         UPDATE notifications
-        SET read = TRUE, seen = TRUE
-        WHERE user_id = $1;
+        SET read = TRUE, seen = TRUE, create_date = NOW()
+        WHERE
+          user_id = $1
+          AND (read = FALSE OR seen = FALSE);
         `,
         [req.session.user_id],
       );
       res.end(JSON.stringify({ success: true }));
     }
 
-    // Updating an array of notification_ids that are seen
-    if (req.body.mark_as_seen) {
+    // Updating all notifications as seen
+    if (req.body.mark_all_as_seen) {
       await req.client.query(
         `
         UPDATE notifications
         SET seen = TRUE
-        WHERE notification_id = ANY($1::int[]) AND user_id = $2;
+        WHERE
+          user_id = $1
+          AND seen = FALSE;
         `,
-        [req.body.mark_as_seen, req.session.user_id],
+        [req.session.user_id],
       );
       res.end(JSON.stringify({ success: true }));
     }
 
-    // Returning the unread_count
-    if (req.body?.path === "/unread_count") {
-      const unread_count = await req.client.query(
+    // Returning the unread_count and unseen_count
+    if (req.body?.path === "/unread_count_unseen_count") {
+      const counts = await req.client.query(
         `
-        SELECT COUNT(*) AS unread_count
+        SELECT 
+          SUM(CASE WHEN read = FALSE THEN 1 ELSE 0 END) AS unread_count,
+          SUM(CASE WHEN seen = FALSE THEN 1 ELSE 0 END) AS unseen_count
         FROM notifications
-        WHERE user_id = $1 AND read = FALSE;;
+        WHERE user_id = $1;
         `,
         [req.session.user_id],
       );
-      res.end(JSON.stringify({ unread_count: unread_count.rows[0].unread_count}));
+
+      // Special case for exactly 1 unseen, we want to load that comment_id and notification_id
+      let comment_id = null;
+      let notification_id = null;
+      if (counts.rows[0].unseen_count === "1") {
+        const comment = await req.client.query(
+          `
+          SELECT comment_id, notification_id
+          FROM notifications
+          WHERE user_id = $1
+          AND seen = FALSE
+          ORDER BY create_date DESC
+          `,
+          [req.session.user_id],
+        );
+        comment_id = comment.rows[0].comment_id;
+        notification_id = comment.rows[0].notification_id;
+      }
+
+      // Return the counts (and maybe a comment_id/notification_id)
+      res.end(
+        JSON.stringify({
+          unread_count: counts.rows[0].unread_count,
+          unseen_count: counts.rows[0].unseen_count,
+          comment_id,
+          notification_id,
+        }),
+      );
 
       // Returning the complete notifications list
     } else if (req.body?.path === "/notifications") {

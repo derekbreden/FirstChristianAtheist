@@ -132,7 +132,7 @@ read BOOL DEFAULT false,
 seen BOOL DEFAULT false,
 create_date TIMESTAMP(3) NOT NULL DEFAULT NOW()
 );
-CREATE INDEX idx_notifications_user_id_create_date_read ON notifications(user_id, create_date, read);
+CREATE INDEX idx_notifications_user_id_create_date_read_seen ON notifications(user_id, create_date, read, seen);
 CREATE INDEX idx_notifications_comment_id ON notifications(comment_id);
 
 CREATE TABLE IF NOT EXISTS votes (
