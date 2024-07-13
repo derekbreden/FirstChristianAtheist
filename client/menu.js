@@ -1,12 +1,13 @@
 const showMenu = () => {
   const $menu = $(
     `
-    modal-bg
-    menu
-      links
-        a[href=/] Home
-        a[href=/topics] Topics
-        a[href=/recent] Recent
+    menu-wrapper
+      modal-bg
+      menu
+        links
+          a[href=/] Home
+          a[href=/topics] Topics
+          a[href=/recent] Recent
     `,
   );
   if (state.push_active) {
@@ -269,11 +270,16 @@ const showMenu = () => {
 };
 $("hamburger").forEach(($el) => {
   $el.on("click", () => {
-    showMenu();
+    if ($("menu-wrapper")) {
+      $("menu-wrapper").remove();
+    } else {
+      showMenu();
+    }
   });
 });
 $("[href]").forEach(($el) => {
   $el.on("click", ($event) => {
+    $("menu-wrapper")?.remove();
     $event.preventDefault();
     goToPath($el.getAttribute("href"));
   });

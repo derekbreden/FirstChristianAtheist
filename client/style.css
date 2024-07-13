@@ -116,7 +116,7 @@ header {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0px 0px 5px #26323e;
-  z-index: 1;
+  z-index: 2;
 }
 header h1 {
   cursor: pointer;
@@ -158,16 +158,34 @@ hamburger line {
   height: 8px;
   width: 8px;
 }
+menu-wrapper {
+  position: fixed;
+  top: 44px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+}
 menu {
   display: flex;
   flex-direction: column;
-  position: fixed;
+  position: absolute;
   top: 0;
   right: 0;
-  z-index: 3;
   background: #fff;
   box-shadow: 0px 0px 5px #26323e;
   border-radius: 0 0 0 2px;
+  z-index: 6;
+  border-top: 1px solid #999;
+}
+menu::before {
+  content: "";
+  position: absolute;
+  left: -20px;
+  right: 0;
+  top: -8px;
+  height: 7px;
+  background: #fff;
 }
 @media (max-width: 480px) {
   body {
@@ -267,7 +285,7 @@ modal-bg {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 2;
+  z-index: 4;
 }
 input,
 textarea {
@@ -419,7 +437,7 @@ password-help::before {
 modal {
   position: fixed;
   flex-direction: column;
-  z-index: 4;
+  z-index: 5;
   top: 44px;
   left: 50%;
   transform: translateX(-50%);
@@ -687,7 +705,7 @@ share-wrapper info {
   display: none;
   max-width: unset;
   white-space: nowrap;
-  z-index: 2;
+  z-index: 1;
 }
 share-wrapper info[show] {
   display: flex;
