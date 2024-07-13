@@ -16,13 +16,13 @@ const renderNotification = (notification) => {
 
   const $notification = $(
     `
-    notification
-      summary $1
+    notification[unread=$1]
+      summary $2
       read-more-wrapper
         p Read more
         button[expand-right]
     `,
-    [text],
+    [!notification.read, text],
   );
   $notification.on("click", () => {
     goToPath("/comment/" + notification.comment_id);
@@ -119,6 +119,12 @@ const getUnreadCount = () => {
         console.error(data);
       } else {
         state.unread_count = Number(data.unread_count);
+        navigator.setAppBadge(state.unread_count);
+        if (Boolean(state.unread_count)) {
+          $("hamburger").setAttribute("unread", "");
+        } else {
+          $("hamburger").removeAttribute("unread");
+        }
       }
     })
     .catch(function (error) {
