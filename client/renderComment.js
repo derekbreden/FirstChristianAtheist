@@ -1,13 +1,7 @@
 const renderComment = (comment) => {
   let note = comment.note || "";
   let note_title = note.slice(0, note.indexOf(" "));
-  note_title =
-    {
-      ESCALATING: "Escalation",
-      JUDGMENTAL: "Judgmental",
-      MISUNDERSTANDING: "Misunderstanding",
-      OFFTOPIC: "Off topic",
-    }[note_title] || note_title;
+  note_title = note_keywords[note_title] || note_title;
   const note_body = note.slice(note.indexOf(" ") + 1);
   let $comment = $(
     `
@@ -51,7 +45,9 @@ const renderComment = (comment) => {
   );
   $comment.$("[reply]").on("click", () => {
     $comment.$(":scope > reply-wrapper").style.display = "none";
-    $comment.$(":scope > reply-wrapper").after(showAddNewComment(null, comment));
+    $comment
+      .$(":scope > reply-wrapper")
+      .after(showAddNewComment(null, comment));
     focusAddNewComment();
   });
   $comment.$("[edit]")?.on("click", () => {
@@ -67,7 +63,7 @@ const renderComment = (comment) => {
         p[img]
           img[src=$1]
         `,
-        [ "/image/" + image_uuid]
+        ["/image/" + image_uuid],
       );
       $image.$("img").on("click", ($event) => {
         $event.stopPropagation();
@@ -79,7 +75,7 @@ const renderComment = (comment) => {
             button[close] Done
           modal-bg
           `,
-          [ "/image/" + image_uuid ]
+          ["/image/" + image_uuid],
         );
         const modalCancel = () => {
           $modal.remove();

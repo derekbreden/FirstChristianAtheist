@@ -102,6 +102,8 @@ const getMoreRecent = () => {
     (max, notification) => {
       if (!notification.read) {
         return max > notification.create_date ? max : notification.create_date;   
+      } else {
+        return max
       }
     },
     "",
@@ -110,6 +112,8 @@ const getMoreRecent = () => {
     (max, notification) => {
       if (notification.read) {
         return max > notification.create_date ? max : notification.create_date;   
+      } else {
+        return max
       }
     },
     "",

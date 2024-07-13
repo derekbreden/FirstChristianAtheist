@@ -11,18 +11,45 @@ const renderNotification = (notification) => {
   const reply_text =
     notification.reply_type === "comment"
       ? "to your comment on"
-      : "to your topic";
-  const text = `${renderName(notification.display_name, notification.display_name_index)} replied ${short_body} ${reply_text} ${short_title}`;
+      : notification.reply_type === "article_comment"
+        ? "to a comment on your topic"
+        : "to your topic";
 
   const $notification = $(
     `
     notification[unread=$1]
-      summary $2
+      first-column
+        summary
+          b $2
+          span $3
+          i $4
+          span $5
+          b $6
+        $7
       read-more-wrapper
         p Read more
         button[expand-right]
     `,
-    [!notification.read, text],
+    [
+      !notification.read,
+      renderName(notification.display_name, notification.display_name_index),
+      "replied",
+      `"${short_body}"`,
+      reply_text,
+      short_title,
+      notification.note
+        ? $(
+            `
+          info[tiny]
+            b $1
+          `,
+            [
+              note_keywords[notification.note.split(" ")[0]] ||
+                notification.note.split(" ")[0],
+            ],
+          )
+        : [],
+    ],
   );
   $notification.on("click", () => {
     goToPath("/comment/" + notification.comment_id);
@@ -106,6 +133,49 @@ const renderNotifications = (notifications) => {
         modalError("Network error");
         console.error(error);
       });
+  }
+};
+
+const renderMarkAllAsRead = () => {
+  if (state.path === "/notifications") {
+    const $mark_all_as_read = $(
+      `
+      mark-all-as-read-wrapper
+        button[mark-all-as-read][small][alt][faint=$1] Mark all as read
+      `,
+      [!Boolean(state.unread_count)],
+    );
+    $("back-forward-wrapper").$("mark-all-as-read-wrapper")?.remove();
+    $("back-forward-wrapper").appendChild($mark_all_as_read);
+    $mark_all_as_read.on("click", () => {
+      $mark_all_as_read.$("button").setAttribute("alt", "");
+      $mark_all_as_read.$("button").setAttribute("faint", "");
+      fetch("/session", {
+        method: "POST",
+        body: JSON.stringify({
+          mark_all_as_read: true,
+        }),
+      })
+        .then((response) => response.json())
+        .then(function (data) {
+          if (!data || !data.success) {
+            modalError("Server error");
+            console.error(data);
+          } else {
+            state.unread_count = 0;
+            state.cache["/notifications"].notifications = state.cache[
+              "/notifications"
+            ].notifications.filter((n) => n.read);
+            renderNotifications(state.cache["/notifications"].notifications);
+            getMoreRecent();
+            getUnreadCountUnseenCount();
+          }
+        })
+        .catch(function (error) {
+          modalError("Network error");
+          console.error(error);
+        });
+    });
   }
 };
 

@@ -1,9 +1,8 @@
 const renderPage = (data) => {
-
   // Update global state
   if (state.path !== data.path) {
     state.path = data.path;
-    history.replaceState({path_index: state.path_index}, "", data.path);
+    history.replaceState({ path_index: state.path_index }, "", data.path);
   }
   state.path_history.push(state.path);
 
@@ -36,6 +35,9 @@ const renderPage = (data) => {
 
   // Render Share Button on article
   renderShare();
+
+  // Render Mark all as read on notifications
+  renderMarkAllAsRead();
 
   // Emit rendered event
   $("body").dispatchEvent(new CustomEvent("page-rendered"));

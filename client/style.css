@@ -338,6 +338,10 @@ info[small] {
   padding: 5px 5px 5px 26px;
   font-size: 11px;
 }
+info[tiny] {
+  padding: 1px 3px 1px 19px;
+  font-size: 11px;
+}
 pass::before,
 info::before,
 error::before {
@@ -362,6 +366,13 @@ info[small]::before {
   left: 5px;
   top: 5px;
   font-size: 11px;
+}
+info[tiny]::before {
+  height: 11px;
+  width: 11px;
+  left: 3px;
+  top: 2.5px;
+  font-size: 9px;
 }
 info {
   border-color: #48c;
@@ -643,6 +654,7 @@ back-forward-wrapper {
   display: flex;
   justify-content: space-between;
 }
+mark-all-as-read-wrapper,
 read-more-wrapper,
 share-wrapper,
 forward-wrapper,
@@ -812,16 +824,38 @@ notifications {
 notifications notification {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  gap: 10px;
+  justify-content: space-betwee;
+  align-items: center;
   margin-top: 20px;
+  gap: 5px;
   position: relative;
+}
+notifications notification first-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+notifications notification info[tiny] b {
+  font-weight: 600;
 }
 notifications notification summary {
   font-size: 11px;
 }
+notifications notification summary b {
+  font-weight: 600;
+}
+notifications notification summary i {
+  margin: 0 3px 0 0;
+}
+notifications notification summary span {
+  margin: 0 3px;
+}
 notifications h3 {
   margin-top: 20px;
+}
+notifications notification + h3 {
+  margin-top: 30px;
 }
 articles {
   display: flex;
@@ -832,6 +866,7 @@ articles article {
   padding-bottom: 21px;
   position: relative;
 }
+notifications notification::after,
 activities activity::before,
 articles article::before {
   content: "";
@@ -841,6 +876,13 @@ articles article::before {
   left: 0;
   right: 0;
   border-bottom: 1px solid #ddd;
+}
+notifications notification::after {
+  bottom: -10px;
+}
+notifications notification:last-child::after,
+notifications notification:has(+ h3)::after {
+  display: none;
 }
 articles-loading {
   display: none;
