@@ -188,8 +188,7 @@ const getUnreadCountUnseenCount = () => {
   })
     .then((response) => response.json())
     .then(function (data) {
-      // will be "0" so not falsey if we are golden
-      if (!data || !data.unread_count || !data.unseen_count) {
+      if (!data) {
         modalError("Server error");
         console.error(data);
       } else {
