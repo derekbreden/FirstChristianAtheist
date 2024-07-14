@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
         `
         UPDATE notifications
         SET read = TRUE, seen = TRUE, create_date = NOW()
-        WHERE notification_id = ANY($1::int[]) AND user_id = $2;
+        WHERE notification_id = ANY($1::int[]) AND user_id = $2
         `,
         [req.body.mark_as_read, req.session.user_id],
       );
@@ -21,7 +21,7 @@ module.exports = async (req, res) => {
         SET read = TRUE, seen = TRUE, create_date = NOW()
         WHERE
           user_id = $1
-          AND (read = FALSE OR seen = FALSE);
+          AND (read = FALSE OR seen = FALSE)
         `,
         [req.session.user_id],
       );
@@ -36,7 +36,7 @@ module.exports = async (req, res) => {
         SET seen = TRUE
         WHERE
           user_id = $1
-          AND seen = FALSE;
+          AND seen = FALSE
         `,
         [req.session.user_id],
       );
@@ -51,7 +51,7 @@ module.exports = async (req, res) => {
           SUM(CASE WHEN read = FALSE THEN 1 ELSE 0 END) AS unread_count,
           SUM(CASE WHEN seen = FALSE THEN 1 ELSE 0 END) AS unseen_count
         FROM notifications
-        WHERE user_id = $1;
+        WHERE user_id = $1
         `,
         [req.session.user_id],
       );

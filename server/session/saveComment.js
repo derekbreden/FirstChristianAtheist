@@ -348,7 +348,7 @@ module.exports = async (req, res) => {
     }
 
     // Trigger all pushes
-    subscriptions.rows.forEach((subscription) => {
+    subscriptions.rows.forEach(async (subscription) => {
       // Create data for the push
       const short_display_name =
         req.body.display_name.length > 20
@@ -365,6 +365,20 @@ module.exports = async (req, res) => {
         tag = `comment:${comment_id}`;
       }
 
+      // Get the unread count for this user id
+      const unread_count_result = await req.client.query(
+        `
+        SELECT 
+          COUNT(*) AS unread_count
+        FROM notifications
+        WHERE
+          user_id = $1
+          AND read = FALSE
+        `,
+        [subscription.user_id],
+      );
+      const unread_count = unread_count_result.rows[0].unread_count;
+
       // Send the push
       webpush
         .sendNotification(
@@ -372,7 +386,8 @@ module.exports = async (req, res) => {
           JSON.stringify({
             title: `${short_display_name} replied`,
             body: short_body,
-            tag: tag,
+            tag,
+            unread_count,
           }),
         )
         .then(console.log)
