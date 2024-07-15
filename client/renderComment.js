@@ -1,7 +1,7 @@
 const renderComment = (comment) => {
-  let note = comment.note || "";
-  let note_title = note.slice(0, note.indexOf(" "));
-  note_title = note_keywords[note_title] || note_title;
+  const note = comment.note || "";
+  let note_keyword = note.slice(0, note.indexOf(" "));
+  note_title = note_keywords[note_keyword] || note_keyword;
   const note_body = note.slice(note.indexOf(" ") + 1);
   let $comment = $(
     `
@@ -28,11 +28,11 @@ const renderComment = (comment) => {
         ? $(
             `
             info-wrapper
-              info[show]
-                b $1
-                span $2
+              info[show][$1]
+                b $2
+                span $3
             `,
-            [note_title, note_body],
+            [note_keyword, note_title, note_body],
           )
         : [],
       $(

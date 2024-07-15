@@ -78,10 +78,18 @@ const $ = (selector_or_flint, flint_args_or_element) => {
       // Extract attributes from the node text
       const attributes = (node.text.match(/\[[^\]]*\]/g) || []).map((attr) => {
         let [key, value] = attr.slice(1, -1).split("=");
+        if (key.startsWith("$")) {
+          const arg_index = parseInt(key.slice(1)) - 1;
+          key = flint_args[arg_index];
+        }
         if (value) {
           if (value.startsWith("$")) {
             const arg_index = parseInt(value.slice(1)) - 1;
             value = flint_args[arg_index];
+          } else if (value.startsWith(`"`) && value.endsWith(`"`)) {
+            value = value.slice(1, -1);
+          } else if (value.startsWith(`'`) && value.endsWith(`'`)) {
+            value = value.slice(1, -1);
           }
         } else {
           value = "";

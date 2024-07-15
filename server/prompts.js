@@ -49,6 +49,12 @@ OFFTOPIC
 - USE THIS ONLY IN OBVIOUS AND EXTREME CASES!!!
 - IF ANYTHING IS REMOTELY NEAR LOVE OR ETHICS OR ATHEISM OR CHRISTIANITY, DO NOT USE THIS! DO NOT USE THIS! DO NOT USE THIS!
 
+RESPONSE
+- NEVER USE if any other keyword is appropriate
+- ONLY USE if the user is asking you, the moderator, the AI, a specific question directly
+- DO give a detailed and complete response
+- DO include a note
+
 OK
 - DO NOT USE if any other keyword is appropriate
 - DO USE when no other keyword applies

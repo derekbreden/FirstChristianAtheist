@@ -15,6 +15,9 @@ const renderNotification = (notification) => {
         ? "to a comment on your topic"
         : "to your topic";
 
+  const note = notification.note || "";
+  const note_keyword = note.split(" ")[0]
+  const note_title = note_keywords[note_keyword] || note_keyword;
   const $notification = $(
     `
     notification[unread=$1]
@@ -40,12 +43,12 @@ const renderNotification = (notification) => {
       notification.note
         ? $(
             `
-          info[tiny]
-            b $1
+          info[tiny][$1]
+            b $2
           `,
             [
-              note_keywords[notification.note.split(" ")[0]] ||
-                notification.note.split(" ")[0],
+              note_keyword,
+              note_title
             ],
           )
         : [],
