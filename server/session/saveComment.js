@@ -65,30 +65,65 @@ module.exports = async (req, res) => {
     }
 
     const messages = [];
-    messages.push({
-      role: "user",
-      name: "Admin",
-      content: page.title + "\n\n" + page.body,
-    });
     const article_results = await req.client.query(
       `
-      SELECT a.title, a.body, u.display_name
+      SELECT
+        a.title,
+        a.body,
+        u.display_name,
+        STRING_AGG(i.image_uuid, ',') AS image_uuids
       FROM articles a
       INNER JOIN users u ON a.user_id = u.user_id
-      WHERE a.parent_article_id = $1
+      LEFT JOIN article_images i ON i.article_id = a.article_id
+      WHERE a.article_id = $1
+      GROUP BY
+        a.title,
+        a.body,
+        u.display_name,
+        a.create_date
       ORDER BY a.create_date ASC
       `,
       [article_id],
     );
     for (const article of article_results.rows) {
+      // Get base64 image urls from object store
+      const pngs = article.immage_uuids
+        ? (
+            await Promise.all(
+              article.image_uuids.split(",").map(async (image_uuid) => {
+                const { ok, value, error } =
+                  await object_client.downloadAsBytes(`${image_uuid}.png`);
+                if (!ok) {
+                  console.error(error);
+                  return null;
+                }
+                return Buffer.from(value[0]).toString("utf-8");
+              }),
+            )
+          ).filter((x) => x)
+        : [];
+
+      // Add a message for the article(s) being commented on
       messages.push({
         role: "user",
         name: (article.display_name || "Anonymous").replace(
-          /[^a-z0-9_\-]/g,
+          /[^a-z0-9_\-]/gi,
           "",
         ),
-        content: article.title + "\n\n" + article.body,
+        content: [
+          { type: "text", text: article.title + "\n\n" + article.body },
+          ...pngs.map((png) => {
+            return {
+              image_url: {
+                url: png,
+              },
+              type: "image_url",
+            };
+          }),
+        ],
       });
+
+      // Articles do not have notes at the moment
       messages.push({
         role: "system",
         content: "OK",
@@ -99,34 +134,78 @@ module.exports = async (req, res) => {
       messages.push({
         role: "user",
         name: "Admin",
-        content: [{ type: "text", text: "Comments:" }],
+        content: "Comments:",
       });
       const comment_ancestors = await req.client.query(
         `
         SELECT
-          users.display_name,
-          comments.body,
-          comments.note,
-          comments.comment_id
-        FROM comments
-        INNER JOIN users ON comments.user_id = users.user_id
-        WHERE comments.comment_id = $1
-        OR comments.comment_id IN (
-          SELECT ancestor_id
-          FROM comment_ancestors
-          WHERE comment_id = $1
-        )
-        ORDER BY comments.create_date ASC
+          u.display_name,
+          c.body,
+          c.note,
+          c.comment_id,
+          STRING_AGG(i.image_uuid, ',') AS image_uuids
+        FROM comments c
+        INNER JOIN users u ON u.user_id = c.user_id
+        LEFT JOIN comment_images i ON i.comment_id = c.comment_id
+        WHERE
+          c.comment_id = $1
+          OR c.comment_id IN (
+            SELECT ancestor_id
+            FROM comment_ancestors
+            WHERE comment_id = $1
+          )
+        GROUP BY
+          u.display_name,
+          c.body,
+          c.note,
+          c.comment_id,
+          c.create_date
+        ORDER BY c.create_date ASC
         `,
         [req.body.parent_comment_id],
       );
       for (const comment_ancestor of comment_ancestors.rows) {
+        // Get base64 image urls from object store
+        const pngs = comment_ancestor.image_uuids
+          ? (
+              await Promise.all(
+                comment_ancestor.image_uuids
+                  .split(",")
+                  .map(async (image_uuid) => {
+                    const { ok, value, error } =
+                      await object_client.downloadAsBytes(`${image_uuid}.png`);
+                    if (!ok) {
+                      console.error(error);
+                      return null;
+                    }
+                    return Buffer.from(value[0]).toString("utf-8");
+                  }),
+              )
+            ).filter((x) => x)
+          : [];
+
+        // Add a message for each ancestor in the comment chain
         messages.push({
           role: "user",
-          name: comment_ancestor.display_name.replace(/[^a-z0-9_\-]/g, ""),
-          content:
-            comment_ancestor.display_name + ":\n" + comment_ancestor.body,
+          name: comment_ancestor.display_name.replace(/[^a-z0-9_\-]/gi, ""),
+          content: [
+            {
+              type: "text",
+              text:
+                comment_ancestor.display_name + ":\n" + comment_ancestor.body,
+            },
+            ...pngs.map((png) => {
+              return {
+                image_url: {
+                  url: png,
+                },
+                type: "image_url",
+              };
+            }),
+          ],
         });
+
+        // Add a message for the system response of a note or OK
         if (comment_ancestor.note) {
           messages.push({
             role: "system",
@@ -149,7 +228,7 @@ module.exports = async (req, res) => {
         ...req.body.pngs.map((png) => {
           return {
             image_url: {
-              url: png.url,
+              url: png,
             },
             type: "image_url",
           };
