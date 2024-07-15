@@ -1,6 +1,8 @@
-const loadingPage = () => {
+const loadingPage = (first_render) => {
   $("[add-new-comment]")?.remove();
-  $("articles-loading").style.display = "flex";
+  if (!first_render) {
+    $("articles-loading").style.display = "flex";
+  }
   $("articles").style.display = "none";
   $("comments").style.display = "none";
   $("activities").style.display = "none";
@@ -16,4 +18,7 @@ const loadingPage = () => {
 
   // Render Back Button
   renderBack();
+
+  // Render Share Button on article
+  renderShare();
 };

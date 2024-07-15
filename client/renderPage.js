@@ -33,9 +33,6 @@ const renderPage = (data) => {
   // Render Forward Button on comment thread
   renderForward(data.parent_article);
 
-  // Render Share Button on article
-  renderShare();
-
   // Render Mark all as read on notifications
   renderMarkAllAsRead();
 

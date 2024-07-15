@@ -896,7 +896,8 @@ notifications notification:has(+ h3)::after {
 articles-loading {
   display: none;
   flex-direction: column;
-  animation: loading 1.5s ease-in-out infinite;
+  opacity: 0;
+  animation: loading 1.5s ease-in-out infinite 1s;
 }
 articles-loading h2 {
   background: #ddd;
