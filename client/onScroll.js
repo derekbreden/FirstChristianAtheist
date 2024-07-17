@@ -42,8 +42,10 @@ document.addEventListener("scroll", () => {
           // Append what we found to the existing cache
           state.cache["/recent"].activities.push(...data.activities);
 
-          // And re-render
-          renderActivities(state.cache["/recent"].activities);
+          // And re-render if any activities added
+          if (data.activities.length) {
+            renderActivities(state.cache["/recent"].activities);
+          }
           state.loading_path = false;
         })
         .catch(function (error) {
@@ -92,8 +94,10 @@ document.addEventListener("scroll", () => {
           // Append what we found to the existing cache
           state.cache["/topics"].articles.push(...data.articles);
 
-          // And re-render
-          renderArticles(state.cache["/topics"].articles);
+          // And re-render if any articles added
+          if (data.articles.length) {
+            renderArticles(state.cache["/topics"].articles);
+          }
           state.loading_path = false;
         })
         .catch(function (error) {
@@ -161,8 +165,10 @@ document.addEventListener("scroll", () => {
             ...data.notifications,
           );
 
-          // And re-render
-          renderNotifications(state.cache["/notifications"].notifications);
+          // And re-render if any results added
+          if (data.notifications.length) {
+            renderNotifications(state.cache["/notifications"].notifications);
+          }
           state.loading_path = false;
         })
         .catch(function (error) {
