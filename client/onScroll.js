@@ -48,11 +48,11 @@ document.addEventListener("scroll", () => {
         })
         .catch(function (error) {
           state.loading_path = false;
-          debug(error);
+          console.error(error);
+          modalError("Network error");
         });
     }
   }
-
 
   // Topics load older
   if (
@@ -98,12 +98,11 @@ document.addEventListener("scroll", () => {
         })
         .catch(function (error) {
           state.loading_path = false;
-          debug(error);
+          console.error(error);
+          modalError("Network error");
         });
     }
   }
-
-
 
   // Notifications load older
   if (
@@ -117,26 +116,28 @@ document.addEventListener("scroll", () => {
     // When we pass the threshold
     if ($body.scrollTop > threshold) {
       // Find the oldest (min) create_date of what we have so far
-      const max_notification_unread_create_date = state.cache["/notifications"].notifications.reduce(
-        (min, notification) => {
-          if (!notification.read) {
-            return min < notification.create_date ? min : notification.create_date;
-          } else {
-            return min;
-          }
-        },
-        new Date().toISOString(),
-      );
-      const max_notification_read_create_date = state.cache["/notifications"].notifications.reduce(
-        (min, notification) => {
-          if (notification.read) {
-            return min < notification.create_date ? min : notification.create_date;
-          } else {
-            return min;
-          }
-        },
-        new Date().toISOString(),
-      );
+      const max_notification_unread_create_date = state.cache[
+        "/notifications"
+      ].notifications.reduce((min, notification) => {
+        if (!notification.read) {
+          return min < notification.create_date
+            ? min
+            : notification.create_date;
+        } else {
+          return min;
+        }
+      }, new Date().toISOString());
+      const max_notification_read_create_date = state.cache[
+        "/notifications"
+      ].notifications.reduce((min, notification) => {
+        if (notification.read) {
+          return min < notification.create_date
+            ? min
+            : notification.create_date;
+        } else {
+          return min;
+        }
+      }, new Date().toISOString());
 
       // Use that to load anything older than that (our min is the max of what we want returned)
       state.loading_path = true;
@@ -156,7 +157,9 @@ document.addEventListener("scroll", () => {
           }
 
           // Append what we found to the existing cache
-          state.cache["/notifications"].notifications.push(...data.notifications);
+          state.cache["/notifications"].notifications.push(
+            ...data.notifications,
+          );
 
           // And re-render
           renderNotifications(state.cache["/notifications"].notifications);
@@ -164,10 +167,9 @@ document.addEventListener("scroll", () => {
         })
         .catch(function (error) {
           state.loading_path = false;
-          debug(error);
+          console.error(error);
+          modalError("Network error");
         });
     }
   }
-
-  
 });

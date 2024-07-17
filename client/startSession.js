@@ -68,7 +68,8 @@ const startSession = () => {
     })
     .catch(function (error) {
       state.loading_path = false;
-      debug(error);
+      console.error(error);
+      modalError("Network error");
     });
 };
 
@@ -98,22 +99,20 @@ const getMoreRecent = () => {
     },
     "",
   );
-  const min_notification_unread_create_date = current_cache.notifications.reduce(
-    (max, notification) => {
+  const min_notification_unread_create_date =
+    current_cache.notifications.reduce((max, notification) => {
       if (!notification.read) {
-        return max > notification.create_date ? max : notification.create_date;   
+        return max > notification.create_date ? max : notification.create_date;
       } else {
-        return max
+        return max;
       }
-    },
-    "",
-  );
+    }, "");
   const min_notification_read_create_date = current_cache.notifications.reduce(
     (max, notification) => {
       if (notification.read) {
-        return max > notification.create_date ? max : notification.create_date;   
+        return max > notification.create_date ? max : notification.create_date;
       } else {
-        return max
+        return max;
       }
     },
     "",
@@ -213,8 +212,7 @@ const getMoreRecent = () => {
 
         // If we are past the threshold, then maintain our position
         if (scroll_top > min_threshold) {
-          $body.scrollTop =
-            scroll_top + ($body.scrollHeight - scroll_height);
+          $body.scrollTop = scroll_top + ($body.scrollHeight - scroll_height);
         }
       }
 
@@ -226,6 +224,7 @@ const getMoreRecent = () => {
     })
     .catch(function (error) {
       state.loading_path = false;
-      debug(error);
+      console.error(error);
+      modalError("Network error");
     });
 };
