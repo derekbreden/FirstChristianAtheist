@@ -81,9 +81,9 @@ module.exports = async (req, res) => {
         (combined.create_date < $1 OR $1 IS NULL)
         AND (combined.create_date > $2 OR $2 IS NULL)
       ORDER BY combined.create_date DESC
-      LIMIT $3;
+      LIMIT 30;
       `,
-      [req.body.max_create_date || null, req.body.min_create_date || null, 10],
+      [req.body.max_create_date || null, req.body.min_create_date || null],
     );
     req.results.activities.push(...activity_results.rows);
   }

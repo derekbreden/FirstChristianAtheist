@@ -116,7 +116,7 @@ module.exports = async (req, res) => {
           AND (n.create_date < $2 OR $2 IS NULL)
           AND (n.create_date > $3 OR $3 IS NULL)
         ORDER BY n.create_date DESC
-        LIMIT 20
+        LIMIT 30
         `,
         [
           req.session.user_id,
@@ -153,7 +153,7 @@ module.exports = async (req, res) => {
           AND (n.create_date < $2 OR $2 IS NULL)
           AND (n.create_date > $3 OR $3 IS NULL)
         ORDER BY n.create_date DESC
-        LIMIT 20
+        LIMIT 30
         `,
         [
           req.session.user_id,

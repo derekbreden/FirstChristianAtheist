@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
         LEFT(a.body, 1000),
         CASE WHEN a.user_id = $1 THEN true ELSE false END
       ORDER BY a.create_date DESC
-      LIMIT 10
+      LIMIT 20
       `,
       [
         req.session.user_id || 0,
