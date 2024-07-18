@@ -2,7 +2,7 @@ module.exports = async (req, res) => {
   if (
     !req.writableEnded &&
     req.body.path &&
-    req.body.path.substr(0, 6) === "/topic"
+    req.body.path.substr(0, 7) === "/topic/"
   ) {
     const slug = req.body.path.substr(7);
     const topic_results = await req.client.query(
