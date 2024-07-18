@@ -71,15 +71,15 @@ p img {
   border-radius: 10px;
 }
 comment p img,
-article[trimmed] p img {
+topic[trimmed] p img {
   height: 100px;
 }
 comment p[img],
-article[trimmed] p[img] {
+topic[trimmed] p[img] {
   display: inline-flex;
 }
 comment p[img] + p[img],
-article[trimmed] p[img] + p[img] {
+topic[trimmed] p[img] + p[img] {
   margin-left: 10px;
 }
 p[quote] {
@@ -629,7 +629,7 @@ comments > add-new:not(:first-child) {
   margin-bottom: 20px;
   padding: 10px;
 }
-articles > add-new:first-child {
+topics > add-new:first-child {
   padding: 20px 0;
   margin-bottom: -20px;
 }
@@ -867,18 +867,18 @@ notifications h3 {
 notifications notification + h3 {
   margin-top: 30px;
 }
-articles {
+topics {
   display: flex;
   flex-direction: column;
 }
 activities activity,
-articles article {
+topics topic {
   padding-bottom: 21px;
   position: relative;
 }
 notifications notification::after,
 activities activity::before,
-articles article::before {
+topics topic::before {
   content: "";
   display: flex;
   position: absolute;
@@ -894,24 +894,24 @@ notifications notification:last-child::after,
 notifications notification:has(+ h3)::after {
   display: none;
 }
-articles-loading {
+topics-loading {
   display: none;
   flex-direction: column;
   opacity: 0;
   animation: loading 1.5s ease-in-out infinite 1s;
 }
-articles-loading h2 {
+topics-loading h2 {
   background: #ddd;
   width: 80%;
   height: 32px;
 }
-articles-loading p {
+topics-loading p {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
-articles-loading p::before,
-articles-loading p::after {
+topics-loading p::before,
+topics-loading p::after {
   content: "";
   display: block;
   width: 100%;
@@ -919,7 +919,7 @@ articles-loading p::after {
   border-bottom: 16px solid #ddd;
   height: 10px;
 }
-articles-loading p::after {
+topics-loading p::after {
   margin-top: 10px;
   width: 33%;
   border-bottom: none;
@@ -932,7 +932,7 @@ activity > h2 {
   font-size: 11px;
   margin-bottom: 5px;
 }
-activity > article h2 {
+activity > topic h2 {
   margin-top: 0;
 }
 activity > [parent-comment] {

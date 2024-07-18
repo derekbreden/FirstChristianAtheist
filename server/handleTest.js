@@ -57,7 +57,7 @@ module.exports = async (req, res) => {
       );
       await req.client.query(
         `
-        DELETE FROM articles WHERE user_id = $1
+        DELETE FROM topics WHERE user_id = $1
         `,
         [user_found.rows[0].user_id],
       );

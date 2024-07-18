@@ -13,20 +13,20 @@ module.exports = async (req, res) => {
     req.body.path &&
     req.body.pngs
   ) {
-    // Get page context if modifying an article from its slug page
+    // Get page context if modifying an topic from its slug page
     //   where path is no longer the page slug
-    if (req.body.article_id) {
+    if (req.body.topic_id) {
       const page_result = await req.client.query(
         `
         SELECT slug
-        FROM articles
-        WHERE article_id = (
-          SELECT parent_article_id
-          FROM articles
-          WHERE article_id = $1
+        FROM topics
+        WHERE topic_id = (
+          SELECT parent_topic_id
+          FROM topics
+          WHERE topic_id = $1
         )
         `,
-        [req.body.article_id],
+        [req.body.topic_id],
       );
       req.body.path = "/" + page_result.rows[0].slug.toLowerCase();
     }
@@ -60,61 +60,61 @@ module.exports = async (req, res) => {
       const slug = req.body.title
         .replace(/[^a-z0-9 ]/gi, "")
         .replace(/ {1,}/g, "_");
-      let article_id = 0;
+      let topic_id = 0;
       // Update existing
-      if (req.body.article_id) {
+      if (req.body.topic_id) {
         await req.client.query(
           `
-          UPDATE articles
+          UPDATE topics
           SET
             title = $1,
             slug = $2,
             body = $3,
             create_date = NOW()
           WHERE
-            article_id = $4
+            topic_id = $4
             AND user_id = $5
           `,
           [
             req.body.title,
             slug,
             req.body.body,
-            req.body.article_id,
+            req.body.topic_id,
             req.session.user_id,
           ],
         );
-        article_id = req.body.article_id;
+        topic_id = req.body.topic_id;
 
         // Add new
       } else {
-        const article_result = await req.client.query(
+        const topic_result = await req.client.query(
           `
-          INSERT INTO articles
-            (title, slug, body, parent_article_id, user_id)
+          INSERT INTO topics
+            (title, slug, body, parent_topic_id, user_id)
           VALUES
             ($1, $2, $3, $4, $5)
-          RETURNING article_id;
+          RETURNING topic_id;
           `,
           [
             req.body.title,
             slug,
             req.body.body,
-            page.article_id,
+            page.topic_id,
             req.session.user_id,
           ],
         );
-        article_id = article_result.rows[0].article_id;
+        topic_id = topic_result.rows[0].topic_id;
       }
 
       // Remove existing images
-      if (req.body.article_id) {
+      if (req.body.topic_id) {
         const existing_images = await req.client.query(
           `
-          DELETE FROM article_images
-          WHERE article_id = $1
+          DELETE FROM topic_images
+          WHERE topic_id = $1
           RETURNING image_uuid
           `,
-          [article_id],
+          [topic_id],
         );
         for (const existing_image of existing_images.rows) {
           const { ok, error } = await object_client.delete(
@@ -138,12 +138,12 @@ module.exports = async (req, res) => {
         } else {
           await req.client.query(
             `
-            INSERT INTO article_images
-              (article_id, image_uuid)
+            INSERT INTO topic_images
+              (topic_id, image_uuid)
             VALUES
               ($1, $2)
             `,
-            [article_id, image_uuid],
+            [topic_id, image_uuid],
           );
         }
       }

@@ -3,27 +3,27 @@ const pages = require("../pages");
 module.exports = async (req, res) => {
   if (!req.writableEnded && pages[req.results.path]) {
     const page = pages[req.results.path];
-    const article_results = await req.client.query(
+    const topic_results = await req.client.query(
       `
       SELECT
         a.create_date,
-        a.article_id,
+        a.topic_id,
         a.title,
         a.slug,
         LEFT(a.body, 1000) as body,
         CASE WHEN a.user_id = $1 THEN true ELSE false END AS edit,
         STRING_AGG(DISTINCT i.image_uuid, ',') as image_uuids,
         COUNT(DISTINCT c.comment_id) as comments
-      FROM articles a
-      LEFT JOIN article_images i ON a.article_id = i.article_id
-      LEFT JOIN comments c ON a.article_id = c.parent_article_id
+      FROM topics a
+      LEFT JOIN topic_images i ON a.topic_id = i.topic_id
+      LEFT JOIN comments c ON a.topic_id = c.parent_topic_id
       WHERE
-        a.parent_article_id = $2
+        a.parent_topic_id = $2
         AND (a.create_date > $3 OR $3 IS NULL)
         AND (a.create_date < $4 OR $4 IS NULL)
       GROUP BY
         a.create_date,
-        a.article_id,
+        a.topic_id,
         a.title,
         a.slug,
         LEFT(a.body, 1000),
@@ -33,12 +33,12 @@ module.exports = async (req, res) => {
       `,
       [
         req.session.user_id || 0,
-        page.article_id,
-        req.body.min_article_create_date || null,
-        req.body.max_article_create_date || null,
+        page.topic_id,
+        req.body.min_topic_create_date || null,
+        req.body.max_topic_create_date || null,
       ],
     );
-    req.results.articles.push(...article_results.rows);
+    req.results.topics.push(...topic_results.rows);
     if (req.results.path === "/") {
       const comment_results = await req.client.query(
         `
@@ -56,7 +56,7 @@ module.exports = async (req, res) => {
           INNER JOIN users u ON c.user_id = u.user_id
           LEFT JOIN comment_images i ON c.comment_id = i.comment_id
           WHERE
-            c.parent_article_id = $2
+            c.parent_topic_id = $2
             AND (c.create_date > $3 OR $3 IS NULL)
           GROUP BY
             c.create_date,
@@ -71,7 +71,7 @@ module.exports = async (req, res) => {
         `,
         [
           req.session.user_id || 0,
-          page.article_id,
+          page.topic_id,
           req.body.min_comment_create_date || null,
         ],
       );

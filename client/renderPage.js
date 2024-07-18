@@ -7,16 +7,16 @@ const renderPage = (data) => {
   state.path_history.push(state.path);
 
   // Hide and show constant elements
-  $("articles-loading").style.display = "none";
-  $("articles").style.display = "flex";
+  $("topics-loading").style.display = "none";
+  $("topics").style.display = "flex";
   $("comments").style.display = "flex";
   $("activities").style.display = "flex";
   if (state.path === "/notifications") {
     $("notifications").style.display = "flex";
   }
 
-  // Render Articles
-  renderArticles(data.articles);
+  // Render Topics
+  renderTopics(data.topics);
 
   // Render Comments
   renderComments(data.comments);
@@ -31,7 +31,7 @@ const renderPage = (data) => {
   renderImages();
 
   // Render Forward Button on comment thread
-  renderForward(data.parent_article);
+  renderForward(data.parent_topic);
 
   // Render Mark all as read on notifications
   renderMarkAllAsRead();

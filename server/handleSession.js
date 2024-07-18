@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
       display_name: "",
     };
     req.results = {
-      articles: [],
+      topics: [],
       comments: [],
       activities: [],
       notifications: [],
@@ -34,15 +34,15 @@ module.exports = async (req, res) => {
     await require("./session/generateResetToken")(req, res);
     await require("./session/useResetToken")(req, res);
     await require("./session/saveSubscription")(req, res);
-    await require("./session/saveArticle")(req, res);
+    await require("./session/saveTopic")(req, res);
     await require("./session/saveComment")(req, res);
     await require("./session/saveDisplayName")(req, res);
     await require("./session/getAdminImage")(req, res);
     await require("./session/createSessionIfNotExists")(req, res);
-    await require("./session/getSingleArticle")(req, res);
+    await require("./session/getSingleTopic")(req, res);
     await require("./session/getSingleThread")(req, res);
     await require("./session/getRecentActivity")(req, res);
-    await require("./session/getPageArticles")(req, res);
+    await require("./session/getPageTopics")(req, res);
     await require("./session/promptToUsePasswordReset")(req, res);
 
     // Default response if nothing else responded sooner

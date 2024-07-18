@@ -2,27 +2,27 @@ module.exports = async (req, res) => {
   if (
     !req.writableEnded &&
     req.body.path &&
-    req.body.path.substr(0, 8) === "/article"
+    req.body.path.substr(0, 6) === "/topic"
   ) {
-    const slug = req.body.path.substr(9);
-    const article_results = await req.client.query(
+    const slug = req.body.path.substr(7);
+    const topic_results = await req.client.query(
       `
       SELECT
         a.create_date,
-        a.article_id,
+        a.topic_id,
         a.title,
         a.slug,
         a.body,
         CASE WHEN a.user_id = $1 THEN true ELSE false END AS edit,
         STRING_AGG(i.image_uuid, ',') AS image_uuids
-      FROM articles a
-      LEFT JOIN article_images i ON a.article_id = i.article_id
+      FROM topics a
+      LEFT JOIN topic_images i ON a.topic_id = i.topic_id
       WHERE
         a.slug = $2
         AND (a.create_date > $3 OR $3 IS NULL)
       GROUP BY
         a.create_date,
-        a.article_id,
+        a.topic_id,
         a.title,
         a.slug,
         a.body,
@@ -31,37 +31,37 @@ module.exports = async (req, res) => {
       [
         req.session.user_id || 0,
         slug,
-        req.body.min_article_create_date || null,
+        req.body.min_topic_create_date || null,
       ],
     );
 
-    let article_id = "";
+    let topic_id = "";
 
     // We set path here to ensure the path goes to a default if there are no results
-    if (article_results.rows.length) {
-      req.results.path = `/article/${slug}`;
-      article_id = article_results.rows[0].article_id;
+    if (topic_results.rows.length) {
+      req.results.path = `/topic/${slug}`;
+      topic_id = topic_results.rows[0].topic_id;
     }
 
-    // Also get the article_id if the article was not updated
-    if (!article_id) {
-      const article_id_result = await req.client.query(
+    // Also get the topic_id if the topic was not updated
+    if (!topic_id) {
+      const topic_id_result = await req.client.query(
         `
-        SELECT article_id
-        FROM articles
+        SELECT topic_id
+        FROM topics
         WHERE slug = $1
         `,
         [slug],
       );
-      if (article_id_result.rows.length) {
-        req.results.path = `/article/${slug}`;
-        article_id = article_id_result.rows[0].article_id;
+      if (topic_id_result.rows.length) {
+        req.results.path = `/topic/${slug}`;
+        topic_id = topic_id_result.rows[0].topic_id;
       }
     }
 
     // Get the comments
-    if (article_id) {
-      req.results.articles.push(...article_results.rows);
+    if (topic_id) {
+      req.results.topics.push(...topic_results.rows);
       const comment_results = await req.client.query(
         `
         SELECT
@@ -78,7 +78,7 @@ module.exports = async (req, res) => {
         INNER JOIN users u ON c.user_id = u.user_id
         LEFT JOIN comment_images i ON c.comment_id = i.comment_id
         WHERE
-          c.parent_article_id = $2
+          c.parent_topic_id = $2
           AND (c.create_date > $3 OR $3 IS NULL)
         GROUP BY
           c.create_date,
@@ -93,7 +93,7 @@ module.exports = async (req, res) => {
         `,
         [
           req.session.user_id || 0,
-          article_id,
+          topic_id,
           req.body.min_comment_create_date || null,
         ],
       );

@@ -1,5 +1,5 @@
-const renderForward = (parent_article) => {
-  if (parent_article) {
+const renderForward = (parent_topic) => {
+  if (parent_topic) {
     const $forward = $(
       `
       forward-wrapper
@@ -7,16 +7,16 @@ const renderForward = (parent_article) => {
         button[expand-right]
       `,
       [
-        `Continue to ${parent_article.title}`,
+        `Continue to ${parent_topic.title}`,
       ],
     );
     $("back-forward-wrapper").$("forward-wrapper")?.remove();
     $("back-forward-wrapper").appendChild($forward);
     $forward.on("click", () => {
-      let new_path = `/article/${parent_article.slug}`;
-      if (parent_article.slug === "Home") {
+      let new_path = `/topic/${parent_topic.slug}`;
+      if (parent_topic.slug === "Home") {
         new_path = "/";
-      } else if (parent_article.slug === "Topics") {
+      } else if (parent_topic.slug === "Topics") {
         new_path = "/topics";
       }
       goToPath(new_path);

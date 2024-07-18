@@ -65,21 +65,21 @@ module.exports = async (req, res) => {
       ],
     );
     if (comment_results.rows.length) {
-      const article_result = await req.client.query(
+      const topic_result = await req.client.query(
         `
         SELECT title, slug
-        FROM articles
-        WHERE article_id IN (
-          SELECT parent_article_id
+        FROM topics
+        WHERE topic_id IN (
+          SELECT parent_topic_id
           FROM comments
           WHERE comment_id = $1
         )
         `,
         [comment_id],
       );
-      req.results.parent_article = {
-        title: article_result.rows[0].title,
-        slug: article_result.rows[0].slug,
+      req.results.parent_topic = {
+        title: topic_result.rows[0].title,
+        slug: topic_result.rows[0].slug,
       };
       req.results.path = `/comment/${comment_id}`;
       req.results.comments.push(...comment_results.rows);

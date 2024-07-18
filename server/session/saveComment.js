@@ -20,19 +20,19 @@ module.exports = async (req, res) => {
     req.body.pngs
   ) {
     const page = pages[req.body.path] || pages["/"];
-    let article_id = page.article_id;
-    if (req.body.path.substr(0, 8) === "/article") {
+    let topic_id = page.topic_id;
+    if (req.body.path.substr(0, 6) === "/topic") {
       const slug = req.body.path.substr(9);
-      const article_results = await req.client.query(
+      const topic_results = await req.client.query(
         `
-        SELECT article_id
-        FROM articles
+        SELECT topic_id
+        FROM topics
         WHERE slug = $1
         `,
         [slug],
       );
-      if (article_results.rows.length) {
-        article_id = article_results.rows[0].article_id;
+      if (topic_results.rows.length) {
+        topic_id = topic_results.rows[0].topic_id;
       } else {
         res.end(
           JSON.stringify({
@@ -44,16 +44,16 @@ module.exports = async (req, res) => {
     }
     if (req.body.path.substr(0, 8) === "/comment") {
       const ancestor_comment_id = req.body.path.substr(9);
-      const ancestor_article_results = await req.client.query(
+      const ancestor_topic_results = await req.client.query(
         `
-        SELECT parent_article_id
+        SELECT parent_topic_id
         FROM comments
         WHERE comment_id = $1
         `,
         [ancestor_comment_id],
       );
-      if (ancestor_article_results.rows.length) {
-        article_id = ancestor_article_results.rows[0].parent_article_id;
+      if (ancestor_topic_results.rows.length) {
+        topic_id = ancestor_topic_results.rows[0].parent_topic_id;
       } else {
         res.end(
           JSON.stringify({
@@ -65,17 +65,17 @@ module.exports = async (req, res) => {
     }
 
     const messages = [];
-    const article_results = await req.client.query(
+    const topic_results = await req.client.query(
       `
       SELECT
         a.title,
         a.body,
         u.display_name,
         STRING_AGG(i.image_uuid, ',') AS image_uuids
-      FROM articles a
+      FROM topics a
       INNER JOIN users u ON a.user_id = u.user_id
-      LEFT JOIN article_images i ON i.article_id = a.article_id
-      WHERE a.article_id = $1
+      LEFT JOIN topic_images i ON i.topic_id = a.topic_id
+      WHERE a.topic_id = $1
       GROUP BY
         a.title,
         a.body,
@@ -83,14 +83,14 @@ module.exports = async (req, res) => {
         a.create_date
       ORDER BY a.create_date ASC
       `,
-      [article_id],
+      [topic_id],
     );
-    for (const article of article_results.rows) {
+    for (const topic of topic_results.rows) {
       // Get base64 image urls from object store
-      const pngs = article.immage_uuids
+      const pngs = topic.immage_uuids
         ? (
             await Promise.all(
-              article.image_uuids.split(",").map(async (image_uuid) => {
+              topic.image_uuids.split(",").map(async (image_uuid) => {
                 const { ok, value, error } =
                   await object_client.downloadAsBytes(`${image_uuid}.png`);
                 if (!ok) {
@@ -103,15 +103,15 @@ module.exports = async (req, res) => {
           ).filter((x) => x)
         : [];
 
-      // Add a message for the article(s) being commented on
+      // Add a message for the topic(s) being commented on
       messages.push({
         role: "user",
-        name: (article.display_name || "Anonymous").replace(
+        name: (topic.display_name || "Anonymous").replace(
           /[^a-z0-9_\-]/gi,
           "",
         ),
         content: [
-          { type: "text", text: article.title + "\n\n" + article.body },
+          { type: "text", text: topic.title + "\n\n" + topic.body },
           ...pngs.map((png) => {
             return {
               image_url: {
@@ -123,7 +123,7 @@ module.exports = async (req, res) => {
         ],
       });
 
-      // Articles do not have notes at the moment
+      // Topics do not have notes at the moment
       messages.push({
         role: "system",
         content: "OK",
@@ -261,14 +261,14 @@ module.exports = async (req, res) => {
         const comment_inserted = await req.client.query(
           `
           INSERT INTO comments
-            (body, parent_article_id, user_id, parent_comment_id)
+            (body, parent_topic_id, user_id, parent_comment_id)
           VALUES
             ($1, $2, $3, $4)
           RETURNING comment_id
           `,
           [
             req.body.body,
-            article_id,
+            topic_id,
             req.session.user_id,
             req.body.parent_comment_id,
           ],
@@ -296,7 +296,7 @@ module.exports = async (req, res) => {
         const comment_inserted = await req.client.query(
           `
           INSERT INTO comments
-            (body, note, parent_article_id, user_id, parent_comment_id)
+            (body, note, parent_topic_id, user_id, parent_comment_id)
           VALUES
             ($1, $2, $3, $4, $5)
           RETURNING comment_id
@@ -304,7 +304,7 @@ module.exports = async (req, res) => {
           [
             req.body.body,
             ai_response_text,
-            article_id,
+            topic_id,
             req.session.user_id,
             req.body.parent_comment_id,
           ],
@@ -389,8 +389,8 @@ module.exports = async (req, res) => {
       FROM subscriptions
       WHERE user_id IN (
         SELECT user_id
-        FROM articles
-        WHERE article_id = $1
+        FROM topics
+        WHERE topic_id = $1
         UNION
         SELECT user_id
         FROM comments
@@ -401,7 +401,7 @@ module.exports = async (req, res) => {
         )
       ) AND user_id <> $3
       `,
-      [article_id, comment_id, req.session.user_id],
+      [topic_id, comment_id, req.session.user_id],
     );
 
     // Track user_id of notifications inserted, as the same user may have multiple clients subscribed
@@ -437,7 +437,7 @@ module.exports = async (req, res) => {
         req.body.body.length > 50
           ? req.body.body.substr(0, 50) + "..."
           : req.body.body;
-      let tag = `article:${article_id}`;
+      let tag = `topic:${topic_id}`;
 
       // Chrome wants unique tags ¯\_(ツ)_/¯
       if (subscription.subscription_json.match(/google/i)) {

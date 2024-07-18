@@ -11,7 +11,7 @@ const renderNotification = (notification) => {
   const reply_text =
     notification.reply_type === "comment"
       ? "to your comment on"
-      : notification.reply_type === "article_comment"
+      : notification.reply_type === "topic_comment"
         ? "to a comment on your topic"
         : "to your topic";
 

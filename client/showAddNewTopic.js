@@ -1,7 +1,7 @@
-const showAddNewArticle = (article) => {
+const showAddNewTopic = (topic) => {
   const $add_new = $(
     `
-    add-new[article]
+    add-new[topic]
       title-wrapper
         input[title][placeholder=Title][maxlength=140][value=$1]
         label[img-icon]
@@ -10,12 +10,12 @@ const showAddNewArticle = (article) => {
       button[submit] $3
       button[alt][cancel] Cancel
     `,
-    article
-      ? [article.title, article.body, "Save changes"]
+    topic
+      ? [topic.title, topic.body, "Save changes"]
       : ["", "", "Add topic"],
   );
 
-  const addArticleError = (error) => {
+  const addTopicError = (error) => {
     $add_new.appendChild(
       $(
         `
@@ -29,8 +29,8 @@ const showAddNewArticle = (article) => {
 
   const pngs = [];
 
-  if (article?.image_uuids) {
-    const image_uuids = article.image_uuids.split(",");
+  if (topic?.image_uuids) {
+    const image_uuids = topic.image_uuids.split(",");
     for (const image_uuid of image_uuids) {
       imageToPng("/image/" + image_uuid, (png) => {
         pngs.push(png);
@@ -48,7 +48,7 @@ const showAddNewArticle = (article) => {
           if (pngs.length > 4) {
             pngs.splice(4, pngs.length - 4);
             if (!$("modal[error]")) {
-              modalError("Each article is limited to 4 images");
+              modalError("Each topic is limited to 4 images");
             }
           }
           previewPngs();
@@ -84,10 +84,10 @@ const showAddNewArticle = (article) => {
   $add_new.$("[body]").on("focus", () => {
     $add_new.$("error")?.remove();
   });
-  if (article) {
+  if (topic) {
     $add_new.$("[cancel]").on("click", () => {
-      $add_new.replaceWith(article.$article);
-      delete state.active_add_new_article;
+      $add_new.replaceWith(topic.$topic);
+      delete state.active_add_new_topic;
     });
   } else {
     $add_new.$("[cancel]").remove();
@@ -97,15 +97,15 @@ const showAddNewArticle = (article) => {
     const title = $add_new.$("[title]").value;
     const body = $add_new.$("[body]").value;
     if (!title) {
-      addArticleError("Please enter a title");
+      addTopicError("Please enter a title");
       return;
     }
     if (!body) {
-      addArticleError("Please enter some content");
+      addTopicError("Please enter some content");
       return;
     }
     if (title.length >= body.length) {
-      addArticleError("The content must be longer than the title");
+      addTopicError("The content must be longer than the title");
       return;
     }
     $add_new.appendChild(
@@ -126,7 +126,7 @@ const showAddNewArticle = (article) => {
         title,
         body,
         pngs,
-        article_id: article ? article.article_id : undefined,
+        topic_id: topic ? topic.topic_id : undefined,
       }),
     })
       .then((response) => response.json())
@@ -146,7 +146,7 @@ const showAddNewArticle = (article) => {
               OFFTOPIC: "Off topic",
             }[first_word];
             if (title) {
-              addArticleError(
+              addTopicError(
                 $(
                   `
                   b $1
@@ -156,14 +156,14 @@ const showAddNewArticle = (article) => {
                 ),
               );
             } else {
-              addArticleError(data.error);
+              addTopicError(data.error);
             }
           } else {
-            addArticleError("Server error");
+            addTopicError("Server error");
           }
           return;
         }
-        if (!article) {
+        if (!topic) {
           $add_new.$("[body]").value = "";
           $add_new.$("info")?.remove();
           $add_new.$("[title]").removeAttribute("disabled");
@@ -171,10 +171,10 @@ const showAddNewArticle = (article) => {
           $add_new.$("[submit]").removeAttribute("disabled");
           $add_new.$("[cancel]")?.removeAttribute("disabled");
         }
-        // Handle case where title changes slug when updating an article
-        delete state.active_add_new_article;
-        if (article && data.slug) {
-          state.path = `/article/${data.slug}`;
+        // Handle case where title changes slug when updating an topic
+        delete state.active_add_new_topic;
+        if (topic && data.slug) {
+          state.path = `/topic/${data.slug}`;
           startSession();
         } else {
           getMoreRecent();
@@ -186,17 +186,17 @@ const showAddNewArticle = (article) => {
         $add_new.$("[body]").removeAttribute("disabled");
         $add_new.$("[submit]").removeAttribute("disabled");
         $add_new.$("[cancel]")?.removeAttribute("disabled");
-        addArticleError("Network error");
+        addTopicError("Network error");
       });
   });
-  state.active_add_new_article = $add_new;
-  if (article) {
-    state.active_add_new_article.is_edit = article.article_id;
+  state.active_add_new_topic = $add_new;
+  if (topic) {
+    state.active_add_new_topic.is_edit = topic.topic_id;
   } else {
-    state.active_add_new_article.is_root = true;
+    state.active_add_new_topic.is_root = true;
   }
   return $add_new;
 };
-const focusAddNewArticle = () => {
-  state.active_add_new_article.$("[title]").focus();
+const focusAddNewTopic = () => {
+  state.active_add_new_topic.$("[title]").focus();
 }

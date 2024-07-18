@@ -101,15 +101,15 @@ module.exports = async (req, res) => {
           LEFT(c.note, 21) as note,
           LEFT(a.title, 21) as title,
           CASE
-            WHEN c.parent_comment_id is NULL THEN 'article'
+            WHEN c.parent_comment_id is NULL THEN 'topic'
             WHEN p.user_id = $1 THEN 'comment'
-            ELSE 'article_comment'
+            ELSE 'topic_comment'
           END AS reply_type
         FROM notifications n
         INNER JOIN comments c ON c.comment_id = n.comment_id
         LEFT JOIN comments p ON p.comment_id = c.parent_comment_id
         INNER JOIN users u ON u.user_id = c.user_id
-        INNER JOIN articles a ON a.article_id = c.parent_article_id
+        INNER JOIN topics a ON a.topic_id = c.parent_topic_id
         WHERE
           n.user_id = $1
           AND read = FALSE
@@ -138,15 +138,15 @@ module.exports = async (req, res) => {
           LEFT(c.note, 21) as note,
           LEFT(a.title, 21) as title,
           CASE
-            WHEN c.parent_comment_id is NULL THEN 'article'
+            WHEN c.parent_comment_id is NULL THEN 'topic'
             WHEN p.user_id = $1 THEN 'comment'
-            ELSE 'article_comment'
+            ELSE 'topic_comment'
           END AS reply_type
         FROM notifications n
         INNER JOIN comments c ON c.comment_id = n.comment_id
         LEFT JOIN comments p ON p.comment_id = c.parent_comment_id
         INNER JOIN users u ON u.user_id = c.user_id
-        INNER JOIN articles a ON a.article_id = c.parent_article_id
+        INNER JOIN topics a ON a.topic_id = c.parent_topic_id
         WHERE
           n.user_id = $1
           AND read = TRUE

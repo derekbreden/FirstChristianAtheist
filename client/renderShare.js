@@ -1,5 +1,5 @@
 const renderShare = () => {
-  if (state.path.substr(0, 8) === "/article") {
+  if (state.path.substr(0, 8) === "/topic") {
     const $share = $(
       `
       share-wrapper

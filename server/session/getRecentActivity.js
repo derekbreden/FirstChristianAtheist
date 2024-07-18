@@ -5,7 +5,7 @@ module.exports = async (req, res) => {
       `
       WITH combined AS (
         SELECT 
-          a.article_id AS id,
+          a.topic_id AS id,
           a.create_date,
           a.title,
           LEFT(a.body, 1000) as body,
@@ -13,15 +13,15 @@ module.exports = async (req, res) => {
           a.slug,
           a.user_id,
           NULL AS parent_comment_id,
-          NULL AS parent_article_id,
+          NULL AS parent_topic_id,
           STRING_AGG(DISTINCT i.image_uuid, ',') as image_uuids,
           COUNT(DISTINCT c.comment_id) as comments,
-          'article' AS type
-        FROM articles a
-        LEFT JOIN article_images i ON a.article_id = i.article_id
-        LEFT JOIN comments c ON a.article_id = c.parent_article_id
+          'topic' AS type
+        FROM topics a
+        LEFT JOIN topic_images i ON a.topic_id = i.topic_id
+        LEFT JOIN comments c ON a.topic_id = c.parent_topic_id
         GROUP BY
-          a.article_id,
+          a.topic_id,
           a.create_date,
           a.title,
           LEFT(a.body, 1000),
@@ -38,7 +38,7 @@ module.exports = async (req, res) => {
           NULL as slug,
           c.user_id,
           c.parent_comment_id,
-          c.parent_article_id,
+          c.parent_topic_id,
           STRING_AGG(i.image_uuid, ',') as image_uuids,
           NULL as comments,
           'comment' AS type
@@ -51,7 +51,7 @@ module.exports = async (req, res) => {
           c.note,
           c.user_id,
           c.parent_comment_id,
-          c.parent_article_id
+          c.parent_topic_id
       )
       SELECT 
         combined.id,
@@ -65,15 +65,15 @@ module.exports = async (req, res) => {
         combined.comments,
         u.display_name,
         u.display_name_index,
-        pa.title AS parent_article_title,
-        pa.slug AS parent_article_slug,
+        pa.title AS parent_topic_title,
+        pa.slug AS parent_topic_slug,
         pc.body AS parent_comment_body,
         pc.note AS parent_comment_note,
         pcu.display_name AS parent_comment_display_name,
         pcu.display_name_index AS parent_comment_display_name_index
       FROM combined
       LEFT JOIN users u ON combined.user_id = u.user_id
-      LEFT JOIN articles pa ON combined.parent_article_id = pa.article_id
+      LEFT JOIN topics pa ON combined.parent_topic_id = pa.topic_id
       LEFT JOIN users pu ON pa.user_id = pu.user_id
       LEFT JOIN comments pc ON combined.parent_comment_id = pc.comment_id
       LEFT JOIN users pcu ON pc.user_id = pcu.user_id

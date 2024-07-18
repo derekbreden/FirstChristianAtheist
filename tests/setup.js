@@ -75,15 +75,15 @@ tests.push(async () => {
   );
 });
 
-// Submitted article
+// Submitted topic
 tests.push(async () => {
-  expect("article:first-child h2", "Go to your local food pantry");
+  expect("topic:first-child h2", "Go to your local food pantry");
   $("test-wrapper")?.remove();
-  $("article:first-child h2").click();
+  $("topic:first-child h2").click();
   $("test-wrapper")?.remove();
 });
 
-// Clicked article
+// Clicked topic
 tests.push(async () => {
   expect("[add-new-comment] button", "Add comment");
   await sleep();

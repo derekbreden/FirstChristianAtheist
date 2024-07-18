@@ -4,9 +4,9 @@ const renderActivities = (activities) => {
       if (activity.type === "comment") {
         const $comment = renderComment(activity);
         $comment.$("reply-wrapper")?.remove();
-        let preamble = `${renderName(activity.display_name, activity.display_name_index)} commented on ${activity.parent_article_title}`;
+        let preamble = `${renderName(activity.display_name, activity.display_name_index)} commented on ${activity.parent_topic_title}`;
         if (activity.parent_comment_display_name) {
-          preamble = `${renderName(activity.display_name, activity.display_name_index)} replied to ${renderName(activity.parent_comment_display_name, activity.parent_comment_display_name_index)} on ${activity.parent_article_title}`;
+          preamble = `${renderName(activity.display_name, activity.display_name_index)} replied to ${renderName(activity.parent_comment_display_name, activity.parent_comment_display_name_index)} on ${activity.parent_topic_title}`;
         }
         let $comment_wrapper = $comment;
         if (activity.parent_comment_body) {
@@ -35,7 +35,7 @@ const renderActivities = (activities) => {
         });
         return $activity;
       } else {
-        const $article = renderArticle(activity);
+        const $topic = renderTopic(activity);
         let preamble = `A new topic was posted`;
         const $activity = $(
           `
@@ -43,7 +43,7 @@ const renderActivities = (activities) => {
               h2 $1
               $2
           `,
-          [preamble, $article],
+          [preamble, $topic],
         );
         return $activity;
       }

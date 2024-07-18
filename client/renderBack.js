@@ -4,7 +4,7 @@ const renderBack = () => {
 
   // Sometimes add new wrapper
   if (
-    state.path.substr(0, 8) === "/article" ||
+    state.path.substr(0, 8) === "/topic" ||
     state.path.substr(0, 8) === "/comment" ||
     state.path === "/notifications"
   ) {
@@ -23,7 +23,7 @@ const renderBack = () => {
             ? "Back to recent"
             : previous_path?.substr(0, 8) === "/comment"
               ? "Back to comment thread"
-              : previous_path?.substr(0, 8) === "/article"
+              : previous_path?.substr(0, 8) === "/topic"
                 ? "Back to topic"
                 : previous_path === "/"
                   ? "Back to home"

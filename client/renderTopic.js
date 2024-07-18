@@ -1,10 +1,10 @@
-const renderArticle = (article) => {
-  let $article_body = markdownToElements(article.body);
+const renderTopic = (topic) => {
+  let $topic_body = markdownToElements(topic.body);
   let characters_used = 0;
   let trimmed = false;
   if (state.path === "/topics" || state.path === "/recent") {
-    article.edit = false;
-    $article_body = $article_body.reduce((acc, child) => {
+    topic.edit = false;
+    $topic_body = $topic_body.reduce((acc, child) => {
       characters_used += child.textContent.length;
       if (characters_used < 280) {
 
@@ -17,7 +17,7 @@ const renderArticle = (article) => {
       }
       return acc;
     }, []);
-    $article_body.push(
+    $topic_body.push(
       $(
         `
         expand-wrapper
@@ -26,23 +26,23 @@ const renderArticle = (article) => {
           button[expand-down]
         `,
         [
-          article.comments +
-            (article.comments === "1" ? " comment" : " comments"),
+          topic.comments +
+            (topic.comments === "1" ? " comment" : " comments"),
         ],
       ),
     );
   }
-  const $article = $(
+  const $topic = $(
     `
-    article
+    topic
       h2
         $1
         $2
       $3
     `,
     [
-      article.title,
-      article.edit
+      topic.title,
+      topic.edit
         ? $(
             `
             button[edit][small][alt][faint] Edit
@@ -50,18 +50,18 @@ const renderArticle = (article) => {
             [],
           )
         : [],
-      $article_body,
+      $topic_body,
     ],
   );
-  if (article.edit) {
-    $article.$("[edit]").on("click", ($event) => {
+  if (topic.edit) {
+    $topic.$("[edit]").on("click", ($event) => {
       $event.preventDefault();
-      $article.replaceWith(showAddNewArticle(article));
-      focusAddNewArticle();
+      $topic.replaceWith(showAddNewTopic(topic));
+      focusAddNewTopic();
     });
   }
-  if (article.image_uuids) {
-    const image_uuids = article.image_uuids.split(",").reverse();
+  if (topic.image_uuids) {
+    const image_uuids = topic.image_uuids.split(",").reverse();
     for (const image_uuid of image_uuids) {
       const $image = $(
         `
@@ -70,16 +70,16 @@ const renderArticle = (article) => {
         `,
         ["/image/" + image_uuid],
       );
-      $article.$("h2").after($image);
+      $topic.$("h2").after($image);
     }
   }
   if (state.path === "/topics" || state.path === "/recent") {
-    $article.setAttribute("trimmed", "");
-    $article.on("click", ($event) => {
+    $topic.setAttribute("trimmed", "");
+    $topic.on("click", ($event) => {
       $event.preventDefault();
-      goToPath("/article/" + article.slug);
+      goToPath("/topic/" + topic.slug);
     });
   }
-  article.$article = $article;
-  return $article;
+  topic.$topic = $topic;
+  return $topic;
 };

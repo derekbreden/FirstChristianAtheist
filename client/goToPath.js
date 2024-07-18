@@ -1,9 +1,9 @@
 const goToPath = (new_path, skip_state) => {
   if (state.path !== new_path) {
 
-    // Cancel any open active comment or article
+    // Cancel any open active comment or topic
     delete state.active_add_new_comment;
-    delete state.active_add_new_article;
+    delete state.active_add_new_topic;
 
     // Always track scroll position on cached paths
     if (state.cache[state.path]) {

@@ -34,8 +34,8 @@ const renderImages = () => {
           $image_prompt.$("info")?.remove();
           $image_prompt.$("textarea").removeAttribute("disabled");
           if (data.image) {
-            $("articles img")?.remove();
-            $("articles").appendChild(
+            $("topics img")?.remove();
+            $("topics").appendChild(
               $(
                 `
                 img[src=$1]
@@ -44,8 +44,8 @@ const renderImages = () => {
               ),
             );
           } else if (data.mp3) {
-            $("articles audio")?.remove();
-            $("articles").appendChild(
+            $("topics audio")?.remove();
+            $("topics").appendChild(
               $(
                 `
                 audio[controls][src=$1][autoplay]
@@ -61,6 +61,6 @@ const renderImages = () => {
           debug(error);
         });
     });
-    $("articles").appendChild($image_prompt);
+    $("topics").appendChild($image_prompt);
   }
 };

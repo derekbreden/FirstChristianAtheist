@@ -68,9 +68,9 @@ document.addEventListener("scroll", () => {
     // When we pass the threshold
     if ($body.scrollTop > threshold) {
       // Find the oldest (min) create_date of what we have so far
-      const max_article_create_date = state.cache["/topics"].articles.reduce(
-        (min, article) => {
-          return min < article.create_date ? min : article.create_date;
+      const max_topic_create_date = state.cache["/topics"].topics.reduce(
+        (min, topic) => {
+          return min < topic.create_date ? min : topic.create_date;
         },
         new Date().toISOString(),
       );
@@ -81,22 +81,22 @@ document.addEventListener("scroll", () => {
         method: "POST",
         body: JSON.stringify({
           path: "/topics",
-          max_article_create_date,
+          max_topic_create_date,
         }),
       })
         .then((response) => response.json())
         .then(function (data) {
           // Stop when we reach the end (no more results returned)
-          if (data.articles && !data.articles.length) {
+          if (data.topics && !data.topics.length) {
             state.cache["/topics"].finished = true;
           }
 
           // Append what we found to the existing cache
-          state.cache["/topics"].articles.push(...data.articles);
+          state.cache["/topics"].topics.push(...data.topics);
 
-          // And re-render if any articles added
-          if (data.articles.length) {
-            renderArticles(state.cache["/topics"].articles);
+          // And re-render if any topics added
+          if (data.topics.length) {
+            renderTopics(state.cache["/topics"].topics);
           }
           state.loading_path = false;
         })

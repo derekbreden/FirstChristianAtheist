@@ -93,9 +93,9 @@ const getMoreRecent = () => {
     },
     "",
   );
-  const min_article_create_date = current_cache.articles.reduce(
-    (max, article) => {
-      return max > article.create_date ? max : article.create_date;
+  const min_topic_create_date = current_cache.topics.reduce(
+    (max, topic) => {
+      return max > topic.create_date ? max : topic.create_date;
     },
     "",
   );
@@ -126,7 +126,7 @@ const getMoreRecent = () => {
       path: current_path,
       min_create_date,
       min_comment_create_date,
-      min_article_create_date,
+      min_topic_create_date,
       min_notification_unread_create_date,
       min_notification_read_create_date,
     }),
@@ -177,18 +177,18 @@ const getMoreRecent = () => {
         });
       }
 
-      // Render articles if appropriate
-      if (data.articles?.length) {
-        const new_ids = data.articles.map((article) => article.article_id);
-        current_cache.articles = current_cache.articles.filter(
-          (a) => new_ids.indexOf(a.article_id) === -1,
+      // Render topics if appropriate
+      if (data.topics?.length) {
+        const new_ids = data.topics.map((topic) => topic.topic_id);
+        current_cache.topics = current_cache.topics.filter(
+          (a) => new_ids.indexOf(a.topic_id) === -1,
         );
-        current_cache.articles.unshift(...data.articles);
-        renderArticles(current_cache.articles);
+        current_cache.topics.unshift(...data.topics);
+        renderTopics(current_cache.topics);
 
         // Flash any newly added items
-        data.articles.forEach((article) => {
-          article.$article.setAttribute("flash-long-focus", "");
+        data.topics.forEach((topic) => {
+          topic.$topic.setAttribute("flash-long-focus", "");
         });
       }
 
@@ -196,7 +196,7 @@ const getMoreRecent = () => {
       if (
         data.activities?.length ||
         data.comments?.length ||
-        data.articles?.length ||
+        data.topics?.length ||
         data.notifications?.length
       ) {
         // Set a min threshold of scroll to do anything
