@@ -22,6 +22,7 @@ if (navigator.serviceWorker) {
       state.push_available = true;
       if (subscription) {
         state.push_active = true;
+        getUnreadCountUnseenCount();
         fetch("/session", {
           method: "POST",
           body: JSON.stringify({
