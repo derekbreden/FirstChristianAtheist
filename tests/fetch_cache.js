@@ -7,9 +7,10 @@ const fetch_cache = {
         "title": "What can be done to demonstrate unconditional love for all?",
         "slug": "What_can_be_done_to_demonstrate_unconditional_love_for_all",
         "body": "Exploring answers to this question together without judgement or authority is the only goal here.\n\n![A line drawing depicts Jesus with four chat bubbles: a heart around the Earth, a storm cloud, a person kneeling, and a trio of a fire and cross and clouds. Three of the chat bubbles and Jesus are animated out of the frame, only the heart around the earth remains, and is zoomed in on.](/love.gif)\n\n[Join the discussion](/topics)",
+        "comment_count": "0",
+        "comment_count_max_create_date": "2024-07-19T04:36:35.761Z",
         "edit": false,
-        "image_uuids": null,
-        "comments": "0"
+        "image_uuids": null
       },
       {
         "create_date": "2024-07-07T22:24:28.401Z",
@@ -17,9 +18,10 @@ const fetch_cache = {
         "title": "The Bible",
         "slug": "The_Bible",
         "body": "> Everything we know about God's Word is summed up in a single sentence: Love others as you love yourself.\n\n> — Galatians 5:14 [The Message Bible by Eugene Peterson]",
+        "comment_count": "0",
+        "comment_count_max_create_date": "2024-07-19T04:36:35.761Z",
         "edit": false,
-        "image_uuids": null,
-        "comments": "0"
+        "image_uuids": null
       },
       {
         "create_date": "2024-07-07T22:24:21.782Z",
@@ -27,9 +29,10 @@ const fetch_cache = {
         "title": "Bishop John Shelby Spong",
         "slug": "Bishop_John_Shelby_Spong",
         "body": "> The church is still caught in pre-Darwinian pre-Copernican categories. The idea that we were born in sin is a very strange idea when you’re past Darwin. You know the idea that there was an original perfection from which you fell and had to be redeemed doesn’t make a lot of sense if you see life as emerging over 13.8 billion years from the beginning of this universe. And so we’ve got to begin to lift what I think is the Christ experience out of the explanations of antiquity, and then find a new way to make that experience live, and I think we do this in other areas of life all the time, but we don’t know how to do this in religion.\n\n> — [https://youtu.be/LnDOsdDI9Vs?t=95](https://youtu.be/LnDOsdDI9Vs?t=95)",
+        "comment_count": "0",
+        "comment_count_max_create_date": "2024-07-19T04:36:35.761Z",
         "edit": false,
-        "image_uuids": null,
-        "comments": "0"
+        "image_uuids": null
       },
       {
         "create_date": "2024-06-23T04:35:39.591Z",
@@ -37,9 +40,10 @@ const fetch_cache = {
         "title": "Acceptance",
         "slug": "Acceptance",
         "body": "Christianity as it is today does not accept unrepentant atheists, with the exception of Unitarian Universalism, which prioritizes worship and reverence. This leaves little room for the type of pragmatic and deep discussion that can be had here.\n\nPerhaps here we can have a sanctuary, for those few of us who have something we wish to salvage from the wreckage that is Christianity's encounter with the modern age, some value that we seek to carry forward without the theistic baggage.",
+        "comment_count": "0",
+        "comment_count_max_create_date": "2024-07-19T04:36:35.761Z",
         "edit": false,
-        "image_uuids": null,
-        "comments": "0"
+        "image_uuids": null
       },
       {
         "create_date": "2024-06-11T02:13:36.853Z",
@@ -47,9 +51,10 @@ const fetch_cache = {
         "title": "Moderation",
         "slug": "Moderation",
         "body": "> Everything in moderation\n\n> — Cleobulus\n\nThe comments section below serves as an example of the type of moderation and threading that you will find on the topics on this site.\n\nAn AI will label any post that escalates, judges, or misunderstands.\n\nThe comments are still allowed, but others can rest easy with the AI absorbing the brunt of such tragic expressions of unmet needs.\n",
+        "comment_count": "0",
+        "comment_count_max_create_date": "2024-07-19T04:36:35.761Z",
         "edit": false,
-        "image_uuids": null,
-        "comments": "0"
+        "image_uuids": null
       }
     ],
     "comments": [
@@ -203,12 +208,18 @@ const fetch_cache = {
     "email": null,
     "display_name": null
   },
-  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/\\\",\\\"min_create_date\\\":\\\"\\\",\\\"min_comment_create_date\\\":\\\"2024-06-28T06:02:12.940Z\\\",\\\"min_topic_create_date\\\":\\\"2024-07-07T22:24:35.556Z\\\",\\\"min_notification_unread_create_date\\\":\\\"\\\",\\\"min_notification_read_create_date\\\":\\\"\\\"}\"}]": {
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/\\\",\\\"min_create_date\\\":\\\"\\\",\\\"min_comment_create_date\\\":\\\"2024-06-28T06:02:12.940Z\\\",\\\"min_topic_create_date\\\":\\\"2024-07-07T22:24:35.556Z\\\",\\\"min_notification_unread_create_date\\\":\\\"\\\",\\\"min_notification_read_create_date\\\":\\\"\\\",\\\"min_comment_count_create_date\\\":\\\"2024-07-19T04:36:35.761Z\\\",\\\"min_topic_create_date_for_comment_count\\\":\\\"2024-06-11T02:13:36.853Z\\\"}\"}]": {
     "topics": [],
     "comments": [],
     "activities": [],
     "notifications": [],
     "path": "/",
+    "topic_comment_counts": [
+      {
+        "topic_id": "64",
+        "comment_count": "1"
+      }
+    ],
     "email": null,
     "display_name": null
   },
@@ -223,9 +234,10 @@ const fetch_cache = {
         "title": "What can be done to demonstrate unconditional love for all?",
         "slug": "What_can_be_done_to_demonstrate_unconditional_love_for_all",
         "body": "Exploring answers to this question together without judgement or authority is the only goal here.\n\n![A line drawing depicts Jesus with four chat bubbles: a heart around the Earth, a storm cloud, a person kneeling, and a trio of a fire and cross and clouds. Three of the chat bubbles and Jesus are animated out of the frame, only the heart around the earth remains, and is zoomed in on.](/love.gif)\n\n[Join the discussion](/topics)",
+        "comment_count": "0",
+        "comment_count_max_create_date": "2024-07-19T04:36:35.761Z",
         "edit": false,
-        "image_uuids": null,
-        "comments": "0"
+        "image_uuids": null
       },
       {
         "create_date": "2024-07-07T22:24:28.401Z",
@@ -233,9 +245,10 @@ const fetch_cache = {
         "title": "The Bible",
         "slug": "The_Bible",
         "body": "> Everything we know about God's Word is summed up in a single sentence: Love others as you love yourself.\n\n> — Galatians 5:14 [The Message Bible by Eugene Peterson]",
+        "comment_count": "0",
+        "comment_count_max_create_date": "2024-07-19T04:36:35.761Z",
         "edit": false,
-        "image_uuids": null,
-        "comments": "0"
+        "image_uuids": null
       },
       {
         "create_date": "2024-07-07T22:24:21.782Z",
@@ -243,9 +256,10 @@ const fetch_cache = {
         "title": "Bishop John Shelby Spong",
         "slug": "Bishop_John_Shelby_Spong",
         "body": "> The church is still caught in pre-Darwinian pre-Copernican categories. The idea that we were born in sin is a very strange idea when you’re past Darwin. You know the idea that there was an original perfection from which you fell and had to be redeemed doesn’t make a lot of sense if you see life as emerging over 13.8 billion years from the beginning of this universe. And so we’ve got to begin to lift what I think is the Christ experience out of the explanations of antiquity, and then find a new way to make that experience live, and I think we do this in other areas of life all the time, but we don’t know how to do this in religion.\n\n> — [https://youtu.be/LnDOsdDI9Vs?t=95](https://youtu.be/LnDOsdDI9Vs?t=95)",
+        "comment_count": "0",
+        "comment_count_max_create_date": "2024-07-19T04:36:35.761Z",
         "edit": false,
-        "image_uuids": null,
-        "comments": "0"
+        "image_uuids": null
       },
       {
         "create_date": "2024-06-23T04:35:39.591Z",
@@ -253,9 +267,10 @@ const fetch_cache = {
         "title": "Acceptance",
         "slug": "Acceptance",
         "body": "Christianity as it is today does not accept unrepentant atheists, with the exception of Unitarian Universalism, which prioritizes worship and reverence. This leaves little room for the type of pragmatic and deep discussion that can be had here.\n\nPerhaps here we can have a sanctuary, for those few of us who have something we wish to salvage from the wreckage that is Christianity's encounter with the modern age, some value that we seek to carry forward without the theistic baggage.",
+        "comment_count": "0",
+        "comment_count_max_create_date": "2024-07-19T04:36:35.761Z",
         "edit": false,
-        "image_uuids": null,
-        "comments": "0"
+        "image_uuids": null
       },
       {
         "create_date": "2024-06-11T02:13:36.853Z",
@@ -263,9 +278,10 @@ const fetch_cache = {
         "title": "Moderation",
         "slug": "Moderation",
         "body": "> Everything in moderation\n\n> — Cleobulus\n\nThe comments section below serves as an example of the type of moderation and threading that you will find on the topics on this site.\n\nAn AI will label any post that escalates, judges, or misunderstands.\n\nThe comments are still allowed, but others can rest easy with the AI absorbing the brunt of such tragic expressions of unmet needs.\n",
+        "comment_count": "0",
+        "comment_count_max_create_date": "2024-07-19T04:36:35.761Z",
         "edit": false,
-        "image_uuids": null,
-        "comments": "0"
+        "image_uuids": null
       }
     ],
     "comments": [
@@ -427,9 +443,10 @@ const fetch_cache = {
         "title": "Marshall Rosenberg — Nonviolent Communication",
         "slug": "Marshall_Rosenberg_Nonviolent_Communication",
         "body": "Some communication styles are less likely to result in outcomes you want and more likely to result in violence. Other communication styles are more likely to result in outcomes you want, where your needs and their needs are met.\n\n> The process that I call Non Violent Communication consists of an intention to contribute to our own well being and the well being of others compassionately. And what I mean by giving compassionately is that first of all that whatever we do is done willingly. It’s not done out of guilt or shame or fear of punishment or trying to buy love by submitting to what we think others expect us to do.\n\n[Watch Video](https://youtu.be/l7TONauJGfc)",
+        "comment_count": "1",
+        "comment_count_max_create_date": "2024-07-19T06:44:21.078Z",
         "edit": false,
-        "image_uuids": "4b3596d6-ebf9-4b52-a261-d0908c7d650b",
-        "comments": "1"
+        "image_uuids": "4b3596d6-ebf9-4b52-a261-d0908c7d650b"
       },
       {
         "create_date": "2024-07-11T02:00:06.819Z",
@@ -437,19 +454,21 @@ const fetch_cache = {
         "title": "Emotional Root Cause Analysis",
         "slug": "Emotional_Root_Cause_Analysis",
         "body": "# 1. Identify Your Emotions\n\nThe map is not the territory. The labels we use cannot ever fully capture the experience of our feelings. Still, using some language to draw some lines and delineations can be the start of a coordinated and considered plan of action.\n\nFor myself, at the moment, I feel some anger.\n\n# 2. Investigate Their Root Causes\n\nThis is even more difficult than the first step and even more likely to fall short of uncovering the deepest levels of causes. But again, investigating and seeing what we can see now, as we can see it, can allow us to begin to formulate an approach to address the concerns that our emotions are raising.\n\nFor myself, at the moment, I say to myself the root cause of that anger I feel towards the complacency of others regarding global issues is my own ineffectiveness towards those same issues.\n\n# 3. Exercise Whatever Locus of Control You Have Over Those Root Causes, If Any\n\nAt times, this can be the easiest step, because simply recognizing the root ",
+        "comment_count": "3",
+        "comment_count_max_create_date": "2024-07-15T04:46:29.584Z",
         "edit": false,
-        "image_uuids": "bc6a6635-a532-4f32-b868-a871e8126596,a1458bca-488e-42ae-b1f0-4141e7c01c11,bbd3ab71-da44-473b-9ad4-7a667c09f0c7",
-        "comments": "3"
+        "image_uuids": "bc6a6635-a532-4f32-b868-a871e8126596,a1458bca-488e-42ae-b1f0-4141e7c01c11,bbd3ab71-da44-473b-9ad4-7a667c09f0c7"
       },
       {
         "create_date": "2024-07-11T01:56:14.673Z",
         "topic_id": "31",
         "title": "Never escalate to prevent violence",
         "slug": "Never_escalate_to_prevent_violence",
-        "body": "This is part of ongoing series [10 Principles](/topic/10_Principles)\n\n/mp3/cd9a8fed-5af6-4e75-8467-d53b8524f83d\n\n# 1. Never escalate to prevent violence \n\nThe cycle of violence is only broken when someone decides to de-escalate.\n\nEvery act of massive violence grows from smaller conflicts. Each side feels justified in their retaliation, or even in their preemptive strikes.\n\nStill today, Truman deciding to use nuclear weapons on civilian targets in Japan is hailed as a prime example of escalating and inflicting some violence in order to prevent much greater violence.\n\nWhile this perspective has historical precedent, it is vital to question its wisdom and moral implications. Escalation often perpetuates a cycle of fear, anger, and retribution, ultimately causing more harm than good. By examining alternative approaches, we can explore the potential for dialogue, understanding, and peaceful resolution.\n\nNonviolent communication, patience, and empathy can be powerful tools in de-escalating",
+        "body": "This is part of ongoing series [10 Principles](/article/10_Principles)\n\n/mp3/cd9a8fed-5af6-4e75-8467-d53b8524f83d\n\n# 1. Never escalate to prevent violence \n\nThe cycle of violence is only broken when someone decides to de-escalate.\n\nEvery act of massive violence grows from smaller conflicts. Each side feels justified in their retaliation, or even in their preemptive strikes.\n\nStill today, Truman deciding to use nuclear weapons on civilian targets in Japan is hailed as a prime example of escalating and inflicting some violence in order to prevent much greater violence.\n\nWhile this perspective has historical precedent, it is vital to question its wisdom and moral implications. Escalation often perpetuates a cycle of fear, anger, and retribution, ultimately causing more harm than good. By examining alternative approaches, we can explore the potential for dialogue, understanding, and peaceful resolution.\n\nNonviolent communication, patience, and empathy can be powerful tools in de-escalating",
+        "comment_count": "1",
+        "comment_count_max_create_date": "2024-07-09T08:55:34.948Z",
         "edit": false,
-        "image_uuids": "cab8278e-66d6-421b-a14d-583492996c85",
-        "comments": "1"
+        "image_uuids": "cab8278e-66d6-421b-a14d-583492996c85"
       },
       {
         "create_date": "2024-07-09T03:56:39.125Z",
@@ -457,9 +476,10 @@ const fetch_cache = {
         "title": "Bishop John Shelby Spong — 12 Theses",
         "slug": "Bishop_John_Shelby_Spong_12_Theses",
         "body": "# 1. God\n\n Understanding God in theistic categories as “a being, supernatural in power, dwelling somewhere external to the world and capable of invading the world with miraculous power” is no longer believable. Most God talk in liturgy and conversation has thus become meaningless.\n\n# 2. Jesus – the Christ\n\n If God can no longer be thought of in theistic terms, then conceiving of Jesus as “the incarnation of the theistic deity” has also become a bankrupt concept.\n\n# 3. Original Sin – The Myth of the Fall \n\nThe biblical story of the perfect and finished creation from which we human beings have fallen into “Original Sin” is pre-Darwinian mythology and post-Darwinian nonsense.\n\n# 4. The Virgin Birth \n\nThe virgin birth understood as literal biology is impossible. Far from being a bulwark in defense of the divinity of Christ, the virgin birth actually destroys that divinity.\n\n# 5. Jesus as the Worker of Miracles \n\nIn a post-Newtonian world supernatural invasions of the natural order, perform",
+        "comment_count": "1",
+        "comment_count_max_create_date": "2024-06-29T06:24:22.040Z",
         "edit": false,
-        "image_uuids": "14a1802d-1269-45f3-8efa-66986a669d82,2daafe14-6dde-4ac1-aee5-238f872712ae",
-        "comments": "1"
+        "image_uuids": "14a1802d-1269-45f3-8efa-66986a669d82,2daafe14-6dde-4ac1-aee5-238f872712ae"
       },
       {
         "create_date": "2024-07-09T03:42:45.116Z",
@@ -467,9 +487,10 @@ const fetch_cache = {
         "title": "10 Principles",
         "slug": "10_Principles",
         "body": "/mp3/21542190-bc1b-4440-a8ee-5fd164cfcb74\n\n1. Never escalate\n2. Never judge\n3. Be impeccable\n4. Seek understanding\n5. Consider everyone’s needs\n6. Love wastefully\n7. Verify truth with falsifiable predictions\n8. Everyone is their own final authority\n9. The map is not the territory\n10. Everything is connected\n\n# 1. Never escalate to prevent violence \n\nThe cycle of violence is only broken when someone decides to de-escalate. For further reading, see “Break the Cycle” at sfhelp.org by Pete Gerlach.\n\n# 2. Never judge to see clearly \n\nWhen you see things as right and wrong, as too much or too little, your narrative no longer reflects reality. For further reading, see “Nonviolent Communication” by Marshall Rosenberg.\n\n# 3. Be impeccable with your word to earn trust\n\n Be impeccable with your word, lest any lie (of omission or otherwise) make you an unreliable narrator to others or even yourself. For further reading, see “The Four Agreements” by Don Miguel Ruiz.\n\n# 4. Seek understanding to be u",
+        "comment_count": "1",
+        "comment_count_max_create_date": "2024-06-29T07:27:11.986Z",
         "edit": false,
-        "image_uuids": "4ce7080a-21f5-4600-8686-15c394a43b1f",
-        "comments": "1"
+        "image_uuids": "4ce7080a-21f5-4600-8686-15c394a43b1f"
       },
       {
         "create_date": "2024-06-29T07:13:26.583Z",
@@ -477,9 +498,10 @@ const fetch_cache = {
         "title": "Pete Gerlach — Do you love yourself?",
         "slug": "Pete_Gerlach_Do_you_love_yourself",
         "body": "Pete Gerlach, a professional family systems therapist of 32 years, discusses love:\n\n> The purpose of this video is to provide some perspectives, some questions and thoughts that I hope you’ll find useful in thinking about “Do you Love yourself? Do you really love yourself?”\n\n> “What does that mean? And how can you tell?”\n\n> Because another companion wound is  reality distortion, many people think they love themselves, but in fact they don’t. Could that be you?\n\n[Watch video](https://youtu.be/Pi2VsspnN94)",
+        "comment_count": "2",
+        "comment_count_max_create_date": "2024-07-07T07:03:51.506Z",
         "edit": false,
-        "image_uuids": "31af33ac-fd56-48d8-9bbb-60cf384a69eb",
-        "comments": "2"
+        "image_uuids": "31af33ac-fd56-48d8-9bbb-60cf384a69eb"
       }
     ],
     "comments": [],
@@ -493,31 +515,38 @@ const fetch_cache = {
     "success": true,
     "slug": "Go_to_your_local_food_pantry"
   },
-  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/topics\\\",\\\"min_create_date\\\":\\\"\\\",\\\"min_comment_create_date\\\":\\\"\\\",\\\"min_topic_create_date\\\":\\\"2024-07-15T23:08:22.568Z\\\",\\\"min_notification_unread_create_date\\\":\\\"\\\",\\\"min_notification_read_create_date\\\":\\\"\\\"}\"}]": {
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/topics\\\",\\\"min_create_date\\\":\\\"\\\",\\\"min_comment_create_date\\\":\\\"\\\",\\\"min_topic_create_date\\\":\\\"2024-07-15T23:08:22.568Z\\\",\\\"min_notification_unread_create_date\\\":\\\"\\\",\\\"min_notification_read_create_date\\\":\\\"\\\",\\\"min_comment_count_create_date\\\":\\\"2024-07-19T06:44:21.078Z\\\",\\\"min_topic_create_date_for_comment_count\\\":\\\"2024-06-29T07:13:26.583Z\\\"}\"}]": {
     "topics": [
       {
-        "create_date": "2024-07-17T08:36:58.317Z",
-        "topic_id": "65",
+        "create_date": "2024-07-19T06:45:28.679Z",
+        "topic_id": "66",
         "title": "Go to your local food pantry",
         "slug": "Go_to_your_local_food_pantry",
         "body": "Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.",
+        "comment_count": "0",
+        "comment_count_max_create_date": "2024-07-19T06:45:28.679Z",
         "edit": true,
-        "image_uuids": null,
-        "comments": "0"
+        "image_uuids": null
       }
     ],
     "comments": [],
     "activities": [],
     "notifications": [],
     "path": "/topics",
+    "topic_comment_counts": [
+      {
+        "topic_id": "66",
+        "comment_count": "0"
+      }
+    ],
     "email": "testemail@testemail.com",
     "display_name": ""
   },
   "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/topic/Go_to_your_local_food_pantry\\\"}\"}]": {
     "topics": [
       {
-        "create_date": "2024-07-17T08:36:58.317Z",
-        "topic_id": "65",
+        "create_date": "2024-07-19T06:45:28.679Z",
+        "topic_id": "66",
         "title": "Go to your local food pantry",
         "slug": "Go_to_your_local_food_pantry",
         "body": "Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.",
@@ -535,14 +564,14 @@ const fetch_cache = {
   "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/topic/Go_to_your_local_food_pantry\\\",\\\"display_name\\\":\\\"John Testerson Sr\\\",\\\"body\\\":\\\"Would you like to come visit my town and help?\\\",\\\"pngs\\\":[]}\"}]": {
     "success": true
   },
-  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/topic/Go_to_your_local_food_pantry\\\",\\\"min_create_date\\\":\\\"\\\",\\\"min_comment_create_date\\\":\\\"\\\",\\\"min_topic_create_date\\\":\\\"2024-07-17T08:36:58.317Z\\\",\\\"min_notification_unread_create_date\\\":\\\"\\\",\\\"min_notification_read_create_date\\\":\\\"\\\"}\"}]": {
+  "[\"/session\",{\"method\":\"POST\",\"body\":\"{\\\"path\\\":\\\"/topic/Go_to_your_local_food_pantry\\\",\\\"min_create_date\\\":\\\"\\\",\\\"min_comment_create_date\\\":\\\"\\\",\\\"min_topic_create_date\\\":\\\"2024-07-19T06:45:28.679Z\\\",\\\"min_notification_unread_create_date\\\":\\\"\\\",\\\"min_notification_read_create_date\\\":\\\"\\\",\\\"min_comment_count_create_date\\\":\\\"\\\",\\\"min_topic_create_date_for_comment_count\\\":\\\"2024-07-19T06:45:28.679Z\\\"}\"}]": {
     "topics": [],
     "comments": [
       {
-        "create_date": "2024-07-17T08:37:01.235Z",
-        "comment_id": "62",
+        "create_date": "2024-07-19T06:45:30.800Z",
+        "comment_id": "69",
         "body": "Would you like to come visit my town and help?",
-        "note": "RESPONSE Invitations to visit or meet in person are beyond the scope of what moderation can assist with. It might be best to message users privately when arranging in-person activities for safety reasons and to respect privacy.",
+        "note": "RESPONSE As an AI, I'm not able to visit places physically. However, I encourage community engagement and volunteerism to support local initiatives.",
         "parent_comment_id": null,
         "display_name": "John Testerson Sr",
         "display_name_index": "0",
@@ -561,15 +590,16 @@ const fetch_cache = {
     "comments": [],
     "activities": [
       {
-        "id": "62",
-        "create_date": "2024-07-17T08:37:01.235Z",
+        "id": "69",
+        "create_date": "2024-07-19T06:45:30.800Z",
         "title": null,
         "body": "Would you like to come visit my town and help?",
-        "note": "RESPONSE Invitations to visit or meet in person are beyond the scope of what moderation can assist with. It might be best to message users privately when arranging in-person activities for safety reasons and to respect privacy.",
+        "note": "RESPONSE As an AI, I'm not able to visit places physically. However, I encourage community engagement and volunteerism to support local initiatives.",
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "John Testerson Sr",
         "display_name_index": "0",
         "parent_topic_title": "Go to your local food pantry",
@@ -580,15 +610,16 @@ const fetch_cache = {
         "parent_comment_display_name_index": null
       },
       {
-        "id": "65",
-        "create_date": "2024-07-17T08:36:58.317Z",
+        "id": "66",
+        "create_date": "2024-07-19T06:45:28.679Z",
         "title": "Go to your local food pantry",
         "body": "Many people are hungry, and the network of food pantries in the United States is an excellent resource for meeting the needs of many. They too, need our help.",
         "note": null,
         "slug": "Go_to_your_local_food_pantry",
+        "comment_count": "1",
+        "comment_count_max_create_date": "2024-07-19T06:45:30.800Z",
         "type": "topic",
         "image_uuids": null,
-        "comments": "1",
         "display_name": "John Testerson Sr",
         "display_name_index": "0",
         "parent_topic_title": null,
@@ -600,14 +631,15 @@ const fetch_cache = {
       },
       {
         "id": "61",
-        "create_date": "2024-07-15T23:15:34.771Z",
+        "create_date": "2024-07-19T06:44:21.078Z",
         "title": null,
         "body": "We can listen with giraffe ears, to hear the feelings and unmet need underneath any tragic expression of such unmet needs.\n\nWe can speak with giraffe words, to share and learn without judging or blaming, to make requests with no expectations or obligations.\n\nOr, we can speak in jackal, to shame and judge, to demand, to control others.",
         "note": null,
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": "Marshall Rosenberg — Nonviolent Communication",
@@ -624,9 +656,10 @@ const fetch_cache = {
         "body": "Some communication styles are less likely to result in outcomes you want and more likely to result in violence. Other communication styles are more likely to result in outcomes you want, where your needs and their needs are met.\n\n> The process that I call Non Violent Communication consists of an intention to contribute to our own well being and the well being of others compassionately. And what I mean by giving compassionately is that first of all that whatever we do is done willingly. It’s not done out of guilt or shame or fear of punishment or trying to buy love by submitting to what we think others expect us to do.\n\n[Watch Video](https://youtu.be/l7TONauJGfc)",
         "note": null,
         "slug": "Marshall_Rosenberg_Nonviolent_Communication",
+        "comment_count": "1",
+        "comment_count_max_create_date": "2024-07-19T06:44:21.078Z",
         "type": "topic",
         "image_uuids": "4b3596d6-ebf9-4b52-a261-d0908c7d650b",
-        "comments": "1",
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": null,
@@ -643,9 +676,10 @@ const fetch_cache = {
         "body": "I wonder if the AI moderator can see the poll results in that image I posted?",
         "note": "RESPONSE Yes, I can see the poll results in the image you posted. The poll indicates that 75% of respondents think it is a good idea, 15% think it is a bad idea, and 10% selected \"Other.\"",
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": "Emotional Root Cause Analysis",
@@ -662,9 +696,10 @@ const fetch_cache = {
         "body": "I choose good idea.",
         "note": null,
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "John Doe",
         "display_name_index": "1",
         "parent_topic_title": "Emotional Root Cause Analysis",
@@ -681,9 +716,10 @@ const fetch_cache = {
         "body": "# 1. Identify Your Emotions\n\nThe map is not the territory. The labels we use cannot ever fully capture the experience of our feelings. Still, using some language to draw some lines and delineations can be the start of a coordinated and considered plan of action.\n\nFor myself, at the moment, I feel some anger.\n\n# 2. Investigate Their Root Causes\n\nThis is even more difficult than the first step and even more likely to fall short of uncovering the deepest levels of causes. But again, investigating and seeing what we can see now, as we can see it, can allow us to begin to formulate an approach to address the concerns that our emotions are raising.\n\nFor myself, at the moment, I say to myself the root cause of that anger I feel towards the complacency of others regarding global issues is my own ineffectiveness towards those same issues.\n\n# 3. Exercise Whatever Locus of Control You Have Over Those Root Causes, If Any\n\nAt times, this can be the easiest step, because simply recognizing the root ",
         "note": null,
         "slug": "Emotional_Root_Cause_Analysis",
+        "comment_count": "3",
+        "comment_count_max_create_date": "2024-07-15T04:46:29.584Z",
         "type": "topic",
         "image_uuids": "bc6a6635-a532-4f32-b868-a871e8126596,a1458bca-488e-42ae-b1f0-4141e7c01c11,bbd3ab71-da44-473b-9ad4-7a667c09f0c7",
-        "comments": "3",
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": null,
@@ -697,12 +733,13 @@ const fetch_cache = {
         "id": "31",
         "create_date": "2024-07-11T01:56:14.673Z",
         "title": "Never escalate to prevent violence",
-        "body": "This is part of ongoing series [10 Principles](/topic/10_Principles)\n\n/mp3/cd9a8fed-5af6-4e75-8467-d53b8524f83d\n\n# 1. Never escalate to prevent violence \n\nThe cycle of violence is only broken when someone decides to de-escalate.\n\nEvery act of massive violence grows from smaller conflicts. Each side feels justified in their retaliation, or even in their preemptive strikes.\n\nStill today, Truman deciding to use nuclear weapons on civilian targets in Japan is hailed as a prime example of escalating and inflicting some violence in order to prevent much greater violence.\n\nWhile this perspective has historical precedent, it is vital to question its wisdom and moral implications. Escalation often perpetuates a cycle of fear, anger, and retribution, ultimately causing more harm than good. By examining alternative approaches, we can explore the potential for dialogue, understanding, and peaceful resolution.\n\nNonviolent communication, patience, and empathy can be powerful tools in de-escalating",
+        "body": "This is part of ongoing series [10 Principles](/article/10_Principles)\n\n/mp3/cd9a8fed-5af6-4e75-8467-d53b8524f83d\n\n# 1. Never escalate to prevent violence \n\nThe cycle of violence is only broken when someone decides to de-escalate.\n\nEvery act of massive violence grows from smaller conflicts. Each side feels justified in their retaliation, or even in their preemptive strikes.\n\nStill today, Truman deciding to use nuclear weapons on civilian targets in Japan is hailed as a prime example of escalating and inflicting some violence in order to prevent much greater violence.\n\nWhile this perspective has historical precedent, it is vital to question its wisdom and moral implications. Escalation often perpetuates a cycle of fear, anger, and retribution, ultimately causing more harm than good. By examining alternative approaches, we can explore the potential for dialogue, understanding, and peaceful resolution.\n\nNonviolent communication, patience, and empathy can be powerful tools in de-escalating",
         "note": null,
         "slug": "Never_escalate_to_prevent_violence",
+        "comment_count": "1",
+        "comment_count_max_create_date": "2024-07-09T08:55:34.948Z",
         "type": "topic",
         "image_uuids": "cab8278e-66d6-421b-a14d-583492996c85",
-        "comments": "1",
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": null,
@@ -719,9 +756,10 @@ const fetch_cache = {
         "body": "I ran a promoted poll on this procedure last year.",
         "note": null,
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": "7def9bb3-67fa-47cf-bdbb-cc760ecef6b6",
-        "comments": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": "Emotional Root Cause Analysis",
@@ -738,9 +776,10 @@ const fetch_cache = {
         "body": "There are some, like Howard Zinn, who question the narrative that the bombings of Hiroshima and Nagasaki saved lives.\n\nHe discusses this briefly here: [https://youtu.be/vSKLVseJ9Xo](https://youtu.be/vSKLVseJ9Xo)",
         "note": null,
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": "Never escalate to prevent violence",
@@ -757,9 +796,10 @@ const fetch_cache = {
         "body": "# 1. God\n\n Understanding God in theistic categories as “a being, supernatural in power, dwelling somewhere external to the world and capable of invading the world with miraculous power” is no longer believable. Most God talk in liturgy and conversation has thus become meaningless.\n\n# 2. Jesus – the Christ\n\n If God can no longer be thought of in theistic terms, then conceiving of Jesus as “the incarnation of the theistic deity” has also become a bankrupt concept.\n\n# 3. Original Sin – The Myth of the Fall \n\nThe biblical story of the perfect and finished creation from which we human beings have fallen into “Original Sin” is pre-Darwinian mythology and post-Darwinian nonsense.\n\n# 4. The Virgin Birth \n\nThe virgin birth understood as literal biology is impossible. Far from being a bulwark in defense of the divinity of Christ, the virgin birth actually destroys that divinity.\n\n# 5. Jesus as the Worker of Miracles \n\nIn a post-Newtonian world supernatural invasions of the natural order, perform",
         "note": null,
         "slug": "Bishop_John_Shelby_Spong_12_Theses",
+        "comment_count": "1",
+        "comment_count_max_create_date": "2024-06-29T06:24:22.040Z",
         "type": "topic",
         "image_uuids": "14a1802d-1269-45f3-8efa-66986a669d82,2daafe14-6dde-4ac1-aee5-238f872712ae",
-        "comments": "1",
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": null,
@@ -776,9 +816,10 @@ const fetch_cache = {
         "body": "/mp3/21542190-bc1b-4440-a8ee-5fd164cfcb74\n\n1. Never escalate\n2. Never judge\n3. Be impeccable\n4. Seek understanding\n5. Consider everyone’s needs\n6. Love wastefully\n7. Verify truth with falsifiable predictions\n8. Everyone is their own final authority\n9. The map is not the territory\n10. Everything is connected\n\n# 1. Never escalate to prevent violence \n\nThe cycle of violence is only broken when someone decides to de-escalate. For further reading, see “Break the Cycle” at sfhelp.org by Pete Gerlach.\n\n# 2. Never judge to see clearly \n\nWhen you see things as right and wrong, as too much or too little, your narrative no longer reflects reality. For further reading, see “Nonviolent Communication” by Marshall Rosenberg.\n\n# 3. Be impeccable with your word to earn trust\n\n Be impeccable with your word, lest any lie (of omission or otherwise) make you an unreliable narrator to others or even yourself. For further reading, see “The Four Agreements” by Don Miguel Ruiz.\n\n# 4. Seek understanding to be u",
         "note": null,
         "slug": "10_Principles",
+        "comment_count": "1",
+        "comment_count_max_create_date": "2024-06-29T07:27:11.986Z",
         "type": "topic",
         "image_uuids": "4ce7080a-21f5-4600-8686-15c394a43b1f",
-        "comments": "1",
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": null,
@@ -795,9 +836,10 @@ const fetch_cache = {
         "body": "Exploring answers to this question together without judgement or authority is the only goal here.\n\n![A line drawing depicts Jesus with four chat bubbles: a heart around the Earth, a storm cloud, a person kneeling, and a trio of a fire and cross and clouds. Three of the chat bubbles and Jesus are animated out of the frame, only the heart around the earth remains, and is zoomed in on.](/love.gif)\n\n[Join the discussion](/topics)",
         "note": null,
         "slug": "What_can_be_done_to_demonstrate_unconditional_love_for_all",
+        "comment_count": "0",
+        "comment_count_max_create_date": "2024-07-19T04:36:35.761Z",
         "type": "topic",
         "image_uuids": null,
-        "comments": "0",
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": null,
@@ -814,9 +856,10 @@ const fetch_cache = {
         "body": "> Everything we know about God's Word is summed up in a single sentence: Love others as you love yourself.\n\n> — Galatians 5:14 [The Message Bible by Eugene Peterson]",
         "note": null,
         "slug": "The_Bible",
+        "comment_count": "0",
+        "comment_count_max_create_date": "2024-07-19T04:36:35.761Z",
         "type": "topic",
         "image_uuids": null,
-        "comments": "0",
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": null,
@@ -833,9 +876,10 @@ const fetch_cache = {
         "body": "> The church is still caught in pre-Darwinian pre-Copernican categories. The idea that we were born in sin is a very strange idea when you’re past Darwin. You know the idea that there was an original perfection from which you fell and had to be redeemed doesn’t make a lot of sense if you see life as emerging over 13.8 billion years from the beginning of this universe. And so we’ve got to begin to lift what I think is the Christ experience out of the explanations of antiquity, and then find a new way to make that experience live, and I think we do this in other areas of life all the time, but we don’t know how to do this in religion.\n\n> — [https://youtu.be/LnDOsdDI9Vs?t=95](https://youtu.be/LnDOsdDI9Vs?t=95)",
         "note": null,
         "slug": "Bishop_John_Shelby_Spong",
+        "comment_count": "0",
+        "comment_count_max_create_date": "2024-07-19T04:36:35.761Z",
         "type": "topic",
         "image_uuids": null,
-        "comments": "0",
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": null,
@@ -852,9 +896,10 @@ const fetch_cache = {
         "body": "Pete’s legacy is a collection of 10 minute videos explaining key concepts from his family systems practice.\n\nIt is a particular way of looking at things, but it is a way that resonates with many people and their experiences with others and themselves.",
         "note": null,
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": "Pete Gerlach — Do you love yourself?",
@@ -871,9 +916,10 @@ const fetch_cache = {
         "body": "It may be that this sort of affirmation is unnecessary or confusing, or it may be that this sort of evaluation and further consideration is helpful for such wounded people.\n\nWhat are your thoughts?",
         "note": null,
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": "Pete Gerlach — Do you love yourself?",
@@ -890,9 +936,10 @@ const fetch_cache = {
         "body": "I hope this is received not as a prescription to follow, but instead as a set of principles that only make sense as far as the reasons or consequences of those principles also make sense, and as far as those reasons or consequences are also desirable and worth pursuing.\n\nThis is not meant to be a starting point, or an endpoint, but a middle point. As can be seen in the details, all of these ideas come from other people, and no one need be under an illusion that it could not be improved.\n\nI am curious for any and all feedback that anyone might have on my content, or my approach, or anything at all.",
         "note": null,
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": "10 Principles",
@@ -909,9 +956,10 @@ const fetch_cache = {
         "body": "Pete Gerlach, a professional family systems therapist of 32 years, discusses love:\n\n> The purpose of this video is to provide some perspectives, some questions and thoughts that I hope you’ll find useful in thinking about “Do you Love yourself? Do you really love yourself?”\n\n> “What does that mean? And how can you tell?”\n\n> Because another companion wound is  reality distortion, many people think they love themselves, but in fact they don’t. Could that be you?\n\n[Watch video](https://youtu.be/Pi2VsspnN94)",
         "note": null,
         "slug": "Pete_Gerlach_Do_you_love_yourself",
+        "comment_count": "2",
+        "comment_count_max_create_date": "2024-07-07T07:03:51.506Z",
         "type": "topic",
         "image_uuids": "31af33ac-fd56-48d8-9bbb-60cf384a69eb",
-        "comments": "2",
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": null,
@@ -928,9 +976,10 @@ const fetch_cache = {
         "body": "> Most God talk in liturgy and conversation has thus become meaningless.\n\nDoes Bishop Spong still talk about God at all?",
         "note": null,
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": "Bishop John Shelby Spong — 12 Theses",
@@ -947,9 +996,10 @@ const fetch_cache = {
         "body": "I’m not being judgmental, I’m saying God will judge you.",
         "note": "JUDGMENTAL Stating that God will judge someone is still a judgmental assertion.",
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "John Doe",
         "display_name_index": "0",
         "parent_topic_title": "Home",
@@ -966,9 +1016,10 @@ const fetch_cache = {
         "body": "I’m not being aggressive, I’m informing of you of facts.",
         "note": "JUDGMENTAL Stating that someone will regret their actions is a judgmental assertion.",
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "John Doe",
         "display_name_index": "0",
         "parent_topic_title": "Home",
@@ -985,9 +1036,10 @@ const fetch_cache = {
         "body": "You are committing the greatest sin. You will regret this.",
         "note": "ESCALATING The statement is aggressive and condemning, which does not foster peaceful and constructive dialogue.",
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "John Doe",
         "display_name_index": "0",
         "parent_topic_title": "Home",
@@ -1004,9 +1056,10 @@ const fetch_cache = {
         "body": "One can hope for ripple effects, but surely more direct action can be taken on global concerns as well, especially if one is a voting and tax paying citizen of a first world economy.\n\nWhat influence does one have? Perhaps this too could be focused on those closest to us, where the discussions we have about global concerns have more influence than those same conversations we might have with strangers.",
         "note": null,
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": "Home",
@@ -1023,9 +1076,10 @@ const fetch_cache = {
         "body": "I find the hostage situations in Trigun more interesting than the trolley problem, as far as being closer to reality, and for exploring what having concern for all parties in a difficult situation might mean in practice, despite the fantasy elements.",
         "note": null,
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": "e2de6604-a453-4f52-93e2-95f3b5347cb2",
-        "comments": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": "Home",
@@ -1042,9 +1096,10 @@ const fetch_cache = {
         "body": "Perhaps not, but I find local concerns are where I can have the most confidence that my impact matches my intentions, where I can see the results and the needs first hand.",
         "note": null,
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": "Home",
@@ -1061,9 +1116,10 @@ const fetch_cache = {
         "body": "Is that where you could have the most impact?",
         "note": null,
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": "Home",
@@ -1080,9 +1136,10 @@ const fetch_cache = {
         "body": "Is that where the greatest need is?",
         "note": null,
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": "Home",
@@ -1099,9 +1156,10 @@ const fetch_cache = {
         "body": "Sometimes even heroes with super powers can still be useful for inspiration and deep discussion, especially if they still encounter challenges to their ethics, as Vash most certainly does as his scars attest to.",
         "note": null,
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": "Home",
@@ -1118,9 +1176,10 @@ const fetch_cache = {
         "body": "I can see how with a stretch of the imagination this might have something to do with love, as Vash does embody this ethos well with his concern for the well being of even the most cruel villains he encounters. Still, it is quite a violent show, and the hero’s superpowers make it difficult to find anything applicable to the real world in its mythology.",
         "note": null,
         "slug": null,
+        "comment_count": null,
+        "comment_count_max_create_date": null,
         "type": "comment",
         "image_uuids": null,
-        "comments": null,
         "display_name": "Derek",
         "display_name_index": "0",
         "parent_topic_title": "Home",
