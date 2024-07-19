@@ -1,6 +1,6 @@
 if (navigator.serviceWorker) {
   navigator.serviceWorker
-    .register("/worker.js")
+    .register("/worker.js?v=11")
     .then((registration) => {
 
       // Listen for push updates
