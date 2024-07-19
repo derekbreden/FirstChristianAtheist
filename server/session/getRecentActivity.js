@@ -11,11 +11,12 @@ module.exports = async (req, res) => {
           LEFT(a.body, 1000) as body,
           a.note,
           a.slug,
+          a.comment_count,
+          a.comment_count_max_create_date,
           a.user_id,
           NULL AS parent_comment_id,
           NULL AS parent_topic_id,
           STRING_AGG(DISTINCT i.image_uuid, ',') as image_uuids,
-          COUNT(DISTINCT c.comment_id) as comments,
           'topic' AS type
         FROM topics a
         LEFT JOIN topic_images i ON a.topic_id = i.topic_id
@@ -36,11 +37,12 @@ module.exports = async (req, res) => {
           c.body,
           c.note,
           NULL as slug,
+          NULL as comment_count,
+          NULL as comment_count_max_create_date,
           c.user_id,
           c.parent_comment_id,
           c.parent_topic_id,
           STRING_AGG(i.image_uuid, ',') as image_uuids,
-          NULL as comments,
           'comment' AS type
         FROM comments c
         LEFT JOIN comment_images i ON c.comment_id = i.comment_id
@@ -60,9 +62,10 @@ module.exports = async (req, res) => {
         combined.body,
         combined.note,
         combined.slug,
+        combined.comment_count,
+        combined.comment_count_max_create_date,
         combined.type,
         combined.image_uuids,
-        combined.comments,
         u.display_name,
         u.display_name_index,
         pa.title AS parent_topic_title,
@@ -86,5 +89,25 @@ module.exports = async (req, res) => {
       [req.body.max_create_date || null, req.body.min_create_date || null],
     );
     req.results.activities.push(...activity_results.rows);
+
+    // Get updated comment counts when requested
+    if (
+      req.body.min_topic_create_date_for_comment_count
+      && req.body.min_comment_count_create_date
+    ) {
+      const topic_comment_counts = await req.client.query(
+        `
+        SELECT
+          topic_id,
+          comment_count
+        FROM topics
+        WHERE
+          create_date > $1
+          AND comment_count_max_create_date > $2
+        `,
+        [req.body.min_topic_create_date_for_comment_count, req.body.min_comment_count_create_date ]
+      );
+      req.results.topic_comment_counts = topic_comment_counts.rows;
+    }
   }
 };

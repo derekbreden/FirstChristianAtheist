@@ -11,17 +11,6 @@ module.exports = async (req, res) => {
       [req.session.session_uuid],
     );
     req.session.session_id = insert_session.rows[0].session_id;
-    const user_agent = req.headers["user-agent"];
-    const ip_address = req.headers["x-forwarded-for"].split(",")[0];
-    await req.client.query(
-      `
-      INSERT INTO browsers
-        (session_id, user_agent, ip_address)
-      VALUES
-        ($1, $2, $3);
-      `,
-      [req.session.session_id, user_agent, ip_address],
-    );
 
     // Set the cookie like a sane person
     res.setHeader(

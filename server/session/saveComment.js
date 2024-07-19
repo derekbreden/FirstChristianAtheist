@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
     const page = pages[req.body.path] || pages["/"];
     let topic_id = page.topic_id;
     if (req.body.path.substr(0, 7) === "/topic/") {
-      const slug = req.body.path.substr(9);
+      const slug = req.body.path.substr(7);
       const topic_results = await req.client.query(
         `
         SELECT topic_id
@@ -106,10 +106,7 @@ module.exports = async (req, res) => {
       // Add a message for the topic(s) being commented on
       messages.push({
         role: "user",
-        name: (topic.display_name || "Anonymous").replace(
-          /[^a-z0-9_\-]/gi,
-          "",
-        ),
+        name: (topic.display_name || "Anonymous").replace(/[^a-z0-9_\-]/gi, ""),
         content: [
           { type: "text", text: topic.title + "\n\n" + topic.body },
           ...pngs.map((png) => {
@@ -374,6 +371,25 @@ module.exports = async (req, res) => {
         );
       }
     }
+
+    // Update the topic comment_count and comment_count_max_create_date
+    await req.client.query(
+      `
+      UPDATE topics
+      SET
+        comment_count = subquery.comment_count,
+        comment_count_max_create_date = subquery.comment_count_max_create_date
+      FROM (
+        SELECT
+          COUNT(*) AS comment_count,
+          MAX(create_date) AS comment_count_max_create_date
+        FROM comments
+        WHERE parent_topic_id = $1
+      ) AS subquery
+      WHERE topics.topic_id = $1
+      `,
+      [topic_id],
+    );
 
     // Respond with success so the client reloads
     res.end(

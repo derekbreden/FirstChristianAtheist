@@ -25,16 +25,6 @@ module.exports = async (req, res) => {
       );
       await req.client.query(
         `
-        DELETE FROM browsers WHERE session_id IN (
-          SELECT session_id
-          FROM user_sessions
-          WHERE user_id = $1
-        )
-        `,
-        [user_found.rows[0].user_id],
-      );
-      await req.client.query(
-        `
         DELETE FROM user_sessions WHERE user_id = $1
         `,
         [user_found.rows[0].user_id],

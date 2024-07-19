@@ -93,12 +93,9 @@ const getMoreRecent = () => {
     },
     "",
   );
-  const min_topic_create_date = current_cache.topics.reduce(
-    (max, topic) => {
-      return max > topic.create_date ? max : topic.create_date;
-    },
-    "",
-  );
+  const min_topic_create_date = current_cache.topics.reduce((max, topic) => {
+    return max > topic.create_date ? max : topic.create_date;
+  }, "");
   const min_notification_unread_create_date =
     current_cache.notifications.reduce((max, notification) => {
       if (!notification.read) {
@@ -118,6 +115,51 @@ const getMoreRecent = () => {
     "",
   );
 
+  // Find oldest topic create_date for comment count, and max of the comment_count_max_create_date for the topics
+  const min_topic_create_date_for_comment_count_1 = current_cache.topics.reduce(
+    (min, topic) => {
+      return min < topic.create_date ? min : topic.create_date;
+    },
+    new Date().toISOString(),
+  );
+  const min_topic_create_date_for_comment_count_2 =
+    current_cache.activities.reduce((min, activity) => {
+      if (activity.type === "topic") {
+        return min < activity.create_date ? min : activity.create_date;
+      } else {
+        return min;
+      }
+    }, new Date().toISOString());
+  const min_topic_create_date_for_comment_count =
+    min_topic_create_date_for_comment_count_1 <
+    min_topic_create_date_for_comment_count_2
+      ? min_topic_create_date_for_comment_count_1
+      : min_topic_create_date_for_comment_count_2;
+  const min_comment_count_create_date_1 = current_cache.topics.reduce(
+    (max, topic) => {
+      return max > topic.comment_count_max_create_date
+        ? max
+        : topic.comment_count_max_create_date;
+    },
+    "",
+  );
+  const min_comment_count_create_date_2 = current_cache.activities.reduce(
+    (max, activity) => {
+      if (activity.type === "topic") {
+        return max > activity.comment_count_max_create_date
+          ? max
+          : activity.comment_count_max_create_date;
+      } else {
+        return max;
+      }
+    },
+    "",
+  );
+  const min_comment_count_create_date =
+    min_comment_count_create_date_1 > min_comment_count_create_date_2
+      ? min_comment_count_create_date_1
+      : min_comment_count_create_date_2;
+
   // Use that to load anything newer than that (our max is the min of what we want returned)
   state.loading_path = true;
   fetch("/session", {
@@ -129,6 +171,8 @@ const getMoreRecent = () => {
       min_topic_create_date,
       min_notification_unread_create_date,
       min_notification_read_create_date,
+      min_comment_count_create_date,
+      min_topic_create_date_for_comment_count,
     }),
   })
     .then((response) => response.json())
@@ -214,6 +258,31 @@ const getMoreRecent = () => {
         if (scroll_top > min_threshold) {
           $body.scrollTop = scroll_top + ($body.scrollHeight - scroll_height);
         }
+      }
+
+      // Render updated topic comment counts
+      if (data.topic_comment_counts?.length) {
+        data.topic_comment_counts.forEach((topic_comment_count) => {
+          const found_topic = current_cache.topics.find(
+            (topic) => topic.topic_id === topic_comment_count.topic_id,
+          );
+          const found_activity = current_cache.activities.find(
+            (activity) =>
+              activity.id === topic_comment_count.topic_id &&
+              activity.type === "topic",
+          );
+          const text =
+            topic_comment_count.comment_count +
+            (topic_comment_count.comment_count === "1"
+              ? " comment"
+              : " comments");
+          if (found_topic) {
+            found_topic.$topic.$("[comments]").innerText = text;
+          }
+          if (found_activity) {
+            found_activity.$topic.$("[comments]").innerText = text;
+          }
+        });
       }
 
       // Acknowledge we finished loading

@@ -26,8 +26,8 @@ const renderTopic = (topic) => {
           button[expand-down]
         `,
         [
-          topic.comments +
-            (topic.comments === "1" ? " comment" : " comments"),
+          topic.comment_count +
+            (topic.comment_count === "1" ? " comment" : " comments"),
         ],
       ),
     );
