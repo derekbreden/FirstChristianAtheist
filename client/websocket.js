@@ -1,12 +1,20 @@
 const reconnectWs = () => {
-  const ws = new WebSocket(`wss://${window.location.host}`);
-  ws.addEventListener("message", (event) => {
+  state.ws = new WebSocket(`wss://${window.location.host}`);
+  state.ws.addEventListener("message", (event) => {
     if (event?.data === "UPDATE") {
       getMoreRecent();
     }
   });
-  ws.addEventListener("close", (event) => {
-    ws.close();
+  state.ws.addEventListener("open", () => {
+    // Tell the websocket we are on a new path
+    try {
+      state.ws.send(JSON.stringify({ path: state.path }));
+    } catch(e) {
+      console.error(e);
+    }
+  });
+  state.ws.addEventListener("close", (event) => {
+    state.ws.close();
     setTimeout(reconnectWs, 10000);
   });
 };

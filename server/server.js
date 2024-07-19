@@ -1,7 +1,5 @@
 const http = require("node:http");
 const fs = require("node:fs/promises");
-const crypto = require("node:crypto");
-const { WebSocketServer } = require("ws");
 
 module.exports = {
   handleRequest(req, res) {
@@ -122,19 +120,7 @@ module.exports = {
     const server = http.createServer(this.handleRequest.bind(this));
 
     // Our websocket server
-    const wss = new WebSocketServer({ server });
-    this.ws_active = {};
-    wss.on("connection", (ws) => {
-      const ws_uuid = crypto.randomUUID();
-      this.ws_active[ws_uuid] = ws;
-      ws.on("error", () => {
-        delete this.ws_active[ws_uuid];
-      });
-      ws.on("close", () => {
-        delete this.ws_active[ws_uuid];
-      });
-      ws.send("UPDATE");
-    });
+    require("./websocket").init(server);
 
     // Start listening
     server.listen(port, hostname, () => {
@@ -144,12 +130,7 @@ module.exports = {
       console.error(err);
     });
   },
-  sendWsMessage(message) {
-    console.log(
-      `Sending message to ${Object.keys(this.ws_active).length} clients`,
-    );
-    Object.keys(this.ws_active).forEach((ws_uuid) => {
-      this.ws_active[ws_uuid].send(message);
-    });
+  sendWsMessage(message, topic_id) {
+    require("./websocket").sendMessage(message, topic_id);
   },
 };

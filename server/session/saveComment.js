@@ -504,6 +504,6 @@ module.exports = async (req, res) => {
     });
 
     // Send websocket update after all notifications have been inserted
-    req.sendWsMessage("UPDATE");
+    req.sendWsMessage("UPDATE", topic_id);
   }
 };

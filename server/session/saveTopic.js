@@ -149,7 +149,7 @@ module.exports = async (req, res) => {
       }
 
       // Send websocket update
-      req.sendWsMessage("UPDATE");
+      req.sendWsMessage("UPDATE", topic_id);
 
       // Respond with success so the client reloads
       res.end(
