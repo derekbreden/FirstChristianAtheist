@@ -15,6 +15,15 @@ const parsePath = () => {
 };
 state.path = parsePath();
 
+// Default to /topics instead of / when we have visited before
+if (state.path === "/") {
+  if (localStorage.getItem("has_visited_before")) {
+    state.path = "/topics";
+  } else {
+    localStorage.setItem("has_visited_before", true);
+  }
+}
+
 // Update page contents when the user hits the back button
 window.addEventListener("popstate", () => {
   const new_path = parsePath();

@@ -5,7 +5,7 @@ const showMenu = () => {
       modal-bg
       menu
         links
-          a[href=/] Home
+          a[href=/] Introduction
           a[href=/topics] Topics
           a[href=/recent] Recent
     `,
