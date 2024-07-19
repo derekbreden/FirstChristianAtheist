@@ -1,4 +1,4 @@
-// Push to notificatons
+// On push show notifications and tell client to refresh
 self.addEventListener("push", (event) => {
   const payload = event.data?.text();
   if (payload) {
@@ -10,13 +10,31 @@ self.addEventListener("push", (event) => {
     const body = parsed_payload.body || "You have a new reply";
     const tag = parsed_payload.tag || "no-tag-in-payload";
     const unread_count = parsed_payload.unread_count || 0;
-    event.waitUntil(
+
+    // Asynchronous events
+    const promises = [];
+
+    // Show the notification
+    promises.push(
       self.registration.showNotification(title, {
         body,
         tag,
-      }),
+      })
     );
-    if (unread_count) {
+
+    // Tell the client to refresh
+    promises.push(
+      self.clients.matchAll().then(clients => {
+        clients.forEach(client => {
+          client.postMessage({
+            push_update: true,
+          });
+        });
+      })
+    );
+    event.waitUntil(Promise.all(promises));
+    
+    if (navigator.setAppBadge && unread_count) {
       navigator.setAppBadge(unread_count);
     }
   }

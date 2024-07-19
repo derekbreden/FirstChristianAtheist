@@ -2,6 +2,16 @@ if (navigator.serviceWorker) {
   navigator.serviceWorker
     .register("/worker.js")
     .then((registration) => {
+
+      // Listen for push updates
+      navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data.push_update) {
+          if (state.push_active) {
+            getUnreadCountUnseenCount();
+          }
+        }
+      });
+
       if (registration.pushManager) {
         return registration.pushManager.getSubscription();
       } else {
