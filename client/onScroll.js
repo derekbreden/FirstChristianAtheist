@@ -108,6 +108,58 @@ document.addEventListener("scroll", () => {
     }
   }
 
+  // Comments load older
+  if (
+    (state.path === "/" || state.path.substr(0, 7) === "/topic/") &&
+    state.cache[state.path] &&
+    !state.cache[state.path].comments_finished
+  ) {
+    // A threshold based on how much is left to scroll
+    const threshold = $body.scrollHeight - $body.clientHeight * 3;
+
+    // When we pass the threshold
+    if ($body.scrollTop > threshold) {
+      // Find the oldest (min) create_date of what we have so far
+      const max_comment_create_date = state.cache[state.path].comments.reduce(
+        (min, comment) => {
+          return min < comment.create_date ? min : comment.create_date;
+        },
+        new Date().toISOString(),
+      );
+
+      // Use that to load anything older than that (our min is the max of what we want returned)
+      state.loading_path = true;
+      fetch("/session", {
+        method: "POST",
+        body: JSON.stringify({
+          path: state.path,
+          max_comment_create_date,
+        }),
+      })
+        .then((response) => response.json())
+        .then(function (data) {
+          // Stop when we reach the end (no more results returned)
+          if (data.comments && !data.comments.length) {
+            state.cache[state.path].comments_finished = true;
+          }
+
+          // Append what we found to the existing cache
+          state.cache[state.path].comments.push(...data.comments);
+
+          // And re-render if any comments added
+          if (data.comments.length) {
+            renderComments(state.cache[state.path].comments);
+          }
+          state.loading_path = false;
+        })
+        .catch(function (error) {
+          state.loading_path = false;
+          console.error(error);
+          modalError("Network error");
+        });
+    }
+  }
+
   // Notifications load older
   if (
     state.path === "/notifications" &&
