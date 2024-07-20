@@ -197,7 +197,9 @@ const getUnreadCountUnseenCount = () => {
       } else {
         state.unread_count = Number(data.unread_count);
         state.unseen_count = Number(data.unseen_count);
-        navigator.setAppBadge(state.unread_count);
+        if (navigator.setAppBadge) {
+          navigator.setAppBadge(state.unread_count);
+        }
         if (Boolean(state.unread_count)) {
           $("hamburger").setAttribute("unread", "");
         } else {
