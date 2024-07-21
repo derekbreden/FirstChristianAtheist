@@ -11,6 +11,11 @@
             "src": "/icon.png?v=12",
             "sizes": "512x512",
             "type": "image/png"
+        },
+        {
+            "src": "/icon1024.png?v=13",
+            "sizes": "1024x1024",
+            "type": "image/png"
         }
     ],
     "theme_color": "#ffffff",
