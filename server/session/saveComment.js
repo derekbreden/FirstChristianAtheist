@@ -9,6 +9,44 @@ webpush.setVapidDetails(
   process.env.VAPID_PUBLIC_KEY,
   process.env.VAPID_PRIVATE_KEY,
 );
+// const fcm_admin = require("firebase-admin");
+// const { initializeApp } = require("firebase-admin/app");
+// const { getMessaging } = require("firebase-admin/messaging");
+// const fcm_app = initializeApp({
+//   credential: fcm_admin.credential.cert(
+//     JSON.parse(process.env.FIREBASE_CREDENTIAL),
+//   ),
+// });
+// const fcm_messaging = getMessaging(fcm_app);
+
+// const pool = require("../pool");
+// (async () => {
+//   const client = await pool.pool.connect();
+//   try {
+//     const found_sub = await client.query(
+//       `
+//       SELECT fcm_token FROM subscriptions
+//       WHERE fcm_token IS NOT NULL
+//       `,
+//     );
+//     if (found_sub.rows.length) {
+//       message = {
+//         data: {
+//           title: "Test title",
+//           body: "Test body",
+//         },
+//         token: JSON.parse(found_sub.rows[0].fcm_token),
+//       };
+//       const result = await fcm_messaging.send(message);
+//       console.warn(result);
+//     }
+//   } catch (err) {
+//     console.error("FCM error", err);
+//   } finally {
+//     client.release();
+//   }
+//   process.exit(0);
+// })();
 
 module.exports = async (req, res) => {
   if (

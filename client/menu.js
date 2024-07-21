@@ -87,8 +87,7 @@ const showMenu = () => {
         window.webkit.messageHandlers["push-permission-request"].postMessage(
           "push-permission-request",
         );
-      }
-      if (state.push_available) {
+      } else if (state.push_available) {
         state.push_active = true;
         $("toggle-wrapper").setAttribute("active", "");
         navigator.serviceWorker.ready
