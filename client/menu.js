@@ -16,11 +16,13 @@ const showMenu = () => {
         `
         a[href=/notifications][unread=$1] $2
         `,
-        [ 
+        [
           Boolean(state.unread_count),
-          state.unread_count ? `Notifications (${state.unread_count})` : "Notifications",
-        ]
-      )
+          state.unread_count
+            ? `Notifications (${state.unread_count})`
+            : "Notifications",
+        ],
+      ),
     );
   }
   const menuCancel = () => {
@@ -45,7 +47,10 @@ const showMenu = () => {
             toggle-circle
         button[sign-out] Log out
       `,
-      [!state.push_available, state.push_active],
+      [
+        !state.push_available && !state.fcm_push_available,
+        state.push_active || state.fcm_push_active,
+      ],
     );
     $signed_in.$("toggle-wrapper").on("click", () => {
       if (state.push_active) {
@@ -75,6 +80,13 @@ const showMenu = () => {
               });
           });
         return;
+      }
+      if (state.fcm_push_available) {
+        state.push_active = true;
+        $("toggle-wrapper").setAttribute("active", "");
+        window.webkit.messageHandlers["push-permission-request"].postMessage(
+          "push-permission-request",
+        );
       }
       if (state.push_available) {
         state.push_active = true;
@@ -141,7 +153,11 @@ const showMenu = () => {
           });
       } else {
         menuCancel();
-        modalError(`You must "Add to Home Screen" to enable notifications.`);
+        if (state.fcm_push_denied) {
+          modalError(`You must enable notifications in settings.`);
+        } else {
+          modalError(`You must "Add to Home Screen" to enable notifications.`);
+        }
       }
     });
     $signed_in.$("[sign-out]").on("click", () => {
