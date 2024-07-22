@@ -1,3 +1,4 @@
+const rendered = [];
 const debug = function () {
   let to_render = [...arguments];
   if (to_render[0] && to_render[0].message) {
@@ -10,7 +11,8 @@ const debug = function () {
   } else if (to_render.length === 1) {
     to_render = to_render[0];
   }
-  $("debug").innerHTML = JSON.stringify(to_render, null, 2);
+  rendered.push(to_render);
+  $("debug").innerHTML = JSON.stringify(rendered, null, 2);
   setTimeout(() => {
     $("debug").innerHTML = "";
   }, 5000);

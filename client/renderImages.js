@@ -54,10 +54,11 @@ const renderImages = () => {
               ),
             );
           } else {
-            debug(data);
+            debug("A", data);
           }
         })
         .catch(function (error) {
+          debug("B");
           debug(error);
         });
     });

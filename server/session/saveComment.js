@@ -9,44 +9,15 @@ webpush.setVapidDetails(
   process.env.VAPID_PUBLIC_KEY,
   process.env.VAPID_PRIVATE_KEY,
 );
-// const fcm_admin = require("firebase-admin");
-// const { initializeApp } = require("firebase-admin/app");
-// const { getMessaging } = require("firebase-admin/messaging");
-// const fcm_app = initializeApp({
-//   credential: fcm_admin.credential.cert(
-//     JSON.parse(process.env.FIREBASE_CREDENTIAL),
-//   ),
-// });
-// const fcm_messaging = getMessaging(fcm_app);
-
-// const pool = require("../pool");
-// (async () => {
-//   const client = await pool.pool.connect();
-//   try {
-//     const found_sub = await client.query(
-//       `
-//       SELECT fcm_token FROM subscriptions
-//       WHERE fcm_token IS NOT NULL
-//       `,
-//     );
-//     if (found_sub.rows.length) {
-//       message = {
-//         data: {
-//           title: "Test title",
-//           body: "Test body",
-//         },
-//         token: JSON.parse(found_sub.rows[0].fcm_token),
-//       };
-//       const result = await fcm_messaging.send(message);
-//       console.warn(result);
-//     }
-//   } catch (err) {
-//     console.error("FCM error", err);
-//   } finally {
-//     client.release();
-//   }
-//   process.exit(0);
-// })();
+const fcm_admin = require("firebase-admin");
+const { initializeApp } = require("firebase-admin/app");
+const { getMessaging } = require("firebase-admin/messaging");
+const fcm_app = initializeApp({
+  credential: fcm_admin.credential.cert(
+    JSON.parse(process.env.FIREBASE_CREDENTIAL),
+  ),
+});
+const fcm_messaging = getMessaging(fcm_app);
 
 module.exports = async (req, res) => {
   if (
@@ -439,7 +410,10 @@ module.exports = async (req, res) => {
     // Send push notifications
     const subscriptions = await req.client.query(
       `
-      SELECT subscription_json, user_id
+      SELECT
+        user_id,
+        subscription_json,
+        fcm_token
       FROM subscriptions
       WHERE user_id IN (
         SELECT user_id
@@ -494,7 +468,7 @@ module.exports = async (req, res) => {
       let tag = `topic:${topic_id}`;
 
       // Chrome wants unique tags ¯\_(ツ)_/¯
-      if (subscription.subscription_json.match(/google/i)) {
+      if (String(subscription.subscription_json || "").match(/google/i)) {
         tag = `comment:${comment_id}`;
       }
 
@@ -513,32 +487,55 @@ module.exports = async (req, res) => {
       const unread_count = unread_count_result.rows[0].unread_count;
 
       // Send the push
-      webpush
-        .sendNotification(
-          JSON.parse(subscription.subscription_json),
-          JSON.stringify({
+
+      // FCM version
+      if (subscription.fcm_token) {
+        const message = {
+          notification: {
             title: `${short_display_name} replied`,
             body: short_body,
-            tag,
-            unread_count,
-          }),
-        )
-        .then(console.log)
-        .catch(async (error) => {
-          // 410 means unsubscribed and is expected, but means we need to stop sending to that subscription_json
-          if (error.statusCode === 410) {
-            console.log("Unsubscribing", subscription.subscription_json);
-            await req.client.query(
-              `
-            DELETE FROM subscriptions
-            WHERE subscription_json = $1
-            `,
-              [subscription.subscription_json],
-            );
-          } else {
-            console.error(error);
-          }
-        });
+          },
+          apns: {
+            payload: {
+              aps: {
+                badge: Number(unread_count || 0),
+              },
+            },
+          },
+          token: JSON.parse(subscription.fcm_token),
+        };
+        const result = await fcm_messaging.send(message);
+        console.log(result);
+
+        // Web Push version
+      } else {
+        webpush
+          .sendNotification(
+            JSON.parse(subscription.subscription_json),
+            JSON.stringify({
+              title: `${short_display_name} replied`,
+              body: short_body,
+              tag,
+              unread_count,
+            }),
+          )
+          .then(console.log)
+          .catch(async (error) => {
+            // 410 means unsubscribed and is expected, but means we need to stop sending to that subscription_json
+            if (error.statusCode === 410) {
+              console.log("Unsubscribing", subscription.subscription_json);
+              await req.client.query(
+                `
+              DELETE FROM subscriptions
+              WHERE subscription_json = $1
+              `,
+                [subscription.subscription_json],
+              );
+            } else {
+              console.error(error);
+            }
+          });
+      }
     });
 
     // Send websocket update after all notifications have been inserted

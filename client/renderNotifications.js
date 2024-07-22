@@ -16,7 +16,7 @@ const renderNotification = (notification) => {
         : "to your topic";
 
   const note = notification.note || "";
-  const note_keyword = note.split(" ")[0]
+  const note_keyword = note.split(" ")[0];
   const note_title = note_keywords[note_keyword] || note_keyword;
   const $notification = $(
     `
@@ -46,10 +46,7 @@ const renderNotification = (notification) => {
           info[tiny][$1]
             b $2
           `,
-            [
-              note_keyword,
-              note_title
-            ],
+            [note_keyword, note_title],
           )
         : [],
     ],
@@ -200,6 +197,19 @@ const getUnreadCountUnseenCount = () => {
         if (navigator.setAppBadge) {
           navigator.setAppBadge(state.unread_count);
         }
+
+        if (
+          window.webkit &&
+          window.webkit.messageHandlers &&
+          window.webkit.messageHandlers["push-permission-request"] &&
+          window.webkit.messageHandlers["push-permission-state"]
+        ) {
+          window.webkit.messageHandlers["set-badge"].postMessage(
+            JSON.stringify({
+              badge: state.unread_count,
+            }),
+          );
+        }
         if (Boolean(state.unread_count)) {
           $("hamburger").setAttribute("unread", "");
         } else {
@@ -269,7 +279,7 @@ window.addEventListener("focus", () => {
     state.window_recently_focused = false;
   }, 5000);
   getMoreRecent();
-  if (state.push_active) {
+  if (state.push_active || state.fcm_push_active) {
     getUnreadCountUnseenCount();
   }
 });

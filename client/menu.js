@@ -10,7 +10,7 @@ const showMenu = () => {
           a[href=/recent] Recent
     `,
   );
-  if (state.push_active) {
+  if (state.push_active || state.fcm_push_active) {
     $menu.$("links").appendChild(
       $(
         `

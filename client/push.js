@@ -5,7 +5,7 @@ if (navigator.serviceWorker) {
       // Listen for push updates
       navigator.serviceWorker.addEventListener("message", (event) => {
         if (event.data.push_update) {
-          if (state.push_active) {
+          if (state.push_active || state.fcm_push_active) {
             getUnreadCountUnseenCount();
           }
         }
@@ -79,7 +79,8 @@ if (
         case "provisional":
           // permission granted
           state.fcm_push_active = true;
-          window.webkit.messageHandlers["push-token"].postMessage("push-token");
+          // window.webkit.messageHandlers["push-token"].postMessage("push-token");
+          getUnreadCountUnseenCount();
           break;
         case "unknown":
         default:
@@ -95,7 +96,7 @@ if (
     "push-permission-state",
   );
   window.addEventListener("push-token", ($event) => {
-    if ($event && $event.detail && !$event.detail.startsWith("ERROR")) {
+    if ($event && $event.detail && !$event.detail.startsWith(`"ERROR`)) {
       getUnreadCountUnseenCount();
       fetch("/session", {
         method: "POST",
@@ -115,8 +116,11 @@ if (
           state.fcm_push_active = false;
         });
     } else {
-      debug($event);
+      debug("D", $event);
     }
+  });
+  window.addEventListener("push-notification", ($event) => {
+    getUnreadCountUnseenCount();
   });
 } else {
   state.fcm_push_available = false;
