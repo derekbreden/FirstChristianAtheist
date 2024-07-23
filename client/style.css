@@ -72,6 +72,7 @@ p img {
 }
 comment p img,
 topic[trimmed] p img {
+  cursor: pointer;
   height: 100px;
 }
 comment p[img],
@@ -647,6 +648,7 @@ display-name-wrapper {
   flex: 1;
 }
 expand-wrapper {
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   padding: 10px 0;
@@ -669,6 +671,7 @@ read-more-wrapper,
 share-wrapper,
 forward-wrapper,
 back-wrapper {
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   align-items: center;
