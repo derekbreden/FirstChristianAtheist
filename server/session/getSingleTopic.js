@@ -120,10 +120,15 @@ module.exports = async (req, res) => {
         LEFT JOIN comment_images i ON c.comment_id = i.comment_id
         WHERE
           c.parent_topic_id = $2
-          AND c.comment_id IN (
-            SELECT comment_id
-            FROM comment_ancestors
-            WHERE ancestor_id = ANY($3::int[])
+          AND (
+            c.comment_id IN (
+              SELECT comment_id
+              FROM comment_ancestors
+              WHERE ancestor_id = ANY($3::int[])
+            )
+            OR (
+              c.create_date > $4 AND $4 IS NOT NULL
+            )
           )
         GROUP BY
           c.create_date,
@@ -134,13 +139,14 @@ module.exports = async (req, res) => {
           u.display_name,
           u.display_name_index,
           CASE WHEN c.user_id = $1 THEN true ELSE false END
-        ORDER BY c.create_date DESC
+        ORDER BY c.create_date ASC
         LIMIT 10
         `,
         [
           req.session.user_id || 0,
           topic_id,
           root_comments.rows.map((c) => c.comment_id),
+          req.body.min_comment_create_date || null,
         ],
       );
       req.results.comments.push(...root_comments.rows);

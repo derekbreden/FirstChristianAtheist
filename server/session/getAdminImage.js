@@ -1,7 +1,9 @@
 const ai = require("../ai");
 const crypto = require("node:crypto");
-const { Client } = require("@replit/object-storage");
-const object_client = new Client();
+const { PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
+const object_client = new S3Client({
+  region: "us-east-1",
+});
 
 module.exports = async (req, res) => {
   if (
@@ -25,9 +27,12 @@ module.exports = async (req, res) => {
     ) {
       const mp3 = await ai.generateSpeech(req.body.prompt, req.body.model);
       const mp3_uuid = crypto.randomUUID();
-      const { ok, error } = await object_client.uploadFromBytes(
-        `${mp3_uuid}.mp3`,
-        mp3,
+      await object_client.send(
+        new PutObjectCommand({
+          Bucket: "firstchristianatheist",
+          Key: `${mp3_uuid}.mp3`,
+          Body: mp3,
+        }),
       );
       req.results.mp3 = `/mp3/${mp3_uuid}`;
     }

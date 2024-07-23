@@ -1,18 +1,25 @@
-const { Client } = require("@replit/object-storage");
-const object_client = new Client();
+const { GetObjectCommand, S3Client } = require("@aws-sdk/client-s3");
+const object_client = new S3Client({
+  region: "us-east-1",
+});
 
 module.exports = async (req, res) => {
   const mp3_uuid = req.path.substr(3);
-  const { ok, value, error } = await object_client.downloadAsBytes(
-    `${mp3_uuid}.mp3`,
-  );
-  if (!ok) {
+
+  try {
+    const response = await object_client.send(
+      new GetObjectCommand({
+        Bucket: "firstchristianatheist",
+        Key: `${mp3_uuid}.mp3`,
+      }),
+    );
+    const object_value = await response.Body.transformToByteArray();
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "audio/mpeg");
+    res.setHeader("Cache-Control", "public, max-age=31536000");
+    res.end(object_value, "binary");
+  } catch (error) {
     console.error(error);
     res.end("Error reading file\n");
-    return;
   }
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "audio/mpeg");
-  res.setHeader("Cache-Control", "public, max-age=31536000");
-  res.end(Buffer.from(value[0]), "binary");
 };

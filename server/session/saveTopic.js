@@ -1,8 +1,14 @@
 const ai = require("../ai");
 const pages = require("../pages");
 const crypto = require("node:crypto");
-const { Client } = require("@replit/object-storage");
-const object_client = new Client();
+const {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} = require("@aws-sdk/client-s3");
+const object_client = new S3Client({
+  region: "us-east-1",
+});
 
 module.exports = async (req, res) => {
   if (
@@ -42,7 +48,10 @@ module.exports = async (req, res) => {
 
     messages.push({
       role: "user",
-      name: (req.session.display_name || "Anonymous").replace(/[^a-z0-9_\-]/g, ""),
+      name: (req.session.display_name || "Anonymous").replace(
+        /[^a-z0-9_\-]/g,
+        "",
+      ),
       content: [
         { type: "text", text: req.body.title + "\n\n" + req.body.body },
         ...req.body.pngs.map((png) => {
@@ -117,11 +126,15 @@ module.exports = async (req, res) => {
           [topic_id],
         );
         for (const existing_image of existing_images.rows) {
-          const { ok, error } = await object_client.delete(
-            `${existing_image.image_uuid}.png`,
-          );
-          if (!ok) {
-            console.error(error);
+          try {
+            await object_client.send(
+              new DeleteObjectCommand({
+                Bucket: "firstchristianatheist",
+                Key: `${existing_image.image_uuid}.png`,
+              }),
+            );
+          } catch (err) {
+            console.error(err);
           }
         }
       }
@@ -129,13 +142,14 @@ module.exports = async (req, res) => {
       // Add new images
       for (const png of req.body.pngs) {
         const image_uuid = crypto.randomUUID();
-        const { ok, error } = await object_client.uploadFromBytes(
-          `${image_uuid}.png`,
-          png.url,
-        );
-        if (!ok) {
-          console.error(error);
-        } else {
+        try {
+          await object_client.send(
+            new PutObjectCommand({
+              Bucket: "firstchristianatheist",
+              Key: `${image_uuid}.png`,
+              Body: png.url,
+            }),
+          );
           await req.client.query(
             `
             INSERT INTO topic_images
@@ -145,6 +159,8 @@ module.exports = async (req, res) => {
             `,
             [topic_id, image_uuid],
           );
+        } catch (error) {
+          console.error(error);
         }
       }
 

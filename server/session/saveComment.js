@@ -1,8 +1,15 @@
 const ai = require("../ai");
 const pages = require("../pages");
 const crypto = require("node:crypto");
-const { Client } = require("@replit/object-storage");
-const object_client = new Client();
+const {
+  GetObjectCommand,
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} = require("@aws-sdk/client-s3");
+const object_client = new S3Client({
+  region: "us-east-1",
+});
 const webpush = require("web-push");
 webpush.setVapidDetails(
   "mailto:derek@firstchristianatheiest.org",
@@ -96,17 +103,22 @@ module.exports = async (req, res) => {
     );
     for (const topic of topic_results.rows) {
       // Get base64 image urls from object store
-      const pngs = topic.immage_uuids
+      const pngs = topic.image_uuids
         ? (
             await Promise.all(
               topic.image_uuids.split(",").map(async (image_uuid) => {
-                const { ok, value, error } =
-                  await object_client.downloadAsBytes(`${image_uuid}.png`);
-                if (!ok) {
+                try {
+                  const response = await object_client.send(
+                    new GetObjectCommand({
+                      Bucket: "firstchristianatheist",
+                      Key: `${image_uuid}.png`,
+                    }),
+                  );
+                  return await response.Body.transformToString();
+                } catch (error) {
                   console.error(error);
                   return null;
                 }
-                return Buffer.from(value[0]).toString("utf-8");
               }),
             )
           ).filter((x) => x)
@@ -178,13 +190,18 @@ module.exports = async (req, res) => {
                 comment_ancestor.image_uuids
                   .split(",")
                   .map(async (image_uuid) => {
-                    const { ok, value, error } =
-                      await object_client.downloadAsBytes(`${image_uuid}.png`);
-                    if (!ok) {
+                    try {
+                      const response = await object_client.send(
+                        new GetObjectCommand({
+                          Bucket: "firstchristianatheist",
+                          Key: `${image_uuid}.png`,
+                        }),
+                      );
+                      return await response.Body.transformToString();
+                    } catch (error) {
                       console.error(error);
                       return null;
                     }
-                    return Buffer.from(value[0]).toString("utf-8");
                   }),
               )
             ).filter((x) => x)
@@ -228,13 +245,13 @@ module.exports = async (req, res) => {
     }
     messages.push({
       role: "user",
-      name: req.body.display_name.replace(/[^a-z0-9_\-]/g, ""),
+      name: req.body.display_name.replace(/[^a-z0-9_\-]/ig, ""),
       content: [
         { type: "text", text: req.body.display_name + ":\n" + req.body.body },
         ...req.body.pngs.map((png) => {
           return {
             image_url: {
-              url: png,
+              url: png.url,
             },
             type: "image_url",
           };
@@ -350,11 +367,15 @@ module.exports = async (req, res) => {
         [comment_id],
       );
       for (const existing_image of existing_images.rows) {
-        const { ok, error } = await object_client.delete(
-          `${existing_image.image_uuid}.png`,
-        );
-        if (!ok) {
-          console.error(error);
+        try {
+          await object_client.send(
+            new DeleteObjectCommand({
+              Bucket: "firstchristianatheist",
+              Key: `${existing_image.image_uuid}.png`,
+            }),
+          );
+        } catch (err) {
+          console.error(err);
         }
       }
     }
@@ -362,13 +383,14 @@ module.exports = async (req, res) => {
     // Add new images
     for (const png of req.body.pngs) {
       const image_uuid = crypto.randomUUID();
-      const { ok, error } = await object_client.uploadFromBytes(
-        `${image_uuid}.png`,
-        png.url,
-      );
-      if (!ok) {
-        console.error(error);
-      } else {
+      try {
+        await object_client.send(
+          new PutObjectCommand({
+            Bucket: "firstchristianatheist",
+            Key: `${image_uuid}.png`,
+            Body: png.url,
+          }),
+        );
         await req.client.query(
           `
           INSERT INTO comment_images
@@ -378,6 +400,8 @@ module.exports = async (req, res) => {
           `,
           [comment_id, image_uuid],
         );
+      } catch (error) {
+        console.error(error);
       }
     }
 
