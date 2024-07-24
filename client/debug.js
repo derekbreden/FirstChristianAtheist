@@ -12,9 +12,17 @@ const debug = function () {
     to_render = to_render[0];
   }
   rendered.push(to_render);
-  $("debug").innerHTML = JSON.stringify(rendered, null, 2);
+  $("debug")?.remove();
+  $("main-content").prepend(
+    $(
+      `
+    debug $1
+    `,
+      [JSON.stringify(rendered, null, 2)],
+    ),
+  );
   setTimeout(() => {
-    $("debug").innerHTML = "";
+    $("debug")?.remove();
   }, 5000);
 };
 

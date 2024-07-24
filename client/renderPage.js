@@ -6,14 +6,8 @@ const renderPage = (data) => {
   }
   state.path_history.push(state.path);
 
-  // Hide and show constant elements
-  $("topics-loading").style.display = "none";
-  $("topics").style.display = "flex";
-  $("comments").style.display = "flex";
-  $("activities").style.display = "flex";
-  if (state.path === "/notifications") {
-    $("notifications").style.display = "flex";
-  }
+  // Remove loading indicator
+  $("topics-loading")?.remove();
 
   // Render Topics
   renderTopics(data.topics);

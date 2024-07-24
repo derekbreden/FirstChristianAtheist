@@ -20,23 +20,35 @@ body {
   font-size: 14px;
   display: flex;
   justify-content: center;
-  background-image: repeating-linear-gradient(
-    90deg,
-    #bbc8d7 0%,
-    #bbc8d7 calc((100% - 480px) / 2),
-    #fff calc((100% - 480px) / 2),
-    #fff calc((100% - 480px) / 2 + 480px),
-    #bbc8d7 calc((100% - 480px) / 2 + 480px),
-    #bbc8d7 100%
-  );
+  gap: 40px;
+  background: #bbc8d7;
   color: #26323e;
+  flex-direction: row;
 }
-main-content {
+main-content,
+main-content-2 {
+  flex: 1;
   display: flex;
+  background: #fff;
   flex-direction: column;
-  padding: 44px 40px 20px 40px;
+  padding: 44px 20px 20px 20px;
   max-width: 480px;
   width: 100%;
+  position: relative;
+}
+@media (max-width: 1000px) {
+  body {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0;
+  }
+  main-content {
+    padding: 44px 20px 0 20px;
+  }
+  main-content-2 {
+    padding: 0 20px 20px 20px;
+  }
 }
 a,
 a:visited,
@@ -187,14 +199,6 @@ menu::before {
   top: -8px;
   height: 7px;
   background: #fff;
-}
-@media (max-width: 480px) {
-  body {
-    background: #fff;
-  }
-  main-content {
-    padding: 44px 20px 20px 20px;
-  }
 }
 menu signed-in,
 menu sign-in,
@@ -484,7 +488,27 @@ add-new button {
   width: 100%;
 }
 main-content add-new:first-child {
-  margin-top: 20px;
+  position: fixed;
+  top: 64px;
+  bottom: 20px;
+  right: calc(50% + 40px);
+  left: calc(50% - 480px);
+}
+main-content add-new:first-child textarea {
+  height: 100%;
+}
+@media (max-width: 1000px) {
+  main-content add-new:first-child {
+    margin-top: 20px;
+    position: relative;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
+  main-content add-new:first-child textarea {
+    height: unset;
+  }
 }
 title-wrapper {
   display: flex;
@@ -902,7 +926,7 @@ notifications notification:has(+ h3)::after {
   display: none;
 }
 topics-loading {
-  display: none;
+  display: flex;
   flex-direction: column;
   opacity: 0;
   animation: loading 1.5s ease-in-out infinite 1s;

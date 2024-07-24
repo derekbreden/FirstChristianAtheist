@@ -160,6 +160,19 @@ const renderComments = (comments) => {
     state.path !== "/recent" &&
     state.path !== "/image" &&
     state.path !== "/notifications";
+  if (!$("comments")) {
+    const target =
+      state.path.substr(0,9) === "/comment/"
+        ? "main-content"
+        : "main-content-2";
+    $(target).appendChild(
+      $(
+        `
+        comments
+        `,
+      ),
+    );
+  }
   $("comments").replaceChildren(
     ...[
       ...(showCommentList
@@ -198,7 +211,9 @@ const renderComments = (comments) => {
       .after(state.active_add_new_comment);
   }
   if (state.path === "/") {
-    $("reply-wrapper").forEach(($reply_wrapper) => $reply_wrapper.style.display = "none");
+    $("reply-wrapper").forEach(
+      ($reply_wrapper) => ($reply_wrapper.style.display = "none"),
+    );
     $("p[add-new-comment]").remove();
   }
   afterDomUpdate();

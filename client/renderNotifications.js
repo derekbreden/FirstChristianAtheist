@@ -64,6 +64,9 @@ const renderNotification = (notification) => {
 };
 
 const renderNotifications = (notifications) => {
+  if (state.path !== "/notifications") {
+    return;
+  }
   const unread_notifications = notifications.filter((n) => !n.read);
   const read_notifications = notifications.filter((n) => n.read);
   const $unread_header = $(
@@ -101,6 +104,15 @@ const renderNotifications = (notifications) => {
       `,
       ),
     ];
+  }
+  if (!$("notifications")) {
+    $("main-content").appendChild(
+      $(
+        `
+        notifications
+        `
+      )
+    );
   }
   $("notifications").replaceChildren(
     ...[$unread_header],

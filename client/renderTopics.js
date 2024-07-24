@@ -1,5 +1,18 @@
 const renderTopics = (topics) => {
   beforeDomUpdate();
+  if (!$("topics")) {
+    const target =
+      state.path === "/topics"
+        ? "main-content-2"
+        : "main-content";
+    $(target).appendChild(
+      $(
+        `
+        topics
+        `,
+      ),
+    );
+  }
   $("topics").replaceChildren(...topics.map(renderTopic));
 
   if (state.active_add_new_topic?.is_edit) {
