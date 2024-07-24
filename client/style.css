@@ -5,7 +5,7 @@
   src: url("/Montserrat-VariableFont_wght.ttf") format("truetype");
 }
 * {
-  font-family: Montserrat;
+  font-family: Montserrat, Arial;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -49,6 +49,75 @@ main-content-2 {
   main-content-2 {
     padding: 0 20px 20px 20px;
   }
+}
+footer {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  height: calc(54px + env(safe-area-inset-bottom));
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0px 0px 5px #26323e;
+  z-index: 1;
+  padding: 0 0 env(safe-area-inset-bottom) 0;
+}
+footer a {
+  font-size: 11px;
+  text-decoration: none;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  width: 34px;
+  overflow: visible;
+  align-items: center;
+  position: relative;
+}
+footer a p {
+  margin: 0;
+}
+footer a icon {
+  height: 34px;
+  width: 34px;
+  font-size: 34px;
+  line-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+footer a icon[topics] {
+  font-weight: 600;
+}
+footer a icon[recent] {
+  font-weight: 900;
+}
+footer a icon[recent] {
+  font-weight: 900;
+}
+footer a[unread]::before {
+  top: calc(50% - 10px);
+}
+@media (display-mode: standalone) {
+  body {
+    padding-bottom: calc(54px + env(safe-area-inset-bottom));
+  }
+  footer {
+    display: flex;
+  }
+  main-content add-new:first-child {
+    bottom: calc(74px + env(safe-area-inset-bottom));
+  }
+}
+body[app] {
+  padding-bottom: calc(54px + env(safe-area-inset-bottom));
+}
+body[app] footer {
+  display: flex;
+}
+body[app] main-content add-new:first-child {
+  bottom: calc(74px + env(safe-area-inset-bottom));
 }
 a,
 a:visited,

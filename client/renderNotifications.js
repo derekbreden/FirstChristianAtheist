@@ -110,8 +110,8 @@ const renderNotifications = (notifications) => {
       $(
         `
         notifications
-        `
-      )
+        `,
+      ),
     );
   }
   $("notifications").replaceChildren(
@@ -224,8 +224,10 @@ const getUnreadCountUnseenCount = () => {
         }
         if (Boolean(state.unread_count)) {
           $("hamburger").setAttribute("unread", "");
+          $("footer a[notifications]").setAttribute("unread", "");
         } else {
           $("hamburger").removeAttribute("unread");
+          $("footer a[notifications]").removeAttribute("unread");
         }
         if (
           state.unseen_count &&
@@ -251,6 +253,20 @@ const getUnreadCountUnseenCount = () => {
       modalError("Network error");
       console.error(error);
     });
+  if (!$("footer a[notifications]")) {
+    $notification_link = $(
+      `
+      a[href=/notifications][notifications]
+        icon[notifications] ⍾
+        p Notifications
+      `,
+    )
+    $notification_link.on("click", ($event) => {
+      $event.preventDefault();
+      goToPath($notification_link.getAttribute("href"));
+    });
+    $("footer").appendChild($notification_link);
+  }
 };
 
 const markAsRead = (notification_id) => {
