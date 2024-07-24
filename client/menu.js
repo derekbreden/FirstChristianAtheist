@@ -311,6 +311,7 @@ const showMenu = () => {
           }
           state.email = email;
           state.cache = {};
+          cacheIntroduction();
           startSession();
           menuCancel();
         })
