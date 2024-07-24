@@ -81,9 +81,49 @@ const showMenu = () => {
           });
         return;
       }
+      if (state.fcm_push_active) {
+        state.fcm_push_active = false;
+        $("toggle-wrapper").removeAttribute("active");
+        fetch("/session", {
+          method: "POST",
+          body: JSON.stringify({
+            fcm_subscription: state.fcm_token,
+            deactivate: true,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data || !data.success) {
+              modalError("Server error saving subscription");
+            }
+          })
+          .catch(() => {
+            modalError("Network error saving subscription");
+          });
+        return;
+      }
       if (state.fcm_push_available) {
-        state.push_active = true;
+        state.fcm_push_active = true;
+        getUnreadCountUnseenCount();
         $("toggle-wrapper").setAttribute("active", "");
+        if (state.fcm_token) {
+          fetch("/session", {
+            method: "POST",
+            body: JSON.stringify({
+              fcm_subscription: state.fcm_token,
+              reactivate: true,
+            }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (!data || !data.success) {
+                modalError("Server error saving subscription");
+              }
+            })
+            .catch(() => {
+              modalError("Network error saving subscription");
+            });
+        }
         window.webkit.messageHandlers["push-permission-request"].postMessage(
           "push-permission-request",
         );
@@ -178,6 +218,7 @@ const showMenu = () => {
         .then((response) => response.json())
         .then(function (data) {
           state.cache = {};
+          cacheIntroduction();
           startSession();
           menuCancel();
         });

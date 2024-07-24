@@ -25,7 +25,9 @@ const startSession = () => {
 
     // Get more recent if available
     getMoreRecent();
-    return;
+    if (state.path !== "/") {
+      return;
+    }
   }
 
   // Otherwise, make a network call for the entire path results
@@ -60,7 +62,7 @@ const startSession = () => {
       if (data.error) {
         modalError(data.error);
       }
-      if (data.path) {
+      if (data.path && state.path !== "/") {
         state.cache[data.path] = data;
         renderPage(data);
       }

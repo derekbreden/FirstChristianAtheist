@@ -452,6 +452,7 @@ module.exports = async (req, res) => {
           WHERE comment_id = $2
         )
       ) AND user_id <> $3
+      AND active = TRUE
       `,
       [topic_id, comment_id, req.session.user_id],
     );
