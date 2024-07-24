@@ -106,7 +106,7 @@ footer a[unread]::before {
   footer {
     display: flex;
   }
-  main-content add-new:first-child {
+  body main-content add-new:first-child {
     bottom: calc(74px + env(safe-area-inset-bottom));
   }
 }
