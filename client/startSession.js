@@ -74,6 +74,11 @@ const startSession = () => {
 };
 
 const getMoreRecent = () => {
+  // Skip for introduction
+  if (state.path === "/") {
+    return;
+  }
+  
   // Stop if cache not loaded
   if (!state.cache[state.path]) {
     return;

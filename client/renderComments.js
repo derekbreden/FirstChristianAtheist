@@ -197,6 +197,10 @@ const renderComments = (comments) => {
       .$(":scope > reply-wrapper")
       .after(state.active_add_new_comment);
   }
+  if (state.path === "/") {
+    $("reply-wrapper").forEach(($reply_wrapper) => $reply_wrapper.style.display = "none");
+    $("p[add-new-comment]").remove();
+  }
   afterDomUpdate();
 
   // Highlight a comment in a thread we've navigated to specifically

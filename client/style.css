@@ -656,7 +656,11 @@ expand-wrapper {
   position: relative;
 }
 expand-wrapper[above-comments] {
+  cursor: default;
   margin: 0 0 10px 0;
+}
+expand-wrapper[above-comments]:first-child {
+  margin: 10px 0 10px 0;
 }
 expand-wrapper[collapse] {
   flex-direction: row;
