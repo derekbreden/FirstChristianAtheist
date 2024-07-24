@@ -24,6 +24,12 @@ const goToPath = (new_path, skip_state) => {
     } catch(e) {
       console.error(e);
     }
+
+    if (state.path === "/topics") {
+      localStorage.setItem("has_visited_topics", true);
+    } else if (state.path === "/") {
+      localStorage.removeItem("has_visited_topics");
+    }
   }
 
   // Load the page

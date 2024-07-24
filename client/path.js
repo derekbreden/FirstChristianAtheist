@@ -17,10 +17,8 @@ state.path = parsePath();
 
 // Default to /topics instead of / when we have visited before
 if (state.path === "/") {
-  if (localStorage.getItem("has_visited_before")) {
+  if (localStorage.getItem("has_visited_topics")) {
     state.path = "/topics";
-  } else {
-    localStorage.setItem("has_visited_before", true);
   }
 }
 
