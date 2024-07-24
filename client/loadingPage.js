@@ -16,7 +16,8 @@ const loadingPage = (first_render) => {
   $("comments")?.remove();
   $("main-content activities")?.remove();
   $("main-content-2 activities")?.remove();
-  $("notifications")?.remove();
+  $("main-content notifications")?.remove();
+  $("main-content-2 notifications")?.remove();
   if (state.path === "/topics") {
     if (!state.active_add_new_topic?.is_root) {
       $("main-content > add-new:first-child")?.remove();

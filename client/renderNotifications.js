@@ -113,11 +113,20 @@ const renderNotifications = (notifications) => {
         `,
       ),
     );
+    $("main-content-2").appendChild(
+      $(
+        `
+        notifications
+        `,
+      ),
+    );
   }
-  $("notifications").replaceChildren(
+  $("main-content notifications").replaceChildren(
     ...[$unread_header],
     ...$unread_allclear,
     ...unread_notifications.map(renderNotification),
+  );
+  $("main-content-2 notifications").replaceChildren(
     ...[$read_header],
     ...$read_allclear,
     ...read_notifications.map(renderNotification),
