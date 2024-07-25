@@ -63,8 +63,12 @@ const renderActivities = (activities) => {
       return $activity;
     }
   });
-  const $activities_1 = $activities.filter((x, i) => i % 2 === 1)
-  const $activities_2 = $activities.filter((x, i) => i % 2 === 0)
-  $("main-content-wrapper[active] main-content activities").replaceChildren(...$activities_1);
-  $("main-content-wrapper[active] main-content-2 activities").replaceChildren(...$activities_2);
+  if (window.innerWidth > 1000) {
+    const $activities_1 = $activities.filter((x, i) => i % 2 === 1)
+    const $activities_2 = $activities.filter((x, i) => i % 2 === 0)
+    $("main-content-wrapper[active] main-content activities").replaceChildren(...$activities_1);
+    $("main-content-wrapper[active] main-content-2 activities").replaceChildren(...$activities_2);
+  } else {
+    $("main-content-wrapper[active] main-content activities").replaceChildren(...$activities);
+  }
 };
