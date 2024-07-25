@@ -139,7 +139,7 @@ const renderComments = (comments) => {
         // When they click down, keep scroll on the last comment
         if ($event.target?.hasAttribute("expand-down")) {
           const final_rect = $last_comment.getBoundingClientRect();
-          $body.scrollTop = $body.scrollTop + (final_rect.y - original_rect.y);
+          $("main-content-wrapper[active]").scrollTop = $("main-content-wrapper[active]").scrollTop + (final_rect.y - original_rect.y);
         }
       });
       if (state.expanded_comment_ids.includes($root_comment.comment_id)) {

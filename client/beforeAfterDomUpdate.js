@@ -4,7 +4,7 @@ const beforeDomUpdate = () => {
   state.active_element_state = {
     selectionStart: state.active_element?.selectionStart,
     selectionEnd: state.active_element?.selectionEnd,
-    bodyScrollTop: $body.scrollTop,
+    bodyScrollTop: $("main-content-wrapper[active]").scrollTop,
   };
 };
 
@@ -16,6 +16,6 @@ const afterDomUpdate = () => {
       state.active_element_state.selectionStart;
     state.active_element.selectionEnd =
       state.active_element_state.selectionEnd;
-    $body.scrollTop = state.active_element_state.bodyScrollTop;
+    $("main-content-wrapper[active]").scrollTop = state.active_element_state.bodyScrollTop;
   }
 };

@@ -16,6 +16,7 @@ const loadingPage = (first_render, skip_state, clicked_back) => {
       [Boolean(skip_state), Boolean(clicked_back)],
     ),
   );
+  bindScrollEvent();
   setTimeout(() => {
     $("main-content-wrapper[inactive]")?.remove();
   }, 250);

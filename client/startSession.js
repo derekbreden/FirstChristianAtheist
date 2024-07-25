@@ -17,10 +17,11 @@ const startSession = () => {
 
     // Restore scroll position if found
     if (state.cache[state.path].scroll_top) {
-      $body.scrollTop = state.cache[state.path].scroll_top;
+      $("main-content-wrapper[active]").scrollTop =
+        state.cache[state.path].scroll_top;
       delete state.cache[state.path].scroll_top;
-    } else {
-      $body.scrollTop = 0;
+      // } else {
+      // $body.scrollTop = 0;
     }
 
     // Get more recent if available
@@ -80,7 +81,7 @@ const getMoreRecent = () => {
   if (state.path === "/") {
     return;
   }
-  
+
   // Stop if cache not loaded
   if (!state.cache[state.path]) {
     return;
@@ -190,8 +191,8 @@ const getMoreRecent = () => {
       }
 
       // Track current scrollHeight
-      const scroll_height = $body.scrollHeight;
-      const scroll_top = $body.scrollTop;
+      const scroll_height = $("main-content-wrapper[active]").scrollHeight;
+      const scroll_top = $("main-content-wrapper[active]").scrollTop;
 
       // Render notifications if appropriate
       if (data.notifications?.length) {
@@ -263,7 +264,9 @@ const getMoreRecent = () => {
 
         // If we are past the threshold, then maintain our position
         if (scroll_top > min_threshold) {
-          $body.scrollTop = scroll_top + ($body.scrollHeight - scroll_height);
+          $("main-content-wrapper[active]").scrollTop =
+            scroll_top +
+            ($("main-content-wrapper[active]").scrollHeight - scroll_height);
         }
       }
 

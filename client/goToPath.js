@@ -7,7 +7,7 @@ const goToPath = (new_path, skip_state, clicked_back) => {
 
     // Always track scroll position on cached paths
     if (state.cache[state.path]) {
-      state.cache[state.path].scroll_top = $body.scrollTop;
+      state.cache[state.path].scroll_top = $("main-content-wrapper[active]").scrollTop;
     }
 
     // Slide from left to right as if clicking back in several more scenarios
