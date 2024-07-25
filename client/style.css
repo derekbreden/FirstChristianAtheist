@@ -12,12 +12,18 @@
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 html {
+  font: 14px Montserrat, Arial;
   height: 100%;
+}
+@supports (font: -apple-system-body) {
+  html {
+    font: -apple-system-body;
+  }
 }
 body {
   min-height: 100%;
   position: relative;
-  font-size: 14px;
+  font-size: 1rem;
   display: flex;
   justify-content: center;
   gap: 40px;
@@ -65,7 +71,7 @@ footer {
   padding: 0 0 env(safe-area-inset-bottom) 0;
 }
 footer a {
-  font-size: 11px;
+  font-size: .786rem;
   text-decoration: none;
   font-weight: 600;
   display: flex;
@@ -77,6 +83,8 @@ footer a {
 }
 footer a p {
   margin: 0;
+  max-width: unset;
+  font-size-
 }
 footer a icon {
   height: 34px;
@@ -127,7 +135,7 @@ a:active {
 }
 h2 {
   margin-top: 20px;
-  font-size: 18px;
+  font-size: 1.286rem;
   font-weight: 600;
   display: flex;
   justify-content: space-between;
@@ -137,7 +145,7 @@ h2 button {
   margin-left: 5px;
 }
 h3 {
-  font-size: 14px;
+  font-size: 1rem;
   font-weight: 600;
   display: flex;
   justify-content: space-between;
@@ -146,6 +154,10 @@ h3 {
 audio,
 p {
   margin-top: 10px;
+}
+p {
+  max-width: 100%;
+  overflow: hidden;
 }
 p img {
   max-width: 100%;
@@ -202,11 +214,14 @@ header {
 }
 header h1 {
   cursor: pointer;
-  font-size: 18px;
+  font-size: 1.286rem;
   font-weight: 600;
   display: flex;
   align-items: center;
   margin: 0 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 header h1 img {
   height: 24px;
@@ -363,7 +378,7 @@ modal-bg {
 }
 input,
 textarea {
-  font-size: 14px;
+  font-size: 1rem;
   width: 240px;
   border-radius: 2px;
   border: 1px solid #26323e;
@@ -371,7 +386,7 @@ textarea {
 }
 button {
   cursor: pointer;
-  font-size: 14px;
+  font-size: 1rem;
   -webkit-appearance: none;
   border-radius: 2px;
   border: 0;
@@ -410,11 +425,11 @@ error {
 }
 info[small] {
   padding: 5px 5px 5px 26px;
-  font-size: 11px;
+  font-size: .786rem;
 }
 info[tiny] {
   padding: 1px 3px 1px 19px;
-  font-size: 11px;
+  font-size: .786rem;
 }
 pass::before,
 info::before,
@@ -890,7 +905,7 @@ share-wrapper p,
 forward-wrapper p,
 back-wrapper p,
 expand-wrapper p {
-  font-size: 11px;
+  font-size: .786rem;
   font-weight: 600;
   margin: 0 0 5px 0;
   opacity: .5;
@@ -950,7 +965,7 @@ notifications notification info[tiny] b {
   font-weight: 600;
 }
 notifications notification summary {
-  font-size: 11px;
+  font-size: .786rem;
 }
 notifications notification summary b {
   font-weight: 600;
@@ -1029,7 +1044,7 @@ activities {
   flex-direction: column;
 }
 activity > h2 {
-  font-size: 11px;
+  font-size: .786rem;
   margin-bottom: 5px;
 }
 activity > topic h2 {
