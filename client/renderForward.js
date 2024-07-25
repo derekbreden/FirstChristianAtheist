@@ -10,8 +10,8 @@ const renderForward = (parent_topic) => {
         `Continue to ${parent_topic.title}`,
       ],
     );
-    $("back-forward-wrapper").$("forward-wrapper")?.remove();
-    $("back-forward-wrapper").appendChild($forward);
+    $("main-content-wrapper[active] back-forward-wrapper").$("forward-wrapper")?.remove();
+    $("main-content-wrapper[active] back-forward-wrapper").appendChild($forward);
     $forward.on("click", () => {
       let new_path = `/topic/${parent_topic.slug}`;
       if (parent_topic.slug === "Home") {

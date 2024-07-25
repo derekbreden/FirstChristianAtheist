@@ -1,4 +1,4 @@
-const goToPath = (new_path, skip_state) => {
+const goToPath = (new_path, skip_state, clicked_back) => {
   if (state.path !== new_path) {
 
     // Cancel any open active comment or topic
@@ -10,13 +10,23 @@ const goToPath = (new_path, skip_state) => {
       state.cache[state.path].scroll_top = $body.scrollTop;
     }
 
+    // Slide from left to right as if clicking back in several more scenarios
+    if (
+      (state.path === "/topics" && new_path === "/")
+      || (state.path === "/recent" && new_path === "/topics")
+      || (state.path === "/notifications" && new_path === "/topics")
+      || (state.path === "/notifications" && new_path === "/recent")
+    ) {
+      clicked_back = true;
+    }
+
     // Set the new path
     state.path = new_path;
     if (!skip_state) {
       state.path_index++;
       history.pushState({ path_index: state.path_index }, "", state.path);
     }
-    loadingPage();
+    loadingPage(false, skip_state, clicked_back);
 
     // Tell the websocket we are on a new path
     try {

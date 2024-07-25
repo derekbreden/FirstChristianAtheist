@@ -160,11 +160,11 @@ const renderComments = (comments) => {
     state.path !== "/recent" &&
     state.path !== "/image" &&
     state.path !== "/notifications";
-  if (!$("comments")) {
+  if (!$("main-content-wrapper[active] comments")) {
     const target =
       state.path.substr(0,9) === "/comment/"
-        ? "main-content"
-        : "main-content-2";
+        ? "main-content-wrapper[active] main-content"
+        : "main-content-wrapper[active] main-content-2";
     $(target).appendChild(
       $(
         `
@@ -173,7 +173,7 @@ const renderComments = (comments) => {
       ),
     );
   }
-  $("comments").replaceChildren(
+  $("main-content-wrapper[active] comments").replaceChildren(
     ...[
       ...(showCommentList
         ? [
@@ -236,8 +236,8 @@ const renderComments = (comments) => {
 
   // Only render a single comment thread as a thread
   if (state.path.substr(0, 8) === "/comment") {
-    $("comments").setAttribute("thread", "");
+    $("main-content-wrapper[active] comments").setAttribute("thread", "");
   } else {
-    $("comments").removeAttribute("thread");
+    $("main-content-wrapper[active] comments").removeAttribute("thread");
   }
 };

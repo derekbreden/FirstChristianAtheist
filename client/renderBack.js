@@ -1,6 +1,6 @@
 const renderBack = () => {
   // Always remove previous wrapper
-  $("main-content back-forward-wrapper")?.remove();
+  $("main-content-wrapper[active] main-content back-forward-wrapper")?.remove();
 
   // Sometimes add new wrapper
   if (
@@ -32,12 +32,12 @@ const renderBack = () => {
                     : "Back",
       ],
     );
-    $("main-content").prepend($back_forward);
+    $("main-content-wrapper[active] main-content").prepend($back_forward);
     $back_forward.$("back-wrapper").on("click", () => {
       state.path_index--;
       state.path_index--;
       state.path_history = state.path_history.slice(0, -2);
-      goToPath(previous_path);
+      goToPath(previous_path, false, true);
     });
 
     if (!previous_path) {

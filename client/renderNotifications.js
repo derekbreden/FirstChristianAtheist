@@ -105,15 +105,15 @@ const renderNotifications = (notifications) => {
       ),
     ];
   }
-  if (!$("notifications")) {
-    $("main-content").appendChild(
+  if (!$("main-content-wrapper[active] notifications")) {
+    $("main-content-wrapper[active] main-content").appendChild(
       $(
         `
         notifications
         `,
       ),
     );
-    $("main-content-2").appendChild(
+    $("main-content-wrapper[active] main-content-2").appendChild(
       $(
         `
         notifications
@@ -121,12 +121,12 @@ const renderNotifications = (notifications) => {
       ),
     );
   }
-  $("main-content notifications").replaceChildren(
+  $("main-content-wrapper[active] main-content notifications").replaceChildren(
     ...[$unread_header],
     ...$unread_allclear,
     ...unread_notifications.map(renderNotification),
   );
-  $("main-content-2 notifications").replaceChildren(
+  $("main-content-wrapper[active] main-content-2 notifications").replaceChildren(
     ...[$read_header],
     ...$read_allclear,
     ...read_notifications.map(renderNotification),
@@ -166,8 +166,8 @@ const renderMarkAllAsRead = () => {
       `,
       [!Boolean(state.unread_count)],
     );
-    $("back-forward-wrapper").$("mark-all-as-read-wrapper")?.remove();
-    $("back-forward-wrapper").appendChild($mark_all_as_read);
+    $("main-content-wrapper[active] back-forward-wrapper").$("mark-all-as-read-wrapper")?.remove();
+    $("main-content-wrapper[active] back-forward-wrapper").appendChild($mark_all_as_read);
     $mark_all_as_read.on("click", () => {
       $mark_all_as_read.$("button").setAttribute("alt", "");
       $mark_all_as_read.$("button").setAttribute("faint", "");

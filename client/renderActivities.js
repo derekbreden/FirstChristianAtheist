@@ -1,13 +1,13 @@
 const renderActivities = (activities) => {
-  if (!$("activities")) {
-    $("main-content").appendChild(
+  if (!$("main-content-wrapper[active] activities")) {
+    $("main-content-wrapper[active] main-content").appendChild(
       $(
         `
         activities
         `,
       ),
     );
-    $("main-content-2").appendChild(
+    $("main-content-wrapper[active] main-content-2").appendChild(
       $(
         `
         activities
@@ -65,6 +65,6 @@ const renderActivities = (activities) => {
   });
   const $activities_1 = $activities.filter((x, i) => i % 2 === 1)
   const $activities_2 = $activities.filter((x, i) => i % 2 === 0)
-  $("main-content activities").replaceChildren(...$activities_1);
-  $("main-content-2 activities").replaceChildren(...$activities_2);
+  $("main-content-wrapper[active] main-content activities").replaceChildren(...$activities_1);
+  $("main-content-wrapper[active] main-content-2 activities").replaceChildren(...$activities_2);
 };

@@ -1,10 +1,10 @@
 const renderTopics = (topics) => {
   beforeDomUpdate();
-  if (!$("topics")) {
+  if (!$("main-content-wrapper[active] topics")) {
     const target =
       state.path === "/topics"
-        ? "main-content-2"
-        : "main-content";
+        ? "main-content-wrapper[active] main-content-2"
+        : "main-content-wrapper[active] main-content";
     $(target).appendChild(
       $(
         `
@@ -13,7 +13,7 @@ const renderTopics = (topics) => {
       ),
     );
   }
-  $("topics").replaceChildren(...topics.map(renderTopic));
+  $("main-content-wrapper[active] topics").replaceChildren(...topics.map(renderTopic));
 
   if (state.active_add_new_topic?.is_edit) {
     const topic = topics.find(

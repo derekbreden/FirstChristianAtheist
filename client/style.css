@@ -22,14 +22,73 @@ html {
 }
 body {
   min-height: 100%;
-  position: relative;
   font-size: 1rem;
+  background: #fff;
+  color: #26323e;
+  overflow: hidden;
+}
+main-content-wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 44px;
+  bottom: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 40px;
   background: #bbc8d7;
-  color: #26323e;
   flex-direction: row;
+  -webkit-overflow-scrolling: touch;
+}
+main-content-wrapper[inactive] {
+  animation: slide-out-left 0.2s ease-in-out;
+}
+main-content-wrapper[inactive][clicked-back] {
+  animation: slide-out-right 0.2s ease-in-out;
+}
+@keyframes slide-out-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+@keyframes slide-out-right {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+main-content-wrapper[active] {
+  animation: slide-in-left 0.2s ease-in-out;
+}
+main-content-wrapper[active][skip-state] {
+  animation: none;
+}
+main-content-wrapper[active][clicked-back] {
+  animation: slide-in-right 0.2s ease-in-out;
+}
+@keyframes slide-in-left {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+@keyframes slide-in-right {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
 }
 main-content,
 main-content-2 {
@@ -37,23 +96,21 @@ main-content-2 {
   display: flex;
   background: #fff;
   flex-direction: column;
-  padding: 44px 20px 20px 20px;
+  padding: 0 20px 20px 20px;
   max-width: 480px;
   width: 100%;
   position: relative;
 }
 @media (max-width: 1000px) {
-  body {
+  main-content-wrapper {
+    flex-wrap: nowrap;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     gap: 0;
   }
   main-content {
-    padding: 44px 20px 0 20px;
-  }
-  main-content-2 {
-    padding: 0 20px 20px 20px;
+    padding: 0 20px 0 20px;
   }
 }
 footer {
@@ -108,8 +165,8 @@ footer a[unread]::before {
   top: calc(50% - 10px);
 }
 @media (display-mode: standalone) {
-  body {
-    padding-bottom: calc(54px + env(safe-area-inset-bottom));
+  main-content-wrapper {
+    bottom: calc(54px + env(safe-area-inset-bottom));
   }
   footer {
     display: flex;
@@ -118,8 +175,8 @@ footer a[unread]::before {
     bottom: calc(74px + env(safe-area-inset-bottom));
   }
 }
-body[app] {
-  padding-bottom: calc(54px + env(safe-area-inset-bottom));
+body[app] main-content-wrapper {
+  bottom: calc(54px + env(safe-area-inset-bottom));
 }
 body[app] footer {
   display: flex;

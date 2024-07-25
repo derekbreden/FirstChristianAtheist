@@ -7,7 +7,7 @@ const renderPage = (data) => {
   state.path_history.push(state.path);
 
   // Remove loading indicator
-  $("topics-loading")?.remove();
+  $("main-content-wrapper[active] topics-loading")?.remove();
 
   // Render Topics
   renderTopics(data.topics);
