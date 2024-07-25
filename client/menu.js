@@ -38,6 +38,71 @@ const showMenu = () => {
     });
   });
   if (state.email) {
+    const $remove_account = $(
+      `
+        a[href=/] Remove account
+      `,
+    );
+    $remove_account.on("click", ($event) => {
+      $event.preventDefault();
+      menuCancel();
+      const $modal = $(
+        `
+        modal-wrapper
+          modal[info]
+            error
+              b Warning
+              p This will permanently remove your account. This action cannot be undone.
+            p Everything you posted will be deleted:
+            ul
+              li Comments
+              li Topics
+              li Images
+              li Display name
+            p Tap remove to confirm.
+            button-wrapper
+              button[remove] Remove
+              button[alt][cancel] Cancel
+          modal-bg
+        `,
+      );
+      const modalCancel = () => {
+        $modal.remove();
+      };
+      $modal.$("[remove]").on("click", () => {
+        modalCancel();
+        modalInfo("Removing account...");
+        fetch("/session", {
+          method: "POST",
+          body: JSON.stringify({
+            remove_account: true,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data || !data.success) {
+              modalError("Server error removing account");
+            } else {
+              $("modal-wrapper")?.remove();
+              modalInfo("Account removed");
+              state.email = "";
+              state.reset_token_uuid = "";
+              localStorage.removeItem("session_uuid");
+              state.cache = {};
+              cacheIntroduction();
+              goToPath("/");
+            }
+          })
+          .catch((error) => {
+            modalError("Network error removing account");
+          });
+      });
+      $modal.$("[cancel]").on("click", modalCancel);
+      $modal.$("modal-bg").on("click", modalCancel);
+      $("modal-wrapper")?.remove();
+      $("body").appendChild($modal);
+    });
+    $menu.$("links").appendChild($remove_account);
     const $signed_in = $(
       `
       signed-in
@@ -314,6 +379,11 @@ const showMenu = () => {
           cacheIntroduction();
           startSession();
           menuCancel();
+          if (data.signed_in) {
+            modalInfo("You have been signed in to your existing account")
+          } else if (data.created_account) {
+            modalInfo("You have created a new account")
+          }
         })
         .catch(function (error) {
           $sign_in.$("info")?.remove();

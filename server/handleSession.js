@@ -30,6 +30,7 @@ module.exports = async (req, res) => {
     await require("./session/validateSessionUuid")(req, res);
     await require("./session/getNotifications")(req, res);
     await require("./session/createUserIfNotExists")(req, res);
+    await require("./session/handleRemoveAccount")(req, res);
     await require("./session/signUpOrSignIn")(req, res);
     await require("./session/generateResetToken")(req, res);
     await require("./session/useResetToken")(req, res);

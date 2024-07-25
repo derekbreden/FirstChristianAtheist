@@ -34,6 +34,7 @@ module.exports = async (req, res) => {
         res.end(
           JSON.stringify({
             success: true,
+            signed_in: true,
           }),
         );
       } else {
@@ -88,6 +89,7 @@ module.exports = async (req, res) => {
       res.end(
         JSON.stringify({
           success: true,
+          created_account: true,
         }),
       );
     }

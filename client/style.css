@@ -409,6 +409,16 @@ menu toggle-wrapper[active] toggle-button {
 menu toggle-wrapper[active] toggle-button toggle-circle {
   left: 21px;
 }
+button-wrapper {
+  margin-top: 1px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 20px;
+}
+button-wrapper button {
+  flex: 1;
+}
 a[big] {
   display: flex;
   align-items: center;
