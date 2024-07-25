@@ -232,7 +232,7 @@ const cacheIntroduction = () => {
         topic_id: "39",
         title: "Moderation",
         slug: "Moderation",
-        body: "> Everything in moderation\n\n> — Cleobulus\n\nThe comments section here serves as an example of the type of moderation and threading that you will find on the topics on this site.\n\nAn AI will label any post that escalates, judges, or misunderstands.\n\nThe comments are still allowed, but others can rest easy with the AI absorbing the brunt of such tragic expressions of unmet needs.\n",
+        body: "> Everything in moderation\n\n> — Cleobulus\n\nThe comments section here serves as an example of the type of moderation and threading that you will find on the topics on this site.\n\nAn AI will label any post that escalates, judges, or misunderstands.\n\nThe comments are still allowed, but others can rest easy with the AI absorbing the brunt of such tragic expressions of unmet needs.\n\n\n\n\n [Privacy Policy](/privacy)",
         comment_count: "0",
         comment_count_max_create_date: "2024-07-19T04:36:35.761Z",
         edit: false,
@@ -244,5 +244,48 @@ const cacheIntroduction = () => {
     activities: [],
     notifications: [],
   };
+  state.cache["/privacy"] = {
+    topics: [
+
+      {
+        create_date: "2024-06-11T02:13:36.853Z",
+        topic_id: "0",
+        title: "Privacy Policy",
+        slug: "Privacy_Policy",
+        body: `# Information Collection
+
+We collect your email address and password only for the purpose of sending a password reset link if needed.
+
+# Use of Information
+
+Your email and password are used solely to facilitate account recovery.
+
+# Data Security
+
+We take measures to protect your information from unauthorized access or disclosure.
+
+# No Third-Party Services
+
+We do not use any third-party services or analytics.
+
+# Policy Changes
+
+We may update this policy from time to time. Changes will be effective immediately upon posting.
+
+# Contact
+
+For any questions, contact us at derek@firsthchristianatheist.org`,
+        comment_count: "0",
+        comment_count_max_create_date: "2024-07-19T04:36:35.761Z",
+        edit: false,
+        image_uuids: null,
+        $topic: {},
+      },
+    ],
+    comments: [],
+    path: "/privacy",
+    activities: [],
+    notifications: [],
+  }
 };
 cacheIntroduction();

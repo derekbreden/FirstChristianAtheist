@@ -26,7 +26,7 @@ const startSession = () => {
 
     // Get more recent if available
     getMoreRecent();
-    if (state.path !== "/") {
+    if (state.path !== "/" && state.path !== "/privacy") {
       return;
     }
   }
@@ -63,7 +63,7 @@ const startSession = () => {
       if (data.error) {
         modalError(data.error);
       }
-      if (data.path && state.path !== "/") {
+      if (data.path && state.path !== "/" && state.path !== "/privacy") {
         state.cache[data.path] = data;
         renderPage(data);
       }
@@ -78,7 +78,7 @@ const startSession = () => {
 
 const getMoreRecent = () => {
   // Skip for introduction
-  if (state.path === "/") {
+  if (state.path === "/" || state.path === "/privacy") {
     return;
   }
 

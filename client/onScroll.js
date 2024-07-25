@@ -115,7 +115,7 @@ const bindScrollEvent = () => {
 
     // Comments load older
     if (
-      (state.path === "/" || state.path.substr(0, 7) === "/topic/") &&
+      (state.path.substr(0, 7) === "/topic/") &&
       state.cache[state.path] &&
       !state.cache[state.path].comments_finished
     ) {
